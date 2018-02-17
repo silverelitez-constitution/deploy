@@ -21,6 +21,8 @@ domain=$(echo $realm | cut -d'.' -f1)
 yum -y update
 yum -y install realmd sssd oddjob oddjob-mkhomedir adcli samba-common
 
+realm leave; sleep 2
+
 realm discover $realm
 
 realm join --user $user $realm
