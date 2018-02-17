@@ -33,9 +33,9 @@ yum -y install realmd sssd oddjob oddjob-mkhomedir adcli samba-common
 
 realm leave; sleep 2
 
-realm discover $realm
+realm discover ${realm}
 
-realm join --unattended --no-password ${realm} #--user $user $realm
+realm join --unattended --no-password ${realm} | grep 'required-package: ' #--user $user $realm
 
 cat >/etc/sssd/sssd.conf << EOL
 
