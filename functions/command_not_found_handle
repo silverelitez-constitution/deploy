@@ -1,0 +1,40 @@
+show-prompt() {
+    eval 'echo -en "'$PS1'"' | sed -e 's#\\\[##g' -e 's#\\\]##g'
+}
+# To show it in a function registered with `complete -F` on
+# a single tab, and keep the user's input:
+#show-prompt
+#echo -n "${COMP_WORDS[@]}"
+
+command_not_found_handle () 
+{ 
+    # local runcnf=1;
+    # local retval=127;
+    # [[ $- =~ i ]] || runcnf=0;
+    # [[ ! -S /run/dbus/system_bus_socket ]] && runcnf=0;
+    # [[ ! -x '/usr/libexec/packagekitd' ]] && runcnf=0;
+    # [[ -n ${COMP_CWORD-} ]] && runcnf=0;
+    #if [ $runcnf -eq 1 ]; then
+        #'/usr/libexec/pk-command-not-found' "$@";
+		fullcommand="${@}";
+		package=$(repoquery --whatprovides "*bin/${1}" -C --qf '%{NAME}' | head -n1);
+		if [ ! $package ]; then echo "No package provides ${1}! Command doesn't exist..."; return; fi;
+		echo The package $package is required to run "${fullcommand}"!;
+		if yum install --quiet -y "${package}"; then 
+			echo "Okay, now let's try that again...shall we?";
+			echo -ne "$(show-prompt) ${fullcommand}";
+			${fullcommand};
+		else
+			echo 'Unfortunately the installation failed :(';
+		fi;
+		retval=$?;
+    #else
+    #    if [[ -n "${BASH_VERSION-}" ]]; then
+    #        printf 'bash: %scommand not found\n' "${1:+$1: }" 1>&2;
+	#	fi;
+    #fi;
+    return $retval
+}
+
+#ExpPS1="$(bash --rcfile <(echo "PS1='$PS1'") -i <<<'' 2>&1 |
+#              sed ':;$!{N;b};s/^\(.*\n\)*\(.*\)\n\2exit$/\2/p;d')"; echo ${ExpPS1}
