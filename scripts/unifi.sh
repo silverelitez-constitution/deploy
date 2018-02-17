@@ -65,3 +65,4 @@ ln -s /var/opt/UniFi/unifi.service /usr/lib/systemd/system/unifi.service
 systemctl enable /var/opt/UniFi/unifi.service
 systemctl start unifi.service
 systemctl status unifi.service
+sleep 2; reboot
