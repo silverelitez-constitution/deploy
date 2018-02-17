@@ -2,6 +2,9 @@
 # This deployment script has been lovingly crafted for
 DEPLOY_ID="centos"
 
+echo Hostname: $(hostname | cut -d'.' -f1)
+if [[ "$(hostname | cut -d'.' -f1)" == "dc" ]]; then echo "Refusing to turn a domain controller into a client. Aborting..."; exit; fi
+
 # enable these lines for manual deployment. eg not using the deploy function as root
 #if [ ! $1 ]; then echo 'Specify domain admin [user@realm.tld]'; exit 1; fi
 #input=$1
@@ -33,9 +36,9 @@ yum -y install realmd sssd oddjob oddjob-mkhomedir adcli samba-common
 
 realm leave; sleep 2
 
-realm discover $realm
+realm discover ${realm}
 
-realm join --unattended --no-password ${realm} #--user $user $realm
+realm join --unattended --no-password ${realm} | grep 'required-package: ' #--user $user $realm
 
 cat >/etc/sssd/sssd.conf << EOL
 
