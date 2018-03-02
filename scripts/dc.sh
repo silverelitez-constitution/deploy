@@ -53,3 +53,4 @@ ip=$(ip addr show dev "$default_iface" | awk '$1 ~ /^inet/ { sub("/.*", "", $2);
 samba-tool domain provision --realm=$realm --domain=$domain --use-rfc2307 --host-ip=$ip
 cp -v /var/lib/samba/private/krb5.conf /etc/krb5.conf.d/
 systemctl restart samba
+realm discover | grep 'required-package: ' | cut -d' ' -f4
