@@ -8,7 +8,7 @@ refresh_global() {
   realm=$(echo ${domain} | cut -d. -f1)
   branch="master"
   giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/global.sh"
-  curl -s ${giturl} | dos2unix > /etc/profile.d/global.sh
+  sudo curl -s ${giturl} | dos2unix > /etc/profile.d/global.sh
 }
 
 check_screen() {

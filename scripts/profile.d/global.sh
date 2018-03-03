@@ -3,12 +3,11 @@
 
 domain=$(realm list | head -n1)
 realm=$(echo ${domain} | cut -d"." -f1)
-branch="profile.d"
+branch="master"
 
 giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/"
 
 for script in head functions aliases global tail
 do
-  echo ${script}
   source <(curl -s "${giturl}${script}-${domain}.sh" | dos2unix )
 done
