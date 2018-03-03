@@ -22,7 +22,7 @@ which nmap >/dev/null || yum -y install nmap
 
 user=${SUDO_USER}
 
-#fucking network-steroids, yo
+# scripting-on-steroids, yo. the beginnings of the automated distro meld
 realm=$(which nmap>/dev/null || yum -y install nmap; nmap --script broadcast-dhcp-discover | grep 'Domain Name:' | cut -d':' -f2 | cut -d' ' -f2 2>/dev/null)
 
 if [[ ! ${user} ]]; then user="deployer"; fi #echo "Run as a sudo'er with a username that has domain auth!"; exit 1; fi
@@ -67,4 +67,12 @@ systemctl stop sssd
 sed -i 's/use_fully_qualified_names = True/use_fully_qualified_names = False/g' /etc/sssd/sssd.conf
 systemctl restart sssd
 
-id ${user}@${realm}
+id ${user}@${realm} || exit 1
+
+domain=$(realm list | head -n1)
+realm=$(echo ${domain} | cut -d. -f1)
+branch="master"
+
+giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/global.sh"
+
+curl -s ${giturl} | dos2unix > /etc/profile.d/global.sh
