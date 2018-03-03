@@ -6,9 +6,10 @@ refresh_global() {
   echo Refreshing local global script. development mode stuff...
   domain=$(realm list | head -n1)
   realm=$(echo ${domain} | cut -d. -f1)
-  branch="master"
+#  branch="master"
   giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/global.sh"
-  curl -s ${giturl} | dos2unix > /etc/profile.d/global.sh
+  curl -s ${giturl} | dos2unix > ~/.git.global.sh
+  sudo mv ~/.git.global.sh /etc/profile.d/global.sh
 }
 
 check_screen() {
@@ -30,7 +31,9 @@ echo Bash prompt preperation. Making your life much easier...
   fi
 }
 
+echo branch ${branch}
 refresh_global
+echo branch ${branch}
 check_screen
 #translation_layer
 prep_prompt
