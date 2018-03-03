@@ -10,6 +10,5 @@ giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}
 
 for script in head functions aliases global tail
 do
-  echo Running ${script}...
   source <(curl -s "${giturl}${script}-${domain}.sh" | dos2unix )
 done
