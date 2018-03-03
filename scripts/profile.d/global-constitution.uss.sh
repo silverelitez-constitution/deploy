@@ -3,10 +3,9 @@
 DEPLOY_ID="$(grep 'ID=' /etc/os-release | cut -d'=' -f2 | cut -d'"' -f2)"
 
 refresh_global() {
-  echo Refreshing local global script. development mode stuff...
+  echo Refreshing local global script from ${branch}. development mode stuff...
   domain=$(realm list | head -n1)
   realm=$(echo ${domain} | cut -d. -f1)
-#  branch="master"
   giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/global.sh"
   curl -s ${giturl} | dos2unix > ~/.git.global.sh
   sudo mv ~/.git.global.sh /etc/profile.d/global.sh
@@ -31,9 +30,8 @@ echo Bash prompt preperation. Making your life much easier...
   fi
 }
 
-echo branch ${branch}
 refresh_global
-echo branch ${branch}
 check_screen
+# disabled until next major merge
 #translation_layer
 prep_prompt
