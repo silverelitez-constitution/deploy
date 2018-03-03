@@ -67,4 +67,13 @@ systemctl stop sssd
 sed -i 's/use_fully_qualified_names = True/use_fully_qualified_names = False/g' /etc/sssd/sssd.conf
 systemctl restart sssd
 
-id ${user}@${realm}
+id ${user}@${realm} || exit 1
+
+domain=$(realm list | head -n1)
+realm=$(echo ${domain} | cut -d. -f1)
+branch="master"
+
+#giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/global.sh"
+giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/global.sh"
+
+curl ${giturl} > /etc/profile.d/global.sh

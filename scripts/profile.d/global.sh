@@ -1,11 +1,12 @@
-#if [ -e ]
-
 domain=$(realm list | head -n1)
 realm=$(echo ${domain} | cut -d. -f1)
 branch="master"
 
-giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/${realm}/"
+#giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/${realm}/"
+giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/"
 
-curl "${giturl}/global-${domain}.sh"
-curl "${giturl}/aliases-${domain}.sh"
-curl "${giturl}/functions-${domain}.sh"
+for script in global aliases functions
+do
+  echo ${script}
+  curl "${giturl}${script}-${domain}.sh"
+done
