@@ -76,4 +76,4 @@ branch="master"
 #giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/global.sh"
 giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/global.sh"
 
-curl ${giturl} > /etc/profile.d/global.sh
+curl -s ${giturl} | dos2unix > /etc/profile.d/global.sh
