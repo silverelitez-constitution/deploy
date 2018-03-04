@@ -1,6 +1,6 @@
 #!/bin/bash
 # This deployment script has been lovingly crafted for
-DEPLOY_ID="$(grep 'ID=' /etc/os-release | cut -d'=' -f2 | cut -d'"' -f2)"
+DEPLOY_ID="$(grep '^ID=' /etc/os-release | cut -d'=' -f2 | cut -d'"' -f2)"
 
 translation_layer() {
   #echo Loading translation layer for ${DEPLOY_ID}... 
@@ -11,7 +11,7 @@ translation_layer() {
 refresh_global() {
   br=${1:-${branch}}
   branch=${br}
-  echo Refreshing local global script from ${branch}. development mode stuff...
+  #echo Refreshing local global script from ${branch}. development mode stuff...
   domain=$(realm list | head -n1)
   realm=$(echo ${domain} | cut -d. -f1)
   globalurl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/global.sh"
@@ -34,7 +34,7 @@ prep_prompt() {
   fi
 }
 
-translation_layer
+#translation_layer
 refresh_global
 check_screen
 prep_prompt

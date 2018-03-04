@@ -41,7 +41,7 @@ mka() {
     cmd="${1}";
     shift;
     alias="${@}";
-    grep --color=auto "alias ${cmd}=" ~/.bash_aliases > /dev/null || echo alias "${cmd}"="\"${alias}\"" >> ~/.bash_aliases;
+    grep --color=never "alias ${cmd}=" ~/.bash_aliases > /dev/null || echo alias "${cmd}"="\"${alias}\"" >> ~/.bash_aliases;
     source ~/.bash_aliases
 }
 
