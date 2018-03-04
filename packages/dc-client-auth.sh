@@ -79,14 +79,16 @@ echo User is ${user}
 domain=$(echo $realm | cut -d'.' -f1)
 
 echo Installing required packages...
-yum --cacheonly -y install sssd oddjob oddjob-mkhomedir adcli samba-common
+#yum --cacheonly -y install sssd oddjob oddjob-mkhomedir adcli samba-common
+yum --quiet --cacheonly -y install $(realm discover ${realm} | grep 'required-package:' | cut -d':' -f2)
 
 echo Leaving currently joined realm...
 realm leave; sleep 2
 echo Discovering DHCP provided realm...
 realm discover ${realm}
 echo Joining ${realm}
-realm join --unattended --no-password ${realm} | grep 'required-package: ' #--user $user $realm
+#realm join --unattended --no-password ${realm} | grep 'required-package: ' #--user $user $realm
+realm join ${realm}
 
 echo "Writing sssd.conf..."
 cat >/etc/sssd/sssd.conf << EOL
