@@ -66,13 +66,10 @@ if [[ ! ${realm} ]]; then echo "The router/DHCP	server didn't return useful data
 
 domain=$(echo $realm | cut -d'.' -f1)
 
-yum -y update
-#yum -y install realmd sssd oddjob oddjob-mkhomedir adcli samba-common
+yum -y install sssd oddjob oddjob-mkhomedir adcli samba-common
 
 realm leave; sleep 2
-
 realm discover ${realm}
-
 realm join --unattended --no-password ${realm} | grep 'required-package: ' #--user $user $realm
 
 cat >/etc/sssd/sssd.conf << EOL
@@ -103,9 +100,3 @@ sed -i 's/use_fully_qualified_names = True/use_fully_qualified_names = False/g' 
 systemctl restart sssd
 
 id ${user}@${realm} || exit 1
-
-domain=$(realm list | head -n1)
-realm=$(echo ${domain} | cut -d. -f1)
-branch="master"
-
-giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/global.sh"

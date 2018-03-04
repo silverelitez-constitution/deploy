@@ -27,6 +27,13 @@ source ~/.bash-git-prompt/gitprompt.sh
 echo "thefuck disabled until python2 issue is resolved"
 #eval $(thefuck --alias)
 
+domain=$(realm list | head -n1)
+realm=$(echo ${domain} | cut -d"." -f1)
+branch="master"
+giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/resources/etc/motd"
+
+curl -s ${giturl} | dos2unix
+
 cal
 fortune
 date
