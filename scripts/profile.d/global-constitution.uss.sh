@@ -1,7 +1,6 @@
 #!/bin/bash
 # This deployment script has been lovingly crafted for
 DEPLOY_ID="$(grep 'ID=' /etc/os-release | cut -d'=' -f2 | cut -d'"' -f2)"
-yum makecache --quiet -y &
 
 refresh_global() {
   br=${1:-${branch}}
