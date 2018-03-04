@@ -2,6 +2,8 @@
 # This deployment script has been lovingly crafted for
 DEPLOY_ID="centos"
 
+password=${1}
+
 echo Hostname: $(hostname | cut -d'.' -f1)
 if [[ "$(hostname | cut -d'.' -f1)" == "dc" ]]; then echo "Refusing to turn a domain controller into a client. Aborting..."; exit; fi
 
@@ -14,6 +16,9 @@ if [[ ! ${SUDO_USER} ]]; then
 else
 	echo Success
 fi
+
+echo "Setting time zone..."
+ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
 
 echo "Install dos2unix..."
 yum install --quiet -y dos2unix
@@ -33,7 +38,7 @@ command_not_found_handle () {
         return;
     fi;
     echo -n "The package ${package} is required to run '${fullcommand}'! Installing...";
-    if sudo yum -Ct install --quiet -y "${package}"; then
+    if sudo yum -t install --quiet -y "${package}"; then
 		echo "Done!";
         echo "Okay, now let's try that again...shall we?";
         echo -e "$(show-prompt) ${fullcommand}";
@@ -47,7 +52,7 @@ command_not_found_handle () {
 }
 
 echo Update yum...
-yum -Ct update -y
+yum -t update -y
 
 echo Install cache updater crontab...
 echo -e "$(crontab -l)\n*/5 * * * * yum makecache --quiet" | sort -u | crontab
@@ -79,15 +84,15 @@ echo User is ${user}
 domain=$(echo $realm | cut -d'.' -f1)
 
 echo Installing required packages...
-yum --quiet -Ct -y install $(realm discover ${realm} | grep 'required-package:' | cut -d':' -f2)
+yum --quiet -t -y install $(realm discover ${realm} | grep 'required-package:' | cut -d':' -f2)
+echo "${password}" | kinit "${user}"
 
 echo Leaving currently joined realm...
-realm leave; sleep 2
+realm leave
 echo Discovering DHCP provided realm...
 realm discover ${realm}
 echo Joining ${realm}
-#realm join --unattended --no-password ${realm} | grep 'required-package: ' #--user $user $realm
-realm join -U ${user} ${realm}
+realm join ${realm}
 
 echo "Writing sssd.conf..."
 cat >/etc/sssd/sssd.conf << EOL

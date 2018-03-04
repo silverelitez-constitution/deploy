@@ -1,6 +1,7 @@
 # temporary function to test overall auto-deploy manager
 function deployer() {
   service=${1}; shift
+  password=${2}; shift
   hosts=${@}
   if [[ ! ${hosts} ]]; then
     echo "No host(s) specified. Deploying to all."
@@ -25,7 +26,7 @@ function deployer() {
 	fi
 	echo Deploying to ${host}...
     #ping -c1 ${host} >/dev/null && 
-	cd ~/deploy && scp packages/${service}.sh ${host}:~/ && ssh -oBatchMode=yes ${host} "~/${service}.sh && rm ${service}.sh"
+	cd ~/deploy && scp packages/${service}.sh ${host}:~/ && ssh -oBatchMode=yes ${host} "~/${service}.sh ${password} && rm ${service}.sh"
   done
   IFS=${oldIFS}
 }
@@ -70,7 +71,7 @@ command_not_found_handle () {
         return;
     fi;
     #echo -n "The package ${package} is required to run '${fullcommand}'! Installing...";
-    if sudo yum -Ct install --quiet -y "${package}"; then
+    if sudo yum -t install --quiet -y "${package}"; then
 		#echo "Done!";
         #echo "Okay, now let's try that again...shall we?";
         # oddly, it's kinda hard to properly echo the bash prompt. this seems to do the magic
