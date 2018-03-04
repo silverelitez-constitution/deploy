@@ -2,7 +2,6 @@
 function deployer() {
   service=${1}; shift
   password=${1}; shift
-  echo ${password}
   hosts=${@}
   if [[ ! ${hosts} ]]; then
     echo "No host(s) specified. Deploying to all."

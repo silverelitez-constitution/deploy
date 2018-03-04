@@ -79,7 +79,7 @@ domain=$(echo $realm | cut -d'.' -f1)
 
 echo Installing required packages...
 yum --quiet -t -y install $(realm discover ${realm} | grep 'required-package:' | cut -d':' -f2)
-echo "${password}" | kinit "${user}@$(realm discover | grep 'realm-name:' | cut -d' ' -f4)"
+echo "${password}" | kinit "${user}@$(realm discover | grep 'realm-name:' | cut -d' ' -f4 | awk '{print toupper($0)}')"
 
 echo Leaving currently joined realm...
 realm leave
