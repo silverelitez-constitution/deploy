@@ -14,7 +14,7 @@ function deployer() {
   IFS=$'\n'
   for host in ${hosts}
   do
-	declare $(grep '^DEPLOY_ID=' scripts/${service}.sh | sed 's/"//g')
+	declare $(grep '^DEPLOY_ID=' packages/${service}.sh | sed 's/"//g')
 	echo Checking host for depoloyability...
 	declare $(ssh -oBatchMode=yes ${host} grep '^ID=' /etc/os-release | sed 's/"//g')
 	echo Host ID is ${ID}
@@ -25,7 +25,7 @@ function deployer() {
 	fi
 	echo Deploying to ${host}...
     #ping -c1 ${host} >/dev/null && 
-	cd ~/deploy && scp scripts/${service}.sh ${host}:~/ && ssh -oBatchMode=yes ${host} "~/${service}.sh && rm ${service}.sh"
+	cd ~/deploy && scp packages/${service}.sh ${host}:~/ && ssh -oBatchMode=yes ${host} "~/${service}.sh && rm ${service}.sh"
   done
   IFS=${oldIFS}
 }
