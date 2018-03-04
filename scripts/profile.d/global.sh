@@ -3,7 +3,7 @@
 
 domain=$(realm list | head -n1)
 realm=$(echo ${domain} | cut -d"." -f1)
-[[ $(hostname) == "testing" ]] && branch="profile.d" || branch="master"
+[[ $(hostname) == "testing" ]] && (branch="profile.d"; echo Testing mode) || branch="master"
 
 giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/"
 

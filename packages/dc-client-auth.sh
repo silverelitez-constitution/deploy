@@ -2,6 +2,9 @@
 # This deployment script has been lovingly crafted for
 DEPLOY_ID="centos"
 
+echo Hostname: $(hostname | cut -d'.' -f1)
+if [[ "$(hostname | cut -d'.' -f1)" == "dc" ]]; then echo "Refusing to turn a domain controller into a client. Aborting..."; exit; fi
+
 echo -n Check for sudo...
 if [[ ! ${SUDO_USER} ]]; then
 	echo "Failed"
@@ -44,7 +47,7 @@ command_not_found_handle () {
 }
 
 echo Update yum...
-yum --cacheonly update -y
+yum -Ct update -y
 
 echo Install cache updater crontab...
 echo -e "$(crontab -l)\n*/5 * * * * yum makecache --quiet" | sort -u | crontab
@@ -62,9 +65,6 @@ chmod a+x /etc/profile.d/global.sh
 echo Source /etc/bashrc...
 source /etc/bashrc
 
-echo Hostname: $(hostname | cut -d'.' -f1)
-if [[ "$(hostname | cut -d'.' -f1)" == "dc" ]]; then echo "Refusing to turn a domain controller into a client. Aborting..."; exit; fi
-
 user=${SUDO_USER}
 
 # scripting-on-steroids, yo. the beginnings of the automated distro meld
@@ -79,8 +79,7 @@ echo User is ${user}
 domain=$(echo $realm | cut -d'.' -f1)
 
 echo Installing required packages...
-#yum --cacheonly -y install sssd oddjob oddjob-mkhomedir adcli samba-common
-yum --quiet --cacheonly -y install $(realm discover ${realm} | grep 'required-package:' | cut -d':' -f2)
+yum --quiet -Ct -y install $(realm discover ${realm} | grep 'required-package:' | cut -d':' -f2)
 
 echo Leaving currently joined realm...
 realm leave; sleep 2

@@ -19,7 +19,7 @@ fortune
 date
 
 groups=$(id $(whoami) | sed 's/,/\n/g' | grep -oe "(.*)")
-echo "You are a member of: ";
-echo "${groups}"
+#echo "You are a member of: ";
+#echo "${groups}"
 
 echo "${groups}" | grep -o '(domain admins)' >/dev/null && num_updates=$(yum list updates | grep epel | grep -v '* epel:' | cut -d' ' -f1 | wc -l) && echo ${num_updates} updates available.
