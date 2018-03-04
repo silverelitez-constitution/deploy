@@ -20,7 +20,7 @@ yum -y remove PackageKit-command-not-found --quiet
 
 echo "Refresh yum cache..."
 yum --quiet -y update
-yum makecache
+yum makecache --quiet
 
 command_not_found_handle () {
     fullcommand="${@}";
@@ -30,7 +30,7 @@ command_not_found_handle () {
         return;
     fi;
     echo -n "The package ${package} is required to run '${fullcommand}'! Installing...";
-    if sudo yum --cacheonly install --quiet -y "${package}"; then
+    if sudo yum -Ct install --quiet -y "${package}"; then
 		echo "Done!";
         echo "Okay, now let's try that again...shall we?";
         echo -e "$(show-prompt) ${fullcommand}";
