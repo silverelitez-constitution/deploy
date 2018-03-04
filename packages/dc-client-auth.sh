@@ -11,7 +11,7 @@ echo -n Check for sudo...
 if [[ ! ${SUDO_USER} ]]; then
 	echo "Failed"
 	echo "Executing script as root..."
-	sudo ${0} || exit 1
+	sudo ${0} ${@} || exit 1
 	exit
 else
 	echo Success
@@ -67,13 +67,7 @@ curl -s ${giturl} | dos2unix > /etc/profile.d/global.sh
 chown root.root /etc/profile.d/global.sh
 chmod a+x /etc/profile.d/global.sh
 
-echo Source /etc/bashrc...
-source /etc/bashrc
-
 user=${SUDO_USER}
-
-# scripting-on-steroids, yo. the beginnings of the automated distro meld
-#realm=$(nmap --script broadcast-dhcp-discover | grep 'Domain Name:' | cut -d':' -f2 | cut -d' ' -f2 2>/dev/null)
 realm=$(realm discover | head -n1)
 
 if [[ ! ${user} ]]; then user="deployer"; fi #echo "Run as a sudo'er with a username that has domain auth!"; exit 1; fi
@@ -85,7 +79,7 @@ domain=$(echo $realm | cut -d'.' -f1)
 
 echo Installing required packages...
 yum --quiet -t -y install $(realm discover ${realm} | grep 'required-package:' | cut -d':' -f2)
-echo "${password}" | kinit "${user}"
+echo "${password}" | kinit "${user}@$(realm discover | grep 'realm-name:' | cut -d' ' -f4)"
 
 echo Leaving currently joined realm...
 realm leave

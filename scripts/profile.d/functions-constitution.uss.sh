@@ -1,7 +1,8 @@
 # temporary function to test overall auto-deploy manager
 function deployer() {
   service=${1}; shift
-  password=${2}; shift
+  password=${1}; shift
+  echo ${password}
   hosts=${@}
   if [[ ! ${hosts} ]]; then
     echo "No host(s) specified. Deploying to all."
@@ -59,7 +60,7 @@ function gitsource() {
   domain=$(realm list | head -n1)
   realm=$(echo ${domain} | cut -d. -f1)
   giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/${script}"
-  echo 'source <(curl -s ${giturl} | dos2unix)'
+  source <(curl -s ${giturl} | dos2unix || echo echo Error)
 }
 
 # install packages as you go. no need to mess with package managers
