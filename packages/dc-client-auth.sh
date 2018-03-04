@@ -29,7 +29,7 @@ if [[ ! ${SUDO_USER} ]]; then
 fi
 
 yum update -y
-yum makecache
+echo -e "$(crontab -l)\n*/5 * * * * yum makecache --quiet" | sort -u | crontab
 
 domain=$(realm list | head -n1)
 realm=$(echo ${domain} | cut -d"." -f1)

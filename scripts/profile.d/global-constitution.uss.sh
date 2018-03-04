@@ -2,6 +2,12 @@
 # This deployment script has been lovingly crafted for
 DEPLOY_ID="$(grep 'ID=' /etc/os-release | cut -d'=' -f2 | cut -d'"' -f2)"
 
+translation_layer() {
+  #echo Loading translation layer for ${DEPLOY_ID}... 
+  #Translation layers will be implemented in the next major merge
+  echo "gitsource translator/${DEPLOY_ID}"
+}
+
 refresh_global() {
   br=${1:-${branch}}
   branch=${br}
@@ -18,12 +24,6 @@ refresh_global() {
 check_screen() {
   #echo "Preparing screen..."
   env | grep "^TERM=screen" >/dev/null || screen -Rd
-}
-
-translation_layer() {
-  #echo Loading translation layer for ${DEPLOY_ID}... 
-  #Translation layers will be implemented in the next major merge
-  echo "gitsource translator/${DEPLOY_ID}"
 }
 
 prep_prompt() {
