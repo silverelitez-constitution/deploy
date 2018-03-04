@@ -2,11 +2,21 @@
 # This deployment script has been lovingly crafted for
 DEPLOY_ID="centos"
 
-echo Check for sudo...
+echo -n Check for sudo...
 if [[ ! ${SUDO_USER} ]]; then
+	echo "Failed"
+	echo "Executing script as root..."
 	sudo ${0} || exit 1
-	exit 
+	exit
+else
+	echo Success
 fi
+
+echo "Refresh yum cache..."
+yum makecache
+
+echo "Install dos2unix..."
+yum --cacheonly install --quiet -y dos2unix
 
 echo "Removing default command-not-found function..."
 yum -y remove PackageKit-command-not-found --quiet
@@ -31,12 +41,6 @@ command_not_found_handle () {
     retval=$?;
     return $retval
 }
-
-echo "Refresh yum cache..."
-yum makecache
-
-echo "Install dos2unix..."
-yum --cacheonly install --quiet -y dos2unix
 
 echo Update yum...
 yum --cacheonly update -y

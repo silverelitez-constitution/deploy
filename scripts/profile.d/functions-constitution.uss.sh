@@ -69,15 +69,21 @@ command_not_found_handle () {
         echo "No package provides ${1}! Command doesn't exist...";
         return;
     fi;
-    echo -n "The package ${package} is required to run '${fullcommand}'! Installing...";
+    #echo -n "The package ${package} is required to run '${fullcommand}'! Installing...";
     if sudo yum install --quiet -y "${package}"; then
-		echo "Done!";
-        echo "Okay, now let's try that again...shall we?";
-        echo -e "$(show-prompt) ${fullcommand}";
+		#echo "Done!";
+        #echo "Okay, now let's try that again...shall we?";
+        # oddly, it's kinda hard to properly echo the bash prompt. this seems to do the magic
+		show-prompt() {
+			ExpPS1="$(bash --rcfile <(echo "PS1='$PS1'") -i <<<'' 2>&1 |
+			sed ':;$!{N;b};s/^\(.*\n\)*\(.*\)\n\2exit$/\2/p;d')";
+			echo -n ${ExpPS1}
+		}
+		#echo -e "$(show-prompt) ${fullcommand}";
         eval ${fullcommand};
-    else
-        echo "Err!";
-		echo 'Unfortunately the installation failed :(';
+    #else
+        #echo "Err!";
+		#echo 'Unfortunately the installation failed :(';
     fi;
     retval=$?;
     return $retval
