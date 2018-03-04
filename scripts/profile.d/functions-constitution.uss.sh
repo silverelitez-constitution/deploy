@@ -1,6 +1,8 @@
 # temporary function to test overall auto-deploy manager
 function deployer() {
   service=${1}; shift
+  password=${1}; shift
+  echo ${password}
   hosts=${@}
   if [[ ! ${hosts} ]]; then
     echo "No host(s) specified. Deploying to all."
@@ -25,7 +27,7 @@ function deployer() {
 	fi
 	echo Deploying to ${host}...
     #ping -c1 ${host} >/dev/null && 
-	cd ~/deploy && scp packages/${service}.sh ${host}:~/ && ssh -oBatchMode=yes ${host} "~/${service}.sh && rm ${service}.sh"
+	cd ~/deploy && scp packages/${service}.sh ${host}:~/ && ssh -oBatchMode=yes ${host} "~/${service}.sh ${password} && rm ${service}.sh"
   done
   IFS=${oldIFS}
 }
@@ -58,7 +60,7 @@ function gitsource() {
   domain=$(realm list | head -n1)
   realm=$(echo ${domain} | cut -d. -f1)
   giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/${script}"
-  echo 'source <(curl -s ${giturl} | dos2unix)'
+  source <(curl -s ${giturl} | dos2unix || echo echo Error)
 }
 
 # install packages as you go. no need to mess with package managers
@@ -69,15 +71,21 @@ command_not_found_handle () {
         echo "No package provides ${1}! Command doesn't exist...";
         return;
     fi;
-    echo -n "The package ${package} is required to run '${fullcommand}'! Installing...";
-    if sudo yum install --quiet -y "${package}"; then
-		echo "Done!";
-        echo "Okay, now let's try that again...shall we?";
-        echo -e "$(show-prompt) ${fullcommand}";
+    #echo -n "The package ${package} is required to run '${fullcommand}'! Installing...";
+    if sudo yum -t install --quiet -y "${package}"; then
+		#echo "Done!";
+        #echo "Okay, now let's try that again...shall we?";
+        # oddly, it's kinda hard to properly echo the bash prompt. this seems to do the magic
+		show-prompt() {
+			ExpPS1="$(bash --rcfile <(echo "PS1='$PS1'") -i <<<'' 2>&1 |
+			sed ':;$!{N;b};s/^\(.*\n\)*\(.*\)\n\2exit$/\2/p;d')";
+			echo -n ${ExpPS1}
+		}
+		#echo -e "$(show-prompt) ${fullcommand}";
         eval ${fullcommand};
-    else
-        echo "Err!";
-		echo 'Unfortunately the installation failed :(';
+    #else
+        #echo "Err!";
+		#echo 'Unfortunately the installation failed :(';
     fi;
     retval=$?;
     return $retval

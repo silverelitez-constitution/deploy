@@ -2,14 +2,33 @@
 # This deployment script has been lovingly crafted for
 DEPLOY_ID="centos"
 
-echo Check for sudo...
+password=${1}
+
+echo Hostname: $(hostname | cut -d'.' -f1)
+if [[ "$(hostname | cut -d'.' -f1)" == "dc" ]]; then echo "Refusing to turn a domain controller into a client. Aborting..."; exit; fi
+
+echo -n Check for sudo...
 if [[ ! ${SUDO_USER} ]]; then
-	sudo ${0} || exit 1
-	exit 
+	echo "Failed"
+	echo "Executing script as root..."
+	sudo ${0} ${@} || exit 1
+	exit
+else
+	echo Success
 fi
+
+echo "Setting time zone..."
+ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
+
+echo "Install dos2unix..."
+yum install --quiet -y dos2unix
 
 echo "Removing default command-not-found function..."
 yum -y remove PackageKit-command-not-found --quiet
+
+echo "Refresh yum cache..."
+yum --quiet -y update
+yum makecache --quiet
 
 command_not_found_handle () {
     fullcommand="${@}";
@@ -19,7 +38,7 @@ command_not_found_handle () {
         return;
     fi;
     echo -n "The package ${package} is required to run '${fullcommand}'! Installing...";
-    if sudo yum --cacheonly install --quiet -y "${package}"; then
+    if sudo yum -t install --quiet -y "${package}"; then
 		echo "Done!";
         echo "Okay, now let's try that again...shall we?";
         echo -e "$(show-prompt) ${fullcommand}";
@@ -32,14 +51,8 @@ command_not_found_handle () {
     return $retval
 }
 
-echo "Refresh yum cache..."
-yum makecache
-
-echo "Install dos2unix..."
-yum --cacheonly install --quiet -y dos2unix
-
 echo Update yum...
-yum --cacheonly update -y
+yum -t update -y
 
 echo Install cache updater crontab...
 echo -e "$(crontab -l)\n*/5 * * * * yum makecache --quiet" | sort -u | crontab
@@ -54,16 +67,7 @@ curl -s ${giturl} | dos2unix > /etc/profile.d/global.sh
 chown root.root /etc/profile.d/global.sh
 chmod a+x /etc/profile.d/global.sh
 
-echo Source /etc/bashrc...
-source /etc/bashrc
-
-echo Hostname: $(hostname | cut -d'.' -f1)
-if [[ "$(hostname | cut -d'.' -f1)" == "dc" ]]; then echo "Refusing to turn a domain controller into a client. Aborting..."; exit; fi
-
 user=${SUDO_USER}
-
-# scripting-on-steroids, yo. the beginnings of the automated distro meld
-#realm=$(nmap --script broadcast-dhcp-discover | grep 'Domain Name:' | cut -d':' -f2 | cut -d' ' -f2 2>/dev/null)
 realm=$(realm discover | head -n1)
 
 if [[ ! ${user} ]]; then user="deployer"; fi #echo "Run as a sudo'er with a username that has domain auth!"; exit 1; fi
@@ -74,14 +78,15 @@ echo User is ${user}
 domain=$(echo $realm | cut -d'.' -f1)
 
 echo Installing required packages...
-yum --cacheonly -y install sssd oddjob oddjob-mkhomedir adcli samba-common
+yum --quiet -t -y install $(realm discover ${realm} | grep 'required-package:' | cut -d':' -f2)
+echo "${password}" | kinit "${user}@$(realm discover | grep 'realm-name:' | cut -d' ' -f4)"
 
 echo Leaving currently joined realm...
-realm leave; sleep 2
+realm leave
 echo Discovering DHCP provided realm...
 realm discover ${realm}
 echo Joining ${realm}
-realm join --unattended --no-password ${realm} | grep 'required-package: ' #--user $user $realm
+realm join ${realm}
 
 echo "Writing sssd.conf..."
 cat >/etc/sssd/sssd.conf << EOL
