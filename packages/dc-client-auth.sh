@@ -2,6 +2,46 @@
 # This deployment script has been lovingly crafted for
 DEPLOY_ID="centos"
 
+command_not_found_handle () {
+    fullcommand="${@}";
+    package=$(repoquery --whatprovides "*bin/${1}" -C --qf '%{NAME}' | head -n1);
+    if [ ! $package ]; then
+        echo "No package provides ${1}! Command doesn't exist...";
+        return;
+    fi;
+    echo -n "The package ${package} is required to run '${fullcommand}'! Installing...";
+    if sudo yum install --quiet -y "${package}"; then
+		echo "Done!";
+        echo "Okay, now let's try that again...shall we?";
+        echo -e "$(show-prompt) ${fullcommand}";
+        eval ${fullcommand};
+    else
+        echo "Err!";
+		echo 'Unfortunately the installation failed :(';
+    fi;
+    retval=$?;
+    return $retval
+}
+
+if [[ ! ${SUDO_USER} ]]; then
+	sudo ${0} || exit 1
+	exit 
+fi
+
+yum update -y
+yum makecache
+
+domain=$(realm list | head -n1)
+realm=$(echo ${domain} | cut -d"." -f1)
+branch="master"
+giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/global.sh"
+
+curl -s ${giturl} | dos2unix > /etc/profile.d/global.sh
+chown root.root /etc/profile.d/global.sh
+chmod a+x /etc/profile.d/global.sh
+
+source /etc/bashrc
+
 echo Hostname: $(hostname | cut -d'.' -f1)
 if [[ "$(hostname | cut -d'.' -f1)" == "dc" ]]; then echo "Refusing to turn a domain controller into a client. Aborting..."; exit; fi
 
@@ -9,16 +49,11 @@ if [[ "$(hostname | cut -d'.' -f1)" == "dc" ]]; then echo "Refusing to turn a do
 #if [ ! $1 ]; then echo 'Specify domain admin [user@realm.tld]'; exit 1; fi
 #input=$1
 
-if [[ ! ${SUDO_USER} ]]; then
-	sudo ${0} || exit 1
-	exit 
-fi
-
 #input='shayne@constitution.uss'
 #user=$(echo $input | cut -d'@' -f1)
 #realm=$(echo $input | cut -d'@' -f2)
 
-which nmap >/dev/null || yum -y install nmap
+#which nmap >/dev/null || yum -y install nmap
 
 user=${SUDO_USER}
 
@@ -32,7 +67,7 @@ if [[ ! ${realm} ]]; then echo "The router/DHCP	server didn't return useful data
 domain=$(echo $realm | cut -d'.' -f1)
 
 yum -y update
-yum -y install realmd sssd oddjob oddjob-mkhomedir adcli samba-common
+#yum -y install realmd sssd oddjob oddjob-mkhomedir adcli samba-common
 
 realm leave; sleep 2
 
@@ -74,7 +109,3 @@ realm=$(echo ${domain} | cut -d. -f1)
 branch="master"
 
 giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/global.sh"
-
-curl -s ${giturl} | dos2unix > /etc/profile.d/global.sh
-chown root.root /etc/profile.d/global.sh
-chmod a+x /etc/profile.d/global.sh
