@@ -88,7 +88,7 @@ echo Discovering DHCP provided realm...
 realm discover ${realm}
 echo Joining ${realm}
 #realm join --unattended --no-password ${realm} | grep 'required-package: ' #--user $user $realm
-realm join ${realm}
+realm join -U ${user} ${realm}
 
 echo "Writing sssd.conf..."
 cat >/etc/sssd/sssd.conf << EOL
