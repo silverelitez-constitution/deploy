@@ -70,7 +70,7 @@ command_not_found_handle () {
         return;
     fi;
     #echo -n "The package ${package} is required to run '${fullcommand}'! Installing...";
-    if sudo yum install --quiet -y "${package}"; then
+    if sudo yum --cacheonly install --quiet -y "${package}"; then
 		#echo "Done!";
         #echo "Okay, now let's try that again...shall we?";
         # oddly, it's kinda hard to properly echo the bash prompt. this seems to do the magic

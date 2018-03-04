@@ -12,14 +12,15 @@ else
 	echo Success
 fi
 
-echo "Refresh yum cache..."
-yum makecache
-
 echo "Install dos2unix..."
-yum --cacheonly install --quiet -y dos2unix
+yum install --quiet -y dos2unix
 
 echo "Removing default command-not-found function..."
 yum -y remove PackageKit-command-not-found --quiet
+
+echo "Refresh yum cache..."
+yum --quiet -y update
+yum makecache
 
 command_not_found_handle () {
     fullcommand="${@}";
