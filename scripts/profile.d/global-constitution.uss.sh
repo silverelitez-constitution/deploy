@@ -22,9 +22,9 @@ check_screen() {
 }
 
 translation_layer() {
-  echo Loading translation layer for ${DEPLOY_ID}... 
+  #echo Loading translation layer for ${DEPLOY_ID}... 
   #Translation layers will be implemented in the next major merge
-  echo "gitsource translator\${DEPLOY_ID}"
+  echo "gitsource translator/${DEPLOY_ID}"
 }
 
 prep_prompt() {
