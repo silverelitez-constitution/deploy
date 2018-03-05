@@ -6,12 +6,12 @@ source ~/.bash-git-prompt/gitprompt.sh
 
 eval $(thefuck --alias)
 
-domain=$(realm list | head -n1)
+domain=$(sudo realm list | head -n1)
 realm=$(echo ${domain} | cut -d"." -f1)
 branch="master"
 motd="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/resources/etc/motd"
 
-curl -s ${motd} | dos2unix
+curl -s ${motd} | sed 's/^404:.*/echo 404 error/g' | sed 's/^400:.*/echo 400 error/g' | dos2unix
 
 cal
 fortune
