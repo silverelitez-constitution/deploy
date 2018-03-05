@@ -56,38 +56,66 @@ function sshw() { while ! ssh "${@}"; do sleep 1; done }
 function gitsource() {
   script=${1:-default.sh}
   branch=${2:-master}
-  domain=$(realm list | head -n1)
+  domain=$(sudo grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
   realm=$(echo ${domain} | cut -d. -f1)
-  giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/${script}"
-  source <(curl -s ${giturl} | dos2unix || echo echo Error)
+  giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/${script}"
+  source <(curl -s ${giturl} | sed 's/^404:.*//g' | dos2unix || echo echo Error)
+}
+
+function gitcat() {
+  script=${1:-default.sh}
+  branch=${2:-master}
+  domain=$(sudo grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
+  realm=$(echo ${domain} | cut -d. -f1)
+  giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/${script}"
+  curl -s ${giturl} | dos2unix || echo echo Error;
 }
 
 # install packages as you go. no need to mess with package managers
 command_not_found_handle () {
-    fullcommand="${@}";
-    package=$(repoquery --whatprovides "*bin/${1}" -C --qf '%{NAME}' | head -n1);
-    if [ ! $package ]; then
-        echo "No package provides ${1}! Command doesn't exist...";
-        return;
-    fi;
-    #echo -n "The package ${package} is required to run '${fullcommand}'! Installing...";
-    if sudo yum -t install --quiet -y "${package}"; then
-		#echo "Done!";
-        #echo "Okay, now let's try that again...shall we?";
-        # oddly, it's kinda hard to properly echo the bash prompt. this seems to do the magic
-		show-prompt() {
-			ExpPS1="$(bash --rcfile <(echo "PS1='$PS1'") -i <<<'' 2>&1 |
-			sed ':;$!{N;b};s/^\(.*\n\)*\(.*\)\n\2exit$/\2/p;d')";
-			echo -n ${ExpPS1}
-		}
-		#echo -e "$(show-prompt) ${fullcommand}";
-        eval ${fullcommand};
-    #else
-        #echo "Err!";
-		#echo 'Unfortunately the installation failed :(';
-    fi;
-    retval=$?;
-    return $retval
+  fullcommand="${@}";
+  #package=$(repoquery --whatprovides "*bin/${1}" -C --qf '%{NAME}' | head -n1);
+  echo "Command not found: ${1}"
+  package=$(P_NAME ${1} |head -n1)
+  if [ ! $package ]; then
+    echo "No package provides ${1}! Command doesn't exist...";
+    return;
+  fi;
+  echo -n "The package ${package} is required to run '${fullcommand}'! Installing...";
+  if sudo ${P_INSTALL} "${package}" >/dev/null; then
+	echo "Done!";
+    echo "Okay, now let's try that again...shall we?";
+    # oddly, it's kinda hard to properly echo the bash prompt. this seems to do the magic
+	show-prompt() {
+	  ExpPS1="$(bash --rcfile <(echo "PS1='$PS1'") -i <<<'' 2>&1 |
+	  sed ':;$!{N;b};s/^\(.*\n\)*\(.*\)\n\2exit$/\2/p;d')";
+	  echo -n ${ExpPS1}
+	}
+	echo -e "$(show-prompt) ${fullcommand}";
+    eval ${fullcommand};
+  else
+    echo "Err!";
+	echo 'Unfortunately the installation failed :(';
+  fi;
+  retval=$?;
+  return $retval;
+}
+
+# remove package/binary
+r() {
+  echo 'Flushing hash tables...';
+  for package in "${@}";
+  do
+    for binary in $(P_BINARY $package);
+    do
+      hash -d ${binary} 2> /dev/null;
+    done;
+  done;
+  if sudo ${P_REMOVE} ${@}; then
+	echo 'Package has been removed!';
+  else
+    echo 'Package removal failed!';
+  fi
 }
 
 # oddly, it's kinda hard to properly echo the bash prompt. this seems to do the magic
@@ -95,20 +123,4 @@ show-prompt() {
     ExpPS1="$(bash --rcfile <(echo "PS1='$PS1'") -i <<<'' 2>&1 |
      sed ':;$!{N;b};s/^\(.*\n\)*\(.*\)\n\2exit$/\2/p;d')";
     echo -n ${ExpPS1}
-}
-
-# quick way to remove a package. next merge will implement binary reference instead of just package
-yumr() {
-    if sudo yum remove ${@}; then
-        echo 'Flushing hash tables...';
-        for package in "${@}";
-        do
-            for binary in $(repoquery -l ${package} | grep bin | rev | cut -d'/' -f1 | rev);
-            do
-                hash -d ${binary} 2> /dev/null;
-            done;
-        done;
-    else
-        echo 'Package removal failed!';
-    fi
 }
