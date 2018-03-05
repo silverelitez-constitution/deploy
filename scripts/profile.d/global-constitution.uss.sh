@@ -33,7 +33,7 @@ prep_prompt() {
 	P_INSTALL_PIP
 	sudo pip3.4 install --user --quiet thefuck;
   fi
-  [ -e /etc/profile.d/bash_completion.sh ] || sudo yum --quiet --cacheonly -y install *bash-complet*
+  [ -e /etc/profile.d/bash_completion.sh ] || [ -e /etc/bash/bashrc.d/bash_completion.sh ] || sudo PG_BASH_COMPLETION
   if [[ ! -d ~/.bash-git-prompt ]]; then 
     cd ~/ && git clone https://github.com/magicmonty/bash-git-prompt.git .bash-git-prompt --depth=1
   fi

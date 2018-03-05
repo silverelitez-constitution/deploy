@@ -5,6 +5,7 @@
 if [ -e /etc/debug ]; then set -x; debug=1; source /etc/debug; fi
 
 domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
+echo d
 realm=$(echo ${domain} | cut -d. -f1)
 if [ ${TESTING_BRANCH} ]; then 
   branch="${TESTING_BRANCH}"
