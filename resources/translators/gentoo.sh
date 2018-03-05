@@ -20,14 +20,13 @@ echo $REDHAT_SUPPORT_PRODUCT_VERSION
 echo 
 # will use case asap!! clean code, clean head.
 
-if [ ${ID} == "gentoo"];
+if [ ${ID} == "gentoo" ]; then
   P_INSTALL="emerge --keep-going "
-  
 fi
 
-if [ ${ID} == "centos"];
+if [ ${ID} == "centos" ]; then
   P_INSTALL="yum -t install -y "
-  P_NAME='$(repoquery --whatprovides "*bin/${1}" -C --qf '%{NAME}' | head -n1)'
+  P_NAME="repoquery --cache  -C --qf %{NAME} --whatprovides *bin/"
 fi
 
 # Bits that just happen to be common, put them here
@@ -41,13 +40,13 @@ P_INSTALL+=" --quiet "
 command_not_found_handle () {
   fullcommand="${@}";
   #package=$(repoquery --whatprovides "*bin/${1}" -C --qf '%{NAME}' | head -n1);
-  package=${P_NAME}
+  package=$(${P_NAME}${1} |head -n1)
   if [ ! $package ]; then
     echo "No package provides ${1}! Command doesn't exist...";
     return;
   fi;
   echo -n "The package ${package} is required to run '${fullcommand}'! Installing...";
-  if sudo "${P_INSTALL}" "${package}"; then
+  if sudo ${P_INSTALL} "${package}"; then
 	echo "Done!";
     echo "Okay, now let's try that again...shall we?";
     # oddly, it's kinda hard to properly echo the bash prompt. this seems to do the magic
@@ -66,7 +65,7 @@ command_not_found_handle () {
   return $retval
 }
 
-exit 0
+return || exit 0
 
 #DEPLOY_ID="gentoo"
 
