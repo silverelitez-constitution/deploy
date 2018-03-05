@@ -30,8 +30,8 @@ check_screen() {
 
 prep_prompt() {
   if [ ! which thefuck > /dev/null 2>&1 ]; then 
-    sudo yum --quiet -y install pip3.4 python34-devel
-	sudo pip3.4 install --quiet thefuck
+	P_INSTALL_PIP
+	sudo pip3.4 install --user --quiet thefuck;
   fi
   [ -e /etc/profile.d/bash_completion.sh ] || sudo yum --quiet --cacheonly -y install *bash-complet*
   if [[ ! -d ~/.bash-git-prompt ]]; then 
