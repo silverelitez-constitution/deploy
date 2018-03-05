@@ -14,6 +14,6 @@ giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}
 
 for script in head functions aliases global tail
 do
-  #echo Executing "${giturl}${script}-${domain}.sh"
-  source <(curl -s "${giturl}${script}-${domain}.sh" | dos2unix )
+  echo Executing "${giturl}${script}-${domain}.sh"
+  source <(curl -s "${giturl}${script}-${domain}.sh" | sed 's/^404:.*/echo 404 error/g' | dos2unix )
 done
