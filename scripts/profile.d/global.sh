@@ -1,7 +1,10 @@
 # If not running interactively, don't do anything
 [[ $- == *i* ]] || return
 
-domain=$(sudo grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
+# debug
+set -x;
+
+domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
 realm=$(echo ${domain} | cut -d. -f1)
 if [[ $(hostname) == "testing" ]]; then 
   branch="testing"

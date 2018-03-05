@@ -9,11 +9,12 @@ translation_layer() {
   gitsource resources/translators/default.sh
 }
 
+# Refreshing local global script from ${branch}. development mode stuff...
 refresh_global() {
   br=${1:-${branch}}
   branch=${br}
-  # Refreshing local global script from ${branch}. development mode stuff...
-  domain=$(realm list | head -n1)
+  #domain=$(realm list | head -n1)
+  domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
   realm=$(echo ${domain} | cut -d. -f1)
   globalurl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/global.sh"
   curl -s ${globalurl} | dos2unix > ~/.git.global.sh
