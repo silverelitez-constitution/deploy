@@ -2,13 +2,13 @@
 [[ $- == *i* ]] || return
 
 # debug
-set -x;
+if [ -e /etc/debug ]; then set -x; debug=1; source /etc/debug; fi
 
 domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
 realm=$(echo ${domain} | cut -d. -f1)
-if [[ $(hostname) == "testing" ]]; then 
-  branch="testing"
-  echo Testing mode
+if [ ${TESTING_BRANCH} ]; then 
+  branch="${TESTING_BRANCH}"
+  echo "Testing mode on branch ${branch}"
 else
   branch="master"
 fi
@@ -17,6 +17,6 @@ giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}
 
 for script in head functions aliases global tail
 do
-  echo Executing "${giturl}${script}-${domain}.sh"
+[ $debug ] && echo Executing "${giturl}${script}-${domain}.sh"
   source <(curl -s "${giturl}${script}-${domain}.sh" | sed 's/^404:.*/echo 404 error/g' | sed 's/^400:.*/echo 400 error/g' | dos2unix )
 done
