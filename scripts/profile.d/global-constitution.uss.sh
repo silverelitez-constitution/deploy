@@ -1,11 +1,12 @@
 #!/bin/bash
-# This deployment script has been lovingly crafted for
-DEPLOY_ID="$(grep '^ID=' /etc/os-release | cut -d'=' -f2 | cut -d'"' -f2)"
+# This deployment script has been lovingly crafted for 
+source /etc/os-release
 
 translation_layer() {
   # Loading translation layer for ${DEPLOY_ID}... 
   #Translation layers will be implemented in the next major merge
-  echo "gitsource translator/${DEPLOY_ID}"
+  gitsource resources/translators/${ID}.sh
+  gitsource resources/translators/default.sh
 }
 
 refresh_global() {
@@ -37,7 +38,7 @@ prep_prompt() {
   fi
 }
 
-#translation_layer
+translation_layer
 refresh_global
 check_screen
 prep_prompt
