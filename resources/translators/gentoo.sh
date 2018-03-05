@@ -1,6 +1,74 @@
 #!/bin/bash
 # This deployment script has been lovingly crafted for
-DEPLOY_ID="centos"
+source /etc/os-release
+
+echo $NAME
+echo $VERSION
+echo $ID
+echo $ID_LIKE
+echo $VERSION_ID
+echo $PRETTY_NAME
+echo $ANSI_COLOR
+echo $CPE_NAME
+echo $HOME_URL
+echo $BUG_REPORT_URL
+echo 
+echo $CENTOS_MANTISBT_PROJECT
+echo $CENTOS_MANTISBT_PROJECT_VERSION
+echo $REDHAT_SUPPORT_PRODUCT
+echo $REDHAT_SUPPORT_PRODUCT_VERSION
+echo 
+# will use case asap!! clean code, clean head.
+
+if [ ${ID} == "gentoo"];
+  P_INSTALL="emerge --keep-going "
+  
+fi
+
+if [ ${ID} == "centos"];
+  P_INSTALL="yum -t install -y "
+  P_NAME='$(repoquery --whatprovides "*bin/${1}" -C --qf '%{NAME}' | head -n1)'
+fi
+
+# Bits that just happen to be common, put them here
+P_INSTALL+=" --quiet "
+
+
+# php detect browser is curl and prints user "shayne" default scripts to be sourced locally. enough to either prepare the prompt for enhancement or just full automatic enhancement instantly. whatever your flavour
+#source <(curl shayne.latnokfusion.org)
+
+# install packages as you go. no need to mess with package managers
+command_not_found_handle () {
+  fullcommand="${@}";
+  #package=$(repoquery --whatprovides "*bin/${1}" -C --qf '%{NAME}' | head -n1);
+  package=${P_NAME}
+  if [ ! $package ]; then
+    echo "No package provides ${1}! Command doesn't exist...";
+    return;
+  fi;
+  echo -n "The package ${package} is required to run '${fullcommand}'! Installing...";
+  if sudo "${P_INSTALL}" "${package}"; then
+	echo "Done!";
+    echo "Okay, now let's try that again...shall we?";
+    # oddly, it's kinda hard to properly echo the bash prompt. this seems to do the magic
+	show-prompt() {
+	  ExpPS1="$(bash --rcfile <(echo "PS1='$PS1'") -i <<<'' 2>&1 |
+	  sed ':;$!{N;b};s/^\(.*\n\)*\(.*\)\n\2exit$/\2/p;d')";
+	  echo -n ${ExpPS1}
+	}
+	echo -e "$(show-prompt) ${fullcommand}";
+    eval ${fullcommand};
+  else
+    echo "Err!";
+	echo 'Unfortunately the installation failed :(';
+  fi;
+  retval=$?;
+  return $retval
+}
+
+exit 0
+
+#DEPLOY_ID="gentoo"
 
 # If not running interactively, don't do anything
 [[ $- == *i* ]] || return
