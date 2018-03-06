@@ -1,15 +1,15 @@
 #!/bin/bash
 export EDITOR='/usr/bin/nano'
 
-GIT_PROMPT_ONLY_IN_REPO=1;
-source ~/.bash-git-prompt/gitprompt.sh
+[ ! $GIT_PROMPT_ONLY_IN_REPO ] && GIT_PROMPT_ONLY_IN_REPO=1;
+[ ! $GIT_PROMPT_THEME ] && GIT_PROMPT_THEME=TruncatedPwd_WindowTitle_Ubuntu;
+source ~/.bash-git-prompt/gitprompt.sh;
 
 eval $(thefuck --alias)
 
-echo d
-domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
+[ ! $domain ] && domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
 realm=$(echo ${domain} | cut -d"." -f1)
-branch="master"
+
 motd="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/resources/etc/motd"
 
 [ $debug ] && echo ${motd}
@@ -22,6 +22,9 @@ date
 groups=$(id $(whoami) | sed 's/,/\n/g' | grep -oe "(.*)")
 
 # portage takes forever to generate update list. disabled during diag/sanity
-if [ ${ID} != 'gentoo' ]; then
-  echo "${groups}" | grep --color=never -e 'admin\|user' >/dev/null && num_updates=$(P_UPDATES | wc -l) && echo ${num_updates} updates available.
+if [[ ${ID} != 'gentoo' ]]; then
+  if echo "${groups}" | grep --color=never -e 'admin\|user' >/dev/null; then num_updates=$(P_UPDATES | wc -l)
+    echo ${num_updates} updates available.
+    [[ ${num_updates} -gt "0" ]] && P_UPDATES
+  fi
 fi

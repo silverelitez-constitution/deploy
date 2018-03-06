@@ -56,7 +56,7 @@ function sshw() { while ! ssh "${@}"; do sleep 1; done }
 function gitsource() {
   script=${1:-default.sh}
   branch=${2:-master}
-  domain=$(sudo grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
+  [ ! $domain ] && domain=$(sudo grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
   realm=$(echo ${domain} | cut -d. -f1)
   gitsurl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/${script}"
   source <(curl -s ${gitsurl} | sed 's/^404:.*/echo 404 error/g' | dos2unix || echo echo Error)
@@ -65,7 +65,7 @@ function gitsource() {
 function gitcat() {
   script=${1:-default.sh}
   branch=${2:-master}
-  domain=$(sudo grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
+  [ ! $domain ] && domain=$(sudo grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
   realm=$(echo ${domain} | cut -d. -f1)
   gitcurl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/${script}"
   curl -s ${gitcurl} | dos2unix || echo echo Error;

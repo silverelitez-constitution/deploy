@@ -4,8 +4,24 @@
 # debug
 if [ -e /etc/debug ]; then set -x; debug=1; source /etc/debug; fi
 
-domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
-echo d
+# custom configuration
+if [ -e /etc/config ]; then source /etc/config; fi
+
+domain=$(sudo realm list | head -n1)
+
+if [ ! $domain ]; then
+  echo "Hello and thank you for your interest in the Silver Elitez"
+  echo "Constitution Class single-system beta test. You are receiving"
+  echo "this message because your domain is not set. This will cause"
+  echo "the scripts to fail. If you understand that I cannot guarantee"
+  echo "any form of safety when testing these scripts, then go ahead"
+  echo "and put 'domain=constitution.uss' in '/etc/config'"
+  read
+  return
+fi
+
+# enabling multi-domain system for beta-testers
+[ ! $domain ] && domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
 realm=$(echo ${domain} | cut -d. -f1)
 if [ ${TESTING_BRANCH} ]; then 
   branch="${TESTING_BRANCH}"

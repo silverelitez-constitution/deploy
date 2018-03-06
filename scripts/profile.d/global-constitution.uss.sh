@@ -13,8 +13,8 @@ translation_layer() {
 refresh_global() {
   br=${1:-${branch}}
   branch=${br}
-  #domain=$(realm list | head -n1)
-  domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
+  #domain=$(sudo realm list | head -n1)
+  [ ! $domain ] && domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
   realm=$(echo ${domain} | cut -d. -f1)
   globalurl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/global.sh"
   curl -s ${globalurl} | dos2unix > ~/.git.global.sh

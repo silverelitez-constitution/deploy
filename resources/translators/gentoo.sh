@@ -13,3 +13,4 @@ P_UPDATES() { emerge -NDup world --quiet; }
 PG_BASH_COMPLETION() {
   eval sudo ${P_INSTALL} $(eix *bash-complet* | grep '/' | cut -d' ' -f2- | grep -v -e '^ ');
 }
+P_UPDATE() { sudo emerge -NDuav world; revdep-rebuild -i; }

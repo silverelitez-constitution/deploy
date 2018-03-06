@@ -15,6 +15,7 @@ alias l.='ls -d .* --color=auto'
 alias ll='ls -lah'
 alias ls='ls --color=auto'
 alias sudo='sudo '
+alias u="P_UPDATE"
 alias which='alias | /usr/bin/which --tty-only --read-alias --show-dot --show-tilde'
 alias yum='sudo yum'
 alias yumi='sudo yum -y install'
