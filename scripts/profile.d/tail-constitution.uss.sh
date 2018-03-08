@@ -5,6 +5,7 @@ export EDITOR='/usr/bin/nano'
 [ ! $GIT_PROMPT_THEME ] && GIT_PROMPT_THEME=TruncatedPwd_WindowTitle_Ubuntu;
 source ~/.bash-git-prompt/gitprompt.sh;
 
+echo "Loading prompt patcher..."
 eval $(thefuck --alias)
 
 [ ! $domain ] && domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
