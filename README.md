@@ -1,6 +1,19 @@
 # Unified Automatic Cloud System
 
-ALERT: Current scripts run very slowly (mainly due to github throttling)! A local caching solution or similar solution will be implemented to fix the issue
+This is a Proof-Of-Concept project to develop a fully automated system that pays homage to the automatic transmission
+in the way that can turn what is currently a very complicated and messy process to what most people don't even
+give a second thought to. Thus turning a complete waste of resources and time into a way for the average engineer
+to get more stuff done and be tied up with menial tasks.
+
+It's currnetly being set up in the way that would be fully turn-key with an initial set up of 15 minutes (automated, naturally)
+and the user only having to supply a domain name for the system to use. Authentication is still a little tricky due to the balance of
+security and ease-of-use. Most likely a Yubikey will be implemented.
+
+I'd like to reiterate that this _IS_ a _POC_. Despite this system being used to run and manage my network, it's NOT in 
+ANY WAY meant to serve as a production deployment system. But instead, parts of this system that work very well are welcomed
+to be adapted for your system as long as I get feedback on how it goes. :)
+
+ALERT: Current scripts run/curl very slowly (mainly due to github throttling). A local caching solution or similar solution will be implemented to fix the issue
 
 Quick Start
 -----
