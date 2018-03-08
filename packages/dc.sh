@@ -24,7 +24,7 @@ yum install -y samba46 samba46-winbind-clients samba46-winbind samba46-client sa
 rm -rf /etc/krb5.conf
 rm -rf /etc/samba/smb.conf
 
-realm=$1
+realm=${1:-}
 domain=$(echo $realm | cut -d'.' -f1)
 
 cat >/etc/systemd/system/samba.service << EOL
