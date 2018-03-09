@@ -20,3 +20,4 @@ alias which='alias | /usr/bin/which --tty-only --read-alias --show-dot --show-ti
 alias yum='sudo yum'
 alias yumi='sudo yum -y install'
 alias yums='yum search'
+alias pn="P_NAME"

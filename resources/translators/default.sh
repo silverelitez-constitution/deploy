@@ -10,3 +10,5 @@ echo "Got a problem? Let us know at ${BUG_REPORT_URL}!"
 # Bits that just happen to be common, put them here
 P_INSTALL+=" --quiet "
 P_REMOVE+=" --quiet "
+
+gitsource resources/translators/${ID}.sh

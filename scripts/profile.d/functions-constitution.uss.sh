@@ -3,7 +3,6 @@
 translation_layer() {
   # Loading translation layer for ${DEPLOY_ID}... 
   #Translation layers will be implemented in the next major merge
-  gitsource resources/translators/${ID}.sh
   gitsource resources/translators/default.sh
 }
 
