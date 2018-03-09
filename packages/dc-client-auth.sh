@@ -20,7 +20,9 @@ fi
 echo "Setting time zone..."
 ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
 
-echo "Install dos2unix..."
+echo "Install epel-release and dos2unix..."
+yum install -y epel-release --quiet
+yum update -y --quiet
 yum install --quiet -y dos2unix
 
 echo "Removing default command-not-found function..."

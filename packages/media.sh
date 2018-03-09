@@ -2,10 +2,8 @@
 # This deployment script has been lovingly crafted for
 DEPLOY_ID="centos"
 
-#password=${1}
-
 echo Hostname: $(hostname | cut -d'.' -f1)
-if [[ "$(hostname | cut -d'.' -f1)" == "dc" ]]; then echo "Refusing to turn a domain controller into a client. Aborting..."; exit; fi
+if [[ "$(hostname | cut -d'.' -f1)" != "media" ]]; then echo "Can only be deployed to the media server. Aborting.."; exit; fi
 
 echo -n Check for sudo...
 if [[ ! ${SUDO_USER} ]]; then
@@ -17,10 +15,7 @@ else
 	echo Success
 fi
 
-yum install -y epel-release
-yum update -y
-
-yum install -y git
+yum install -y git --quiet
 cd /usr/src
 git clone git://github.com/xbmc/xbmc.git
 XBMC=xbmc
