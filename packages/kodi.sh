@@ -1,3 +1,22 @@
+#!/bin/bash
+# This deployment script has been lovingly crafted for
+DEPLOY_ID="centos"
+
+#password=${1}
+
+echo Hostname: $(hostname | cut -d'.' -f1)
+if [[ "$(hostname | cut -d'.' -f1)" == "dc" ]]; then echo "Refusing to turn a domain controller into a client. Aborting..."; exit; fi
+
+echo -n Check for sudo...
+if [[ ! ${SUDO_USER} ]]; then
+	echo "Failed"
+	echo "Executing script as root..."
+	sudo ${0} ${@} || exit 1
+	exit
+else
+	echo Success
+fi
+
 yum install -y epel-release
 yum update -y
 
