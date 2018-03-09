@@ -1,0 +1,76 @@
+#!/bin/bash
+# This deployment script has been lovingly crafted for
+[ $debug ] && set -x;
+
+DEPLOY_ID="centos"
+
+echo Hostname: $(hostname | cut -d'.' -f1)
+if [[ "$(hostname | cut -d'.' -f1)" != "media" ]]; then echo "Can only be deployed to the media server. Aborting.."; exit; fi
+
+echo -n Check for sudo...
+if [[ ! ${SUDO_USER} ]]; then
+	echo "Failed"
+	echo "Executing script as root..."
+	sudo ${0} ${@} || exit 1
+	exit
+else
+	echo Success
+fi
+
+echo "Prepare git..."
+[ ! which git ] && yum install -y git --quiet
+
+cd /usr/src
+git clone git://github.com/xbmc/xbmc.git
+XBMC=xbmc
+
+echo "Install needed packages..."
+sudo rpm -Uvh https://www.rpmfind.net/linux/dag/redhat/el5/en/x86_64/dag/RPMS/rpmforge-release-0.3.6-1.el5.rf.x86_64.rpm
+sudo yum -y install autoconf automake libtool libvdpau-devel libva-devel libbluray-devel libdca-devel librtmp-devel lame-devel 
+
+#make -C tools/depends/native/JsonSchemaBuilder/
+#sudo cp tools/depends/native/JsonSchemaBuilder/bin/JsonSchemaBuilder /usr/local/bin
+#sudo chmod 775 /usr/local/bin/JsonSchemaBuilder
+
+#sudo sed --in-place=.BAK 's#<\(afp_protocol\|libafpclient\).h>#<afpfs-ng/\1.h>#' /usr/include/afpfs-ng/afp.h
+
+#sudo ln -s /usr/lib/mysql/libmysqlclient.so.??.0.0 /usr/lib/libmysqlclient.so
+
+#cd ${XBMC} # XBMC=xbmc when you used git and XBMC=xbmc-master when you downloaded the ZIP file
+#./bootstrap
+
+wget https://github.com/downloads/sahlberg/libnfs/libnfs-1.3.0.tar.gz
+tar -xzf libnfs-1.3.0.tar.gz
+cd libnfs-1.3.0
+./bootstrap
+./configure
+make
+make install
+su -c 'echo /usr/local/lib > /etc/ld.so.conf.d/local-libs.conf'
+ldconfig
+cd ..
+
+sed --in-place=.BAK 's#<\(afp_protocol\|libafpclient\).h>#<afpfs-ng/\1.h>#' /usr/include/afpfs-ng/afp.h
+#Just to appease the configure application, you may have to show it where libmysqlclient is.
+
+sudo ln -s /usr/lib/mysql/libmysqlclient.so.??.0.0 /usr/lib/libmysqlclient.so
+#Now we are ready for to build Kodi. First, run the bootstrap command:
+
+cd ${XBMC} # XBMC=xbmc when you used git and XBMC=xbmc-master when you downloaded the ZIP file
+./bootstrap
+#Are you going to use LIRC and a remote control? Starting with Fedora 12 the default LIRC socket file name has changed to /var/run/lirc/lircd (from /dev/lircd). You might need to provide the configure script with this parameter before compiling XBMC:
+
+#./configure --with-lirc-device=/var/run/lirc/lircd
+#If not, simply do
+
+#./configure
+#Or if you want to have XBMC/Kodi installed in an alternative directory (e.g. /opt/kodi) use
+
+./configure --prefix=/opt/kodi
+#There are a lot more options available for the configure script. To see all of them use
+
+#./configure --help
+#With the above installed packages this should go smoothly :)
+
+#7 Build
+make
