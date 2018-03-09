@@ -29,9 +29,9 @@ check_screen() {
 }
 
 prep_prompt() {
-  if [ ! which thefuck > /dev/null 2>&1 ]; then 
-	P_INSTALL_PIP
-	sudo pip3.4 install --user --quiet thefuck;
+  if ! which thefuck > /dev/null 2>&1; then 
+    P_INSTALL_PIP
+    sudo pip3.4 install --user --quiet thefuck;
   fi
   [ -e /etc/profile.d/bash_completion.sh ] || [ -e /etc/bash/bashrc.d/bash_completion.sh ] || sudo PG_BASH_COMPLETION
   if [[ ! -d ~/.bash-git-prompt ]]; then 

@@ -17,7 +17,7 @@ if [ -e /etc/silverelitez/debug ]; then set -x; debug=1; source /etc/silverelite
 if [ -e /etc/silverelitez/config ]; then source /etc/silverelitez/config; fi
 
 [ ! $domain ] && { echo -n Discovering domain...;domain=$(sudo realm discover | head -n1);echo $domain; }
-[ ! $domain ] && { echo -n Reading resolv.conf for domain...;domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2); echo $domain}
+[ ! $domain ] && { echo -n Reading resolv.conf for domain...;domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2); echo $domain; }
 
 if [ ! $domain ]; then
   echo 
