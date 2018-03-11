@@ -10,6 +10,7 @@ P_BINARY() { equery files ${1}| grep 'bin/' | rev | cut -d'/' -f1 | rev; }
 P_INSTALL_PIP() { sudo emerge --quiet pip gcc python-dev; }
 P_UPDATES() { emerge -NDup world --quiet; }
 PG_BASH_COMPLETION() { eval sudo ${P_INSTALL} $(eix *bash-complet* | grep '/' | cut -d' ' -f2- | grep -v -e '^ '); }
-P_UPDATE() { sudo emerge -NDuav world; revdep-rebuild -i; }
+P_UPDATE() { sudo emerge --sync --quiet; }
+P_UPGRADE() { sudo emerge -NDuav world; revdep-rebuild -i; }
 
 _SHELL_TRANSLATOR=1

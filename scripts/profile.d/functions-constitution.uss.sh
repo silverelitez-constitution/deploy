@@ -39,31 +39,24 @@ prep_prompt() {
 # - User Environment functions
 
 # temporary function to test overall auto-deploy manager
-function deployer() {
+deployer() {
   service=${1}; shift
   password=${1}; shift
-  hosts=${@}
-  if [[ ! ${hosts} ]]; then
-    echo "No host(s) specified. Deploying to all."
+  hosts=${@:-${service}}
+  if [[ ${hosts} == "all" ]]; then
+    echo "Deploying to all hosts. Press enter to continue..."
+	read
 	hosts="$(nmap 10.37.224.* -sn | grep 'scan report for ' | cut -d' ' -f5)"
   else
 	mosts="${hosts}"
 	hosts=$(echo "${mosts}" | sed 's/ /\n/g')
   fi
-  
   oldIFS=${IFS}
   IFS=$'\n'
   for host in ${hosts}
   do
-	declare $(grep '^DEPLOY_ID=' packages/${service}.sh | sed 's/"//g')
-	echo Checking host for depoloyability...
-	declare $(ssh -oBatchMode=yes ${host} grep '^ID=' /etc/os-release | sed 's/"//g')
+	declare "$(ssh -oBatchMode=yes ${host} cat /etc/os-release)"
 	echo Host ID is ${ID}
-	echo Host ID for deployment is ${DEPLOY_ID}
-	if [[ ${DEPLOY_ID} -ne ${ID} ]]; then
-		echo "Host is not ${DEPLOY_ID}! Skipping."
-		return;
-	fi
 	echo Deploying to ${host}...
     #ping -c1 ${host} >/dev/null && 
 	cd ~/deploy && scp packages/${service}.sh ${host}:~/ && ssh -oBatchMode=yes ${host} "~/${service}.sh ${password} && rm ${service}.sh"
