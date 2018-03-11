@@ -1,14 +1,12 @@
 #!/bin/bash
 # This deployment script has been lovingly crafted for
-# Gentoo, Centos
+# Gentoo, Centos, Ubuntu
 
+# System ID
 echo "You're using ${PRETTY_NAME}"
 echo "OS ID: ${ID}"
 echo "Visit us at ${HOME_URL}"
 echo "Got a problem? Let us know at ${BUG_REPORT_URL}!"
 
-# Bits that just happen to be common, put them here
-P_INSTALL+=" --quiet "
-P_REMOVE+=" --quiet "
-
 gitsource resources/translators/${ID}.sh
+[ ${_SHELL_TRANSLATOR} ] || { echo "Translator load error"; return 1; }

@@ -9,3 +9,8 @@ P_UPDATE() { sudo yum update; }
 PG_BASH_COMPLETION() {
   yum --quiet --cacheonly -y install *bash-complet*;
 }
+
+P_INSTALL+=" --quiet "
+P_REMOVE+=" --quiet "
+
+_SHELL_TRANSLATOR=1

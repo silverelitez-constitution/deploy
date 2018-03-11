@@ -1,97 +1,81 @@
 #!/bin/bash
-# This deployment script has been lovingly crafted for
-DEPLOY_ID="centos"
+# This deployment script has NOT been ravenously tested on:
+# Centos 7, Ubuntu 17.10, Gentoo 17.1
 
-password=${1}
-
-echo Hostname: $(hostname | cut -d'.' -f1)
-if [[ "$(hostname | cut -d'.' -f1)" == "dc" ]]; then echo "Refusing to turn a domain controller into a client. Aborting..."; exit; fi
-
-echo -n Check for sudo...
-if [[ ! ${SUDO_USER} ]]; then
-	echo "Failed"
-	echo "Executing script as root..."
-	sudo ${0} ${@} || exit 1
-	exit
-else
-	echo Success
-fi
-
-echo "Setting time zone..."
-ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
-
-echo "Install epel-release and dos2unix..."
-yum install -y epel-release --quiet
-yum update -y --quiet
-yum install --quiet -y dos2unix
-
-echo "Removing default command-not-found function..."
-yum -y remove PackageKit-command-not-found --quiet
-
-echo "Refresh yum cache..."
-yum --quiet -y update
-yum makecache --quiet
-
-command_not_found_handle () {
-    fullcommand="${@}";
-    package=$(repoquery --whatprovides "*bin/${1}" -C --qf '%{NAME}' | head -n1);
-    if [ ! $package ]; then
-        echo "No package provides ${1}! Command doesn't exist...";
-        return;
-    fi;
-    echo -n "The package ${package} is required to run '${fullcommand}'! Installing...";
-    if sudo yum -t install --quiet -y "${package}"; then
-		echo "Done!";
-        echo "Okay, now let's try that again...shall we?";
-        echo -e "$(show-prompt) ${fullcommand}";
-        eval ${fullcommand};
-    else
-        echo "Err!";
-		echo 'Unfortunately the installation failed :(';
-    fi;
-    retval=$?;
-    return $retval
+# Resources
+gitsource() {
+  gitsurl="https://raw.githubusercontent.com/silverelitez-${domain}/deploy/master/${script}"
+  source <(curl -s ${gitsurl} | sed 's/^404:.*/echo 404 error/g' | dos2unix || echo echo Error)
+}
+is_sudo() {
+  echo -n Check for sudo...
+  if [[ ! ${SUDO_USER} ]]; then
+    echo "Failed! Executing script as root..."
+    sudo ${0} ${@} || exit 1
+    exit
+  else
+    user=${SUDO_USER}
+    echo "Success as ${user}"
+  fi
 }
 
-echo Update yum...
-yum -t update -y
+# Steps
+prepare_host() {
+  echo "Preparing host..."
+  is_sudo
+  echo Hostname: $(hostname | cut -d'.' -f1)
+  if [[ "$(hostname | cut -d'.' -f1)" == "dc" ]]; then echo "Refusing to turn a domain controller into a client. Aborting..."; exit; fi
+  echo "Setting time zone..."
+  ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
+  realm=$(realm discover | head -n1)
+  domain=$(echo $realm | cut -d'.' -f1)
+  password=${1}
+  if [[ ! ${user} ]]; then user="deployer"; fi #echo "Run as a sudo'er with a username that has domain auth!"; exit 1; fi
+  if [[ ! ${realm} ]]; then echo "The router/DHCP  server didn't return useful data!"; exit 1; fi
+  if [[ ! ${password} ]]; then echo "Password not supplied!"; exit 1; fi
+  which dos2unix || { echo "Install dos2unix..."
+    case "${ID}" in
+      centos) P_INSTALL="yum install -y " ;;
+      ubuntu) P_INSTALL="apt install -y " ;;
+      gentoo) P_INSTALL="emerge ";;
+    esac; 
+	P_INSTALL+="--quiet "
+    ${P_INSTALL} dos2unix
+  }
+  gitsource resources/translators/default.sh
+  echo "${password}" | kinit "${user}@$(realm discover | grep 'realm-name:' | cut -d' ' -f4 | awk '{print toupper($0)}')"
+}
+install_packages() {
+  echo "Installing required packages..."
+  [[ ${ID} == 'centos' ]] && { echo "Install epel-release..."; ${P_INSTALL} epel-release; }
+  P_UPDATE
+  [[ ${ID} == 'centos' ]] && ${P_REMOVE} PackageKit-command-not-found --quiet
 
-echo Install cache updater crontab...
-echo -e "$(crontab -l)\n*/5 * * * * yum makecache --quiet" | sort -u | crontab
-
-domain=$(realm discover | head -n1)
-realm=$(echo ${domain} | cut -d"." -f1)
-branch="master"
-giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/global.sh"
-
-echo Update global profile.d script...
-curl -s ${giturl} | dos2unix > /etc/profile.d/global.sh
-chown root.root /etc/profile.d/global.sh
-chmod a+x /etc/profile.d/global.sh
-
-user=${SUDO_USER}
-realm=$(realm discover | head -n1)
-
-if [[ ! ${user} ]]; then user="deployer"; fi #echo "Run as a sudo'er with a username that has domain auth!"; exit 1; fi
-if [[ ! ${realm} ]]; then echo "The router/DHCP	server didn't return useful data!"; exit 1; fi
-
-echo User is ${user}
-
-domain=$(echo $realm | cut -d'.' -f1)
-
-echo Installing required packages...
-yum --quiet -t -y install $(realm discover ${realm} | grep 'required-package:' | cut -d':' -f2)
-echo "${password}" | kinit "${user}@$(realm discover | grep 'realm-name:' | cut -d' ' -f4 | awk '{print toupper($0)}')"
-
-echo Leaving currently joined realm...
-realm leave
-echo Discovering DHCP provided realm...
-realm discover ${realm}
-echo Joining ${realm}
-realm join ${realm}
-
-echo "Writing sssd.conf..."
-cat >/etc/sssd/sssd.conf << EOL
+  echo "Update packager..."
+  P_UPDATE
+  [[ ${ID} == 'centos' ]] && yum makecache --quiet
+  ${P_INSTALL} $(realm discover ${realm} | grep 'required-package:' | cut -d':' -f2)
+}
+join_domain() {
+  echo Leaving currently joined realm...
+  realm leave
+  echo Discovering DHCP provided realm...
+  realm discover ${realm}
+  echo Joining ${realm}
+  realm join ${realm}
+}
+update_global_script() {
+  echo Update global profile.d script...
+  giturl="https://raw.githubusercontent.com/silverelitez-${domain}/deploy/master/scripts/profile.d/global.sh"
+  curl -s ${giturl} | dos2unix > /etc/profile.d/global.sh
+  chown root.root /etc/profile.d/global.sh
+  chmod a+x /etc/profile.d/global.sh
+}
+install_services() {
+  echo "Installing services..."
+  [[ ${ID} == "centos" ]] && { echo "Installing crontab..."; echo -e "$(crontab -l)\n*/5 * * * * yum makecache --quiet" | sort -u | crontab; }
+  echo "Writing sssd.conf..."
+  cat >/etc/sssd/sssd.conf << EOL
 [sssd]
 domains = $realm
 config_file_version = 2
@@ -106,17 +90,26 @@ id_provider = ad
 krb5_store_password_if_offline = True
 default_shell = /bin/bash
 ldap_id_mapping = True
-use_fully_qualified_names = True
+use_fully_qualified_names = False
 fallback_homedir = /home/%u@%d
 access_provider = ad
 EOL
+  echo "Engaging sssd service..."
+  systemctl enable sssd
+  systemctl restart sssd
+}
+test_install() {
+  echo "Testing domain..."
+  [[ id ${user}@${realm} ]] && echo "Domain joined!" || exit 1
+}
+the_end() {
+  echo "The End.";
+}
 
-echo "Engaging sssd service..."
-systemctl enable sssd
-systemctl restart sssd
-systemctl stop sssd
-sed -i 's/use_fully_qualified_names = True/use_fully_qualified_names = False/g' /etc/sssd/sssd.conf
-systemctl restart sssd
-
-echo Testing domain...
-id ${user}@${realm} || exit 1
+prepare_host "${@}"
+install_packages
+join_domain
+update_global_script
+install_services
+test_install
+the_end
