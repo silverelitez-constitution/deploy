@@ -100,7 +100,7 @@ EOL
 }
 test_install() {
   echo "Testing domain..."
-  [[ id ${user}@${realm} ]] && echo "Domain joined!" || exit 1
+  id ${user}@${realm} && echo "Domain joined!" || exit 1
 }
 the_end() {
   echo "The End.";

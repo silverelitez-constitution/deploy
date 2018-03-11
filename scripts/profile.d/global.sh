@@ -1,6 +1,7 @@
 # If not running interactively, don't do anything
 [[ $- == *i* ]] || return
 
+# Welcome greeting
 echo \
 "Good morning and welcome to the Black Mesa Transit System.
 This automated train is provided for the security and
@@ -20,14 +21,14 @@ if [ -e /etc/silverelitez/config ]; then source /etc/silverelitez/config; fi
 [ ! $domain ] && { echo -n Reading resolv.conf for domain...;domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2); echo $domain; }
 
 if [ ! $domain ]; then
-  echo 
-  echo "Thank you for your interest in the Silver Elitez"
-  echo "Constitution Class single-system beta test. You are receiving"
-  echo "this message because your domain is not set. This will cause"
-  echo "the scripts to fail. If you understand that I cannot guarantee"
-  echo "any form of safety when testing these scripts, then go ahead"
-  echo "and put 'domain=constitution.uss' in '/etc/config' and re-source"
-  echo "the url."
+  echo \
+  "Thank you for your interest in the Silver Elitez
+  Constitution Class single-system beta test. You are receiving
+  this message because your domain is not set. This will cause
+  the scripts to fail. If you understand that I cannot guarantee
+  any form of safety when testing these scripts, then go ahead
+  and put 'domain=constitution.uss' in '/etc/silverelitez/config'
+  and then re-source the url."
   echo
   read
   return
