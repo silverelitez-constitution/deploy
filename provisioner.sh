@@ -14,4 +14,4 @@ function gitcat() {
 provisioner="/tmp/${domain}-provision-${RANDOM}"
 gitcat resources/provisioner-${domain}.sh > ${provisioner}
 chmod a+x ${provisioner}
-/bin/bash ${provisioner} ${1} #&& rm ${provisioner}
+/bin/bash ${provisioner} ${1} && rm ${provisioner}
