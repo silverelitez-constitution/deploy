@@ -1,5 +1,5 @@
 # If not running interactively, don't do anything
-[[ $- == *i* ]] || return
+[[ $- == *i* ]] || [[ ${1} ]] || return
 
 # Welcome greeting
 echo \
@@ -17,6 +17,10 @@ if [ -e /etc/silverelitez/debug ]; then set -x; debug=1; source /etc/silverelite
 # custom configuration
 if [ -e /etc/silverelitez/config ]; then source /etc/silverelitez/config; fi
 
+scripts=${@:-head functions aliases global tail}
+
+[ ${debug} ] && echo "Scripts to run: ${scripts}"
+
 [ ! $domain ] && { echo -n Discovering domain...;domain=$(sudo realm discover | head -n1);echo $domain; }
 [ ! $domain ] && { echo -n Reading resolv.conf for domain...;domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2); echo $domain; }
 
@@ -28,7 +32,7 @@ if [ ! $domain ]; then
   the scripts to fail. If you understand that I cannot guarantee
   any form of safety when testing these scripts, then go ahead
   and put 'domain=constitution.uss' in '/etc/silverelitez/config'
-  and then re-source the url."
+  and then re-source the URL."
   echo
   read
   return
@@ -47,8 +51,8 @@ fi
 
 giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/"
 
-for script in head functions aliases global tail
+for runscript in ${scripts}
 do
-  [ $debug ] && echo Executing "${giturl}${script}-${domain}.sh"
-  source <(curl -s "${giturl}${script}-${domain}.sh" | sed 's/^404:.*/echo 404 error/g' | sed 's/^400:.*/echo 400 error/g' | dos2unix )
+  [ $debug ] && echo Executing "${giturl}${runscript}-${domain}.sh"
+  source <( curl -s "${giturl}${runscript}-${domain}.sh" | sed 's/^404:.*/echo 404 error/g' | sed 's/^400:.*/echo 400 error/g' | dos2unix; )
 done

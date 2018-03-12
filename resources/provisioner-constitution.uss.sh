@@ -121,6 +121,7 @@ EOL
 test_install() {
   echo "Testing domain..."
   id ${user}@${realm} && echo "Domain joined!" || exit 1
+  mkdir -p /etc/silverelitez
 }
 the_end() {
   echo "The End.";

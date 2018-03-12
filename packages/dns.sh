@@ -1,8 +1,5 @@
 source /etc/os-release
 
-echo Hostname: $(hostname | cut -d'.' -f1)
-if [[ "$(hostname | cut -d'.' -f1)" != "dns" ]]; then echo "Can only be deployed to the dns server. Aborting.."; exit; fi
-
 echo -n Check for sudo...
 if [[ ! ${SUDO_USER} ]]; then
 	echo "Failed"
@@ -13,5 +10,16 @@ else
 	echo Success
 fi
 
+echo Hostname: $(hostname | cut -d'.' -f1)
+if [[ "$(hostname | cut -d'.' -f1)" != "dns" ]]; then echo "Can only be deployed to the dns server. Aborting.."; exit; fi
+
+echo "Initializing functions..."
+source /etc/profile.d/global.sh functions
+
+exit
+echo "Loading translation layer..."
+translation_layer
+
+echo "Installing power dns service..."
 P_INSTALL powerdns
 
