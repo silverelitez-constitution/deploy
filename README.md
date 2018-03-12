@@ -1,11 +1,13 @@
 # Unified Automatic Cloud System
 
+Currently testing on Centos 7 Core, Ubuntu 17.10.1, Gentoo 17.0-no-multilib
+
 This is a Proof-Of-Concept project to develop a fully automated system that pays homage to the automatic transmission
 in the way that can turn what is currently a very complicated and messy process to what most people don't even
 give a second thought to. Thus turning a complete waste of resources and time into a way for the average engineer
 to get more stuff done and be tied up with menial tasks.
 
-It's currnetly being set up in the way that would be fully turn-key with an initial set up of 15 minutes (automated, naturally)
+It's currently being set up in the way that would be fully turn-key with an initial set up of 15 minutes (automated, naturally)
 and the user only having to supply a domain name for the system to use. Authentication is still a little tricky due to the balance of
 security and ease-of-use. Most likely a Yubikey will be implemented.
 
@@ -30,9 +32,9 @@ backup-dc, or ftp. reboot the box and once it's up, run 'deployer [service] [pas
 should automatically do all the things required to prepare the service.
 
 Current deployer examples are as follows:
-```deployer unifi mypassword123 unifi```
-```deployer dc-client-auth mypassword123 manager webserver ftp```
-```deployer kodi mypassword123```
+```deployer unifi mypassword123```
+```deployer provisioner mypassword123 manager webserver ftp```
+```deployer kodi mypassword123 media```
 
 How everything relates to each other
 -----
@@ -51,7 +53,7 @@ on S3 soon. After that, use scripts to automate the process, feeding it only the
 could be used to correlate services with their attributes like required open ports etc. that'll come later. 
 We're working within an enclosed sandbox for a reason right now. So then the base image needs to have
 scripts inside it on boot that check if a provisioned flag was set in like /etc/flight.conf. If it's not
-set, then run the deploy function using it's dns name. That will nmake it pull down the script that will install
+set, then run the deploy function using it's dns name. That will make it pull down the script that will install
 all of it's things and then reboot it. once it's rebooted then it's ready to serve. that easy. "newservice 'dns'"
 and 4 minutes of waiting and BAM. That simple. The initial usb stick will just be a table of services where it
 just cycles through the list running 'newservice' until everything is running. pre-configured. auto-managed.
