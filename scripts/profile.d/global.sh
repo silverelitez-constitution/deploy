@@ -51,8 +51,14 @@ fi
 
 giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/"
 
+nscripts=$(echo ${scripts} | tr ' ' '\n')
+scripts="${nscripts}"
+unset nscripts
+
+[ $debug ] && echo "${scripts}"
+
 for runscript in ${scripts}
 do
   [ $debug ] && echo Executing "${giturl}${runscript}-${domain}.sh"
   source <( curl -s "${giturl}${runscript}-${domain}.sh" | sed 's/^404:.*/echo 404 error/g' | sed 's/^400:.*/echo 400 error/g' | dos2unix; )
-done
+done 

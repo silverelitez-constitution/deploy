@@ -16,7 +16,6 @@ if [[ "$(hostname | cut -d'.' -f1)" != "dns" ]]; then echo "Can only be deployed
 echo "Initializing functions..."
 source /etc/profile.d/global.sh functions
 
-exit
 echo "Loading translation layer..."
 translation_layer
 
