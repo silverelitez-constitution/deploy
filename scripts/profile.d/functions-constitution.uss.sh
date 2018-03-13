@@ -159,3 +159,8 @@ show-prompt() {
      sed ':;$!{N;b};s/^\(.*\n\)*\(.*\)\n\2exit$/\2/p;d')";
     echo -n ${ExpPS1}
 }
+
+gc() {
+  message=${@}
+  git commit -am "${message}" && git push
+}
