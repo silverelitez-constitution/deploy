@@ -45,7 +45,7 @@ echo "Loading translation layer..."
 translation_layer
 
 echo "Installing packages..."
-USE="recursor mysql perl php" ${P_INSTALL} powerdns mysql httpd pdns-recursor pdns-backend-mysql mod_perl php
+USE="recursor mysql perl php pdo" ${P_INSTALL} php-pdo php-mysql php-mcrypt powerdns mysql httpd pdns-recursor pdns-backend-mysql mod_perl php
 
 echo "Configuring apache..."
 # is httpd backed up? no? back it up. yes? delete /etc/httpd
@@ -69,8 +69,9 @@ echo "Hostname based directory: ${hostnamedir}"
 cd /var/www
 mkdir -p ${ipdir}
 mkdir -p ${hostnamedir}
-cd $_ && ln -sf . public-html
-ln -sf ${hostnamedir} ${ipdir}/public-html
+cd $_ && ln -sf NayruPanel public-html
+rm public-html
+ln -sf ${hostnamedir}/NayruPanel ${ipdir}/public-html
 
 echo "Installing NayruPanel..."
 cd ${hostnamedir}
