@@ -10,10 +10,8 @@
 	# exit
 # fi
 
-src=/etc/silverelitez/debug; [ -e ${src} ] && { set -x; debug=1; source ${src}; }
-src=/etc/silverelitez/config; [ -e ${src} ] && source ${src}
-
-exit
+#src=/etc/silverelitez/debug; [ -e ${src} ] && { set -x; debug=1; source ${src}; }
+#src=/etc/silverelitez/config; [ -e ${src} ] && source ${src}
 
 if [[ ${TESTING_BRANCH} ]]; then 
   branch="${TESTING_BRANCH}"
@@ -30,12 +28,11 @@ if [[ "$(hostname | cut -d'.' -f1)" != "dns" ]]; then echo "Can only be deployed
 [ ! $domain ] && { echo "Could not determine domain name. Fatal Error!"; exit; }
 
 echo "Initializing functions..."
-exit
 
 giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/profile.d/scripts/functions-${domain}.sh"
 #[ $debug ] && 
-echo Executing "${giturl}$"
-source <( curl -s "${giturl}" | sed "s/^404:.*/echo 404 error/g" | sed "s/^400:.*/echo 400 error/g" | dos2unix; )
+echo Executing "${giturl}"
+source <( curl -s "${giturl}" | sed "s/^404:.*/echo 404 error - ${giturl}/g" | sed "s/^400:.*/echo 400 error/g" | dos2unix; )
 
 echo "Loading translation layer..."
 translation_layer
