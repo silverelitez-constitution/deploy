@@ -4,11 +4,14 @@
 source /etc/os-release
 
 if [ ${ID} == 'ubuntu' ]; then
-sudo apt-get install software-properties-common
-sudo add-apt-repository ppa:team-xbmc/ppa
-sudo apt-get update
-sudo apt-get install kodi -y
-exit
+  sudo apt-get install software-properties-common
+  sudo add-apt-repository ppa:team-xbmc/ppa
+  sudo apt-get update -y
+  sudo apt-get install kodi -y
+  # grep -- "-A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080" /etc/ufw/before.rules || {
+    # sed -i '1s/^/*nat\n:PREROUTING ACCEPT [0:0]\n-A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080\n/' /etc/ufw/before.rules;
+  # }
+  exit
 fi
 
 export LANGUAGE=en_US.UTF-8
