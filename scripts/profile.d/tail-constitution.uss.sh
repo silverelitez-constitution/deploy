@@ -1,6 +1,6 @@
 #!/bin/bash
 export EDITOR='/usr/bin/nano'
-export PATH=$PATH:/usr/local/go/bin
+export PATH="${PATH}:/usr/local/go/bin:${HOME}/go/bin"
 
 [ ! $GIT_PROMPT_ONLY_IN_REPO ] && GIT_PROMPT_ONLY_IN_REPO=1;
 [ ! $GIT_PROMPT_THEME ] && GIT_PROMPT_THEME=TruncatedPwd_WindowTitle_Ubuntu;
