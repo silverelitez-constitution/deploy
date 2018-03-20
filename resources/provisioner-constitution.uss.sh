@@ -3,7 +3,6 @@
 # Centos 7, Ubuntu 17.10, Gentoo 17.1
 source /etc/os-release
 
-
 # Resources
 gitsource() {
   script=${1:-default.sh}
@@ -44,7 +43,7 @@ prepare_host() {
   q_install dos2unix
   q_install deltarpm applydeldarpm
   ${P_INSTALL} nspr yum-utils
-  [ ${ID} == 'gentoo' ] && { echo -e 'y\n' | layman -a sabayon; emerge realmd --quiet; } || { q_install realm realmd; q_install kinit krb5-user; }
+  [ ${ID} == 'gentoo' ] && { echo -e 'y\n' | layman -a sabayon; emerge realmd --quiet; } || { q_install realm realmd; q_install kinit krb5-workstation; }
   echo Hostname: $(hostname | cut -d'.' -f1)
   if [[ "$(hostname | cut -d'.' -f1)" == "dc" ]]; then echo "Refusing to turn a domain controller into a client. Aborting..."; exit; fi
   [ ! ${realm} ] && { echo -n Discovering realm...;realm=$(sudo realm discover | head -n1);echo $realm; }
@@ -66,7 +65,7 @@ prepare_host() {
 }
 install_packages() {
   echo "Update packager..."
-  [[ ${ID} == 'centos' ]] && { echo "Install epel-release..."; ${P_INSTALL} deltarpm; ${P_INSTALL} epel-release; }
+  [[ ${ID} == 'centos' ]] && { echo "Install delta-rpm etc..."; ${P_INSTALL} yum-utils krb5-workstation deltarpm; }
   [[ ${ID} == 'centos' ]] && { echo "Remove PackageKit-command-not-found..."; ${P_REMOVE} -y PackageKit-command-not-found; }
   P_UPDATE
   [[ ${ID} == 'centos' ]] && { yum-complete-transaction --cleanup-only; yum makecache --quiet; }

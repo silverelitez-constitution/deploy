@@ -45,7 +45,7 @@ resource "virtualbox_vm" "node" {
 EOL
 terraform init && terraform plan && terraform apply -auto-approve || exit 1
 ip=$(terraform output | grep 'IPAddr =' | cut -d' ' -f3)
-while ! sshpass -p vagrant ssh-copy-id root@${ip}; do
+while ! sshpass -p vagrant ssh-copy-id root@${ip} 2>/dev/null; do
 	sleep 1
 done
 scp -r /home/${deploy}/.ssh/ root@${ip}:~/${deploy}
@@ -56,7 +56,8 @@ mv ~/${deploy}/* /home/${deploy}/.ssh/;
 echo \"${deploy}        ALL=(ALL)       NOPASSWD: ALL\" > /etc/sudoers.d/${deploy}
 chown ${deploy}. /home/${deploy} -R"
 ssh ${ip} "echo ${svc} > hostname; sudo mv hostname /etc; sudo reboot"
-while ! ssh ${ip} whoami; do
+sleep 5
+while ! ssh ${ip} whoami 2>/dev/null; do
 	sleep 1
 done
 deployer provisioner $(cat ~/pw) ${svc}
