@@ -28,7 +28,7 @@ svc=${1}
 deploy="shayne"
 echo "New Service: ${svc}"
 cd ~/deploy/resources/env/virtualbox
-cp -rv --preserve=links base $svc && cd $_ || exit 1
+[ -d ${svc} ] || { cp -rv --preserve=links base $svc && cd $_ || exit 1; }
 cat >main.tf << EOL
 resource "virtualbox_vm" "node" {
 	name = "${svc}"
