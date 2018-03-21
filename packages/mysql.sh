@@ -34,4 +34,4 @@ source <( curl -s "${giturl}" | sed 's/^404:.*/echo 404 error - ${giturl}/g' | s
 echo "Loading translation layer..."
 translation_layer
 echo "Installing packages..."
-USE="mysql perl php pdo" ${P_INSTALL} mysql
+USE="mysql perl php pdo" ${P_INSTALL} mysql phpmyadmin
