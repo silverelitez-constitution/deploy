@@ -29,7 +29,7 @@ check_screen() {
 
 prep_prompt() {
   if ! which thefuck > /dev/null 2>&1; then 
-	P_INSTALL expect sshpass
+	${P_INSTALL} expect sshpass
     P_INSTALL_PIP
     pip3.4 install --user --quiet thefuck;
   fi

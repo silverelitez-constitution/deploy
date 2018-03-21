@@ -33,8 +33,9 @@ giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}
 source <( curl -s "${giturl}" | sed 's/^404:.*/echo 404 error - ${giturl}/g' | sed 's/^400:.*/echo 400 error - ${giturl}/g' | dos2unix; )
 echo "Loading translation layer..."
 translation_layer
+
 echo "Installing packages..."
-USE="recursor mysql perl php pdo" ${P_INSTALL} pdns-recursor pdns-backend-mysql powerdns
+USE="recursor mysql perl php pdo" ${P_INSTALL} php-mcrypt pdns-recursor pdns-backend-mysql powerdns
 
 echo "Configuring powerdns..."
 # is it backed up? no? back it up. yes? delete it

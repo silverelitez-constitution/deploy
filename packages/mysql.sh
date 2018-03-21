@@ -1,5 +1,7 @@
 #!/bin/bash
 #set -x;
+password=${1}
+
 src=/etc/silverelitez/debug; [ -e ${src} ] && { set -x; debug=1; source ${src}; }
 src=/etc/silverelitez/config; [ -e ${src} ] && source ${src}
 source /etc/os-release
@@ -34,4 +36,17 @@ source <( curl -s "${giturl}" | sed 's/^404:.*/echo 404 error - ${giturl}/g' | s
 echo "Loading translation layer..."
 translation_layer
 echo "Installing packages..."
-USE="mysql perl php pdo" ${P_INSTALL} mysql phpmyadmin
+USE="mysql perl php pdo" ${P_INSTALL} mysql phpmyadmin php-mysql httpd php-php-gettext mariadb-server
+
+echo "Starting services..."
+mkdir -p /var/lib/mysql
+chown mysql.mysql /var/lib/mysql -R
+mysql_install_db
+for service in httpd mariadb
+do
+  systemctl enable $service
+  systemctl restart $service
+done
+mysqladmin -u root password "${password}"
+mysql -uroot -p"${password}" -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'10.37.%.%' IDENTIFIED BY '${password}' WITH GRANT OPTION;"
+
