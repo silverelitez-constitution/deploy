@@ -73,7 +73,7 @@ To-Do
 - [x] webserver 
 - [x] write provisioner package
 - [x] vpc host
-- [x] dns server
+- [ ] bind dns server
 - [x] mysql server
 - [ ] internal manager (and aws linking partner)
 - [ ] centralized fileshare manager
