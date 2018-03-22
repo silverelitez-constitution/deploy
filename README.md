@@ -71,10 +71,10 @@ To-Do
 - [x] windows 8.1 test client
 - [x] centos testing box
 - [x] webserver 
-- [ ] write provisioner package
+- [x] write provisioner package
 - [x] vpc host
-- [ ] dns server
-- [ ] mysql server
+- [x] dns server
+- [x] mysql server
 - [ ] internal manager (and aws linking partner)
 - [ ] centralized fileshare manager
 - [ ] syslog server
@@ -87,15 +87,16 @@ To-Do
 - [ ] configure php function on webserver to detect curl requests
 - [ ] refine modules and blocks to fit together better
 - [x] think of another bullet point
-- [ ] terraform the virtualboxes
+- [x] terraform the virtualboxes
 - [ ] set up aws system
 - [ ] link router to aws router via openvpn
-- [ ] set up dns system and [ ] bridge with aws internal dns
+- [x] set up dns system
+- [ ] bridge dns with aws internal dns
 - [ ] set up S3FS for configuration backup/storage
 - [ ] set up gitFS to replace gitsource bash functions (possibly gluster as well)
 - [ ] link krb on dc with 1password or similar
 - [ ] NAS support (esata, lan, both?)
-- [ ] tie automation systems together
-- [ ] set up Nayrupanel
+- [x] tie automation systems together
+- [x] set up Nayrupanel
 - [ ] reduce to 16gB initial payload for usb stick
 - [ ] get some sleep
