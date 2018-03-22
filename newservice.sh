@@ -28,7 +28,7 @@ svc=${1}
 deploy="shayne"
 echo "New Service: ${svc}"
 cd ~/deploy/resources/env/virtualbox
-[ -d ${svc} ] || { cp -rv --preserve=links base $svc && cd $_ || exit 1; }
+[ -d "${svc}" ] || { cp -rv --preserve=links base "${svc}" && cd "${_}" || exit 1; } && cd "${svc}"
 cat >main.tf << EOL
 resource "virtualbox_vm" "node" {
 	name = "${svc}"
@@ -43,6 +43,7 @@ resource "virtualbox_vm" "node" {
 	}
 }
 EOL
+terraform providers
 terraform init && terraform apply -auto-approve || exit 1
 ip=$(terraform output | grep 'IPAddr =' | cut -d' ' -f3)
 while ! sshpass -p vagrant ssh-copy-id root@${ip} 2>/dev/null; do
