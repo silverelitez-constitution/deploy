@@ -49,6 +49,9 @@ else
   branch="master"
 fi
 
+echo -n "Testing interconnectivity..."
+ping -q 4.2.2.2 -c3 >/dev/null || { echo "Failed"; return; } && echo "Done"
+
 giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/"
 
 nscripts=$(echo ${scripts} | tr ' ' '\n')

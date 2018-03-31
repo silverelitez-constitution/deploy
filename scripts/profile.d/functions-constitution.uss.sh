@@ -165,3 +165,7 @@ gc() {
   message=${@}
   git commit -am "${message}" && git push
 }
+
+paster() {
+  curl -F c=@- https://ptpb.pw; 
+}

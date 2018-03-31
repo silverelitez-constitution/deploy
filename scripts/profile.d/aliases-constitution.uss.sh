@@ -19,6 +19,5 @@ alias vssh="vagrant ssh "
 alias vspin="vagrant up && vssh"
 alias which='alias | /usr/bin/which --tty-only --read-alias --show-dot --show-tilde'
 alias yum='sudo yum'
-alias yumi='sudo yum -y install'
-alias yums='yum search'
+alias s='yum search'
 alias pn="P_NAME"

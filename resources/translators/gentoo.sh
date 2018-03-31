@@ -5,12 +5,12 @@ P_NAME() {
   [ ${name} ] || name=$(grep  "bin/${1} " /var/db/pkg/*/*/CONTENTS | cut -d'/' -f6 | sed 's/^/=/g')
   echo "${name}";
 }
-P_REMOVE="emerge -Cav "
+P_REMOVE="emerge --depclean -av "
 P_BINARY() { equery files ${1}| grep 'bin/' | rev | cut -d'/' -f1 | rev; }
 P_INSTALL_PIP() { sudo emerge --quiet pip gcc python-dev; }
 P_UPDATES() { emerge -NDup world --quiet; }
 PG_BASH_COMPLETION() { eval sudo ${P_INSTALL} $(eix *bash-complet* | grep '/' | cut -d' ' -f2- | grep -v -e '^ '); }
 P_UPDATE() { sudo emerge --sync --quiet; }
-P_UPGRADE() { sudo emerge -NDuav world; revdep-rebuild -i; }
+P_UPGRADE() { sudo emerge -NDuav world; revdep-rebuild -i; emerge @preserved-rebuild --keep-going --autounmask-write }
 
 _SHELL_TRANSLATOR=1

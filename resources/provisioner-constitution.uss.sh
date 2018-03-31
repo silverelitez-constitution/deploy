@@ -39,6 +39,7 @@ q_install() {
 # Steps
 prepare_host() {
   echo "Preparing host..."
+  timedatectl set-ntp false
 cat >/etc/sysctl.d/00-noipv6.conf <<EOL
 net.ipv6.conf.all.disable_ipv6 = 1
 net.ipv6.conf.default.disable_ipv6 = 1
@@ -48,7 +49,7 @@ EOL
   password=${1}
   q_install dos2unix
   q_install applydeltarpm deltarpm
-  ${P_INSTALL} nspr yum-utils *bash-complet*
+  ${P_INSTALL} nspr yum-utils *bash-complet* kernel-devel
   [ ${ID} == 'gentoo' ] && { echo -e 'y\n' | layman -a sabayon; emerge realmd --quiet; } || { q_install realm realmd; q_install kinit krb5-workstation; }
   echo Hostname: $(hostname | cut -d'.' -f1)
   if [[ "$(hostname | cut -d'.' -f1)" == "dc" ]]; then echo "Refusing to turn a domain controller into a client. Aborting..."; exit; fi
