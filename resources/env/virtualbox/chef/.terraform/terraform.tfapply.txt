@@ -1,0 +1,27 @@
+virtualbox_vm.node: Creating...
+  cpus:                                     "" => "4"
+  image:                                    "" => "./terraform.d/images//centos-7.0-x86_64.box"
+  memory:                                   "" => "1.0 gib"
+  name:                                     "" => "Chef Server"
+  network_adapter.#:                        "" => "1"
+  network_adapter.0.device:                 "" => "IntelPro1000MTServer"
+  network_adapter.0.host_interface:         "" => "p4p1"
+  network_adapter.0.ipv4_address:           "" => "<computed>"
+  network_adapter.0.ipv4_address_available: "" => "<computed>"
+  network_adapter.0.mac_address:            "" => "<computed>"
+  network_adapter.0.status:                 "" => "<computed>"
+  network_adapter.0.type:                   "" => "bridged"
+  status:                                   "" => "running"
+  url:                                      "" => "https://github.com/tommy-muehle/puppet-vagrant-boxes/releases/download/1.1.0/centos-7.0-x86_64.box"
+virtualbox_vm.node: Still creating... (10s elapsed)
+virtualbox_vm.node: Still creating... (20s elapsed)
+virtualbox_vm.node: Still creating... (30s elapsed)
+virtualbox_vm.node: Creation complete after 31s (ID: c140a2ca-ac2a-4253-87aa-7bf952f286ce)
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+IPAddr = 10.37.224.204
+Exit code:
+0

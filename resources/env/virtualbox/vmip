@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cd /home/shayne/deploy/resources/env/virtualbox/"${@}" && terraform output

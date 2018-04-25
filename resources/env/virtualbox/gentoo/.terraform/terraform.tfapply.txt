@@ -1,0 +1,9 @@
+virtualbox_vm.node: Refreshing state... (ID: 842fa311-3e01-4b76-a329-5b7adaf35cdb)
+
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+IPAddr = 10.37.224.231
+Exit code:
+0

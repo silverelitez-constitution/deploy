@@ -22,7 +22,7 @@ alias yum='sudo yum'
 
 alias pr='P_REMOVE'
 alias pi='P_INSTALL'
-alias ps='P_SEARCH'
+alias pf='P_SEARCH'
 alias pu="P_UPDATE"
 alias pug="P_UPGRADE"
 alias pn="P_NAME"

@@ -1,2 +1,3 @@
 resources/env/terraform.d/centos-7-x86_64.box
 */terraform.*
+*.box

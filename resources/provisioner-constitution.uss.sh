@@ -28,10 +28,10 @@ q_install() {
     case "${ID}" in
       centos) P_INSTALL="yum install -y " ;;
       ubuntu) P_INSTALL="apt install -y " ;;
-      gentoo) P_INSTALL="emerge ";;
+      gentoo) P_INSTALL="emerge -v";;
 	  *) echo "No distro declared. Please manually install ${package} for ${binary}"
     esac; 
-	P_INSTALL+="--quiet "
+	#P_INSTALL+="--quiet "
     ${P_INSTALL} ${package}
   }
 }
@@ -47,6 +47,8 @@ net.ipv6.conf.lo.disable_ipv6 = 1
 EOL
   sysctl -p  
   password=${1}
+  echo "Install packages..."
+  [ "${ID}" == "gentoo" ] && { echo "Syncing emerge..."; emerge-webrsync -v; }
   q_install dos2unix
   q_install applydeltarpm deltarpm
   ${P_INSTALL} nspr yum-utils *bash-complet* kernel-devel

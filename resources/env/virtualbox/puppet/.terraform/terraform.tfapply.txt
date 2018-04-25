@@ -1,0 +1,32 @@
+virtualbox_vm.node: Creating...
+  cpus:                                     "" => "4"
+  image:                                    "" => "./terraform.d/images//debian7.3.0-vbox4.3.6-puppet3.4.1.box"
+  memory:                                   "" => "512 mib"
+  name:                                     "" => "Puppet Server"
+  network_adapter.#:                        "" => "1"
+  network_adapter.0.device:                 "" => "IntelPro1000MTServer"
+  network_adapter.0.host_interface:         "" => "p4p1"
+  network_adapter.0.ipv4_address:           "" => "<computed>"
+  network_adapter.0.ipv4_address_available: "" => "<computed>"
+  network_adapter.0.mac_address:            "" => "<computed>"
+  network_adapter.0.status:                 "" => "<computed>"
+  network_adapter.0.type:                   "" => "bridged"
+  status:                                   "" => "running"
+  url:                                      "" => "https://dl.dropboxusercontent.com/u/29173892/vagrant-boxes/debian7.3.0-vbox4.3.6-puppet3.4.1.box"
+
+Error: Error applying plan:
+
+1 error(s) occurred:
+
+* virtualbox_vm.node: 1 error(s) occurred:
+
+* virtualbox_vm.node: exit status 2
+
+Terraform does not automatically rollback in the face of errors.
+Instead, your Terraform state file has been partially updated with
+any resources that successfully completed. Please address the error
+above and apply again to incrementally change your infrastructure.
+
+
+Exit code:
+1
