@@ -19,7 +19,38 @@ unzip terraform.zip -d /usr/local/bin && rm terraform.zip || exit 1
 cd
 yum update -y
 sudo yum install jq awscli unzip git kernel-devel kernel-devel-3.10.0-693.17.1.el7.x86_64 gcc make perl -y
-sudo yum install -y https://download.virtualbox.org/virtualbox/5.2.6/VirtualBox-5.2-5.2.6_120293_el7-1.x86_64.rpm
+
+version=$(curl https://download.virtualbox.org/virtualbox/LATEST.TXT)
+wget https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack
+rpmfile="$(wget -r -np -nc https://download.virtualbox.org/virtualbox/${version}/ -A VirtualBox*${version}*_el7-1.x86_64.rpm 2>&1 | grep 'download.virtualbox.org/virtualbox/' | grep '\.rpm' | tail -n1 | cut -d"‘" -f2 | cut -d'’' -f1)"
+
+IFS=$'\n'
+for vm in $(sudo -u vboxmanager vboxmanage list vms | cut -f2 -d'"')
+do
+	echo "Pausing ${vm}..."
+	sudo -u vboxmanager VBoxManage controlvm "${vm}" pause >/dev/null &
+	sleep 1
+done
+
+echo -n "Waiting for virtualbox to exit"
+while ps aux | grep vboxman | grep virtualbox | grep -v grep
+do
+	echo -n '.'
+	sleep 1
+done
+echo 
+echo "Waiting for VBoxSVC to terminate..."
+
+while ps aux | grep VBoxSVC | grep -v grep
+do
+	echo -n '.'
+	killall -9 VBoxSVC
+	sleep 0.5
+done
+
+sudo yum install -y ${rpmfile} && rm ${rpmfile}
+sudo VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack --replace --accept-license=56be48f923303c8cababb0bb4c478284b688ed23f16d775d729b89a2e8e5f9eb && rm Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack
+
 yum install -y https://releases.hashicorp.com/vagrant/2.0.2/vagrant_2.0.2_x86_64.rpm
 curl https://dl.google.com/go/go1.10.linux-amd64.tar.gz | tar -C /usr/local -zx
 go get github.com/ccll/terraform-provider-virtualbox
