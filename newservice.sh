@@ -23,7 +23,6 @@ deployer() {
   IFS=${oldIFS}
 }
 
-
 svc=${1}
 deploy="vboxmanager"
 deploy="shayne"
@@ -44,6 +43,7 @@ resource "virtualbox_vm" "node" {
 	}
 }
 EOL
+
 terraform providers
 terraform init && terraform apply -auto-approve || exit 1
 ip=$(terraform output | grep 'IPAddr =' | cut -d' ' -f3)
@@ -64,4 +64,3 @@ while ! ssh ${ip} whoami 2>/dev/null; do
 done
 deployer provisioner $(cat ~/pw) ${ip}
 deployer ${svc} $(cat ~/pw) ${ip}
-#10.37.224.192
