@@ -48,7 +48,7 @@ EOL
   sysctl -p  
   password=${1}
   echo "Install packages..."
-  [ "${ID}" == "gentoo" ] && { echo "Syncing emerge..."; emerge-webrsync -v; }
+  [ "${ID}" == "gentoo" ] && { echo "Syncing emerge..."; rm "/usr/portage/metadata/timestamp.x"; emerge-webrsync; echo "=sys-auth/realmd-0.16.2 ~amd64" > /etc/portage/package.accept_keywords; eselect profile set default/linux/amd64/17.0; cd; git clone https://anongit.gentoo.org/git/proj/portage.git; sudo eselect python set 1; sudo USE='-filecaps internal-glib' portage/bin/emerge world -NDuv; sudo PYTHON_TARGETS="python2_7" portage/bin/emerge portage -v; }
   q_install dos2unix
   q_install applydeltarpm deltarpm
   ${P_INSTALL} nspr yum-utils *bash-complet* kernel-devel

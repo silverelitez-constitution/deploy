@@ -4,6 +4,8 @@
 file=${1:-"gentoo/terraform.tfvars"}
 source "${file}"
 
+oldifs="${IFS}"
+
 ih=0
 iw=0
 pw=0
@@ -16,8 +18,31 @@ info() {
 msg() {
   dialog --msgbox "${@}" $ih $iw
 }
+
 program() { read input
   echo input | dialog --progressbox test ${ph} ${pw}
+}
+
+field() { #field 1 ${line}
+  field="${1}"; shift; line="${@}"
+  echo "${line}" | cut -d'=' -f"${field}"
+}
+
+list() { #list gentoo/terraform.tfvars radio
+  file="${1}"; shift;
+  extra="${@}"
+  source "${file}"
+  IFS=$'\n'
+  ar=()
+  for line in $(cat "${file}")
+  do
+    tag=$(field 1 "${line}")
+    item=$(field 2- "${line}")
+	[ "${extra}" == "radio" ] && checked=$([ -eq "${!tag}" "${item}" ] && echo on || echo off)
+	[ "${extra}" == "checklist" ] && checked=$([ -eq "${!tag}" "${item}" ] && echo on || echo off)
+	ar+=(${tag} ${item} ${checked})
+  done
+  IFS="${oldifs}"
 }
 
 menu() {
@@ -41,6 +66,13 @@ menu() {
 		--menu "Please choose Image:" 0 0 0 "${ar[@]}"
 }
 
+newmenu() { #newmenu "main menu" "gentoo/terraform.tfvars"
+  [ "${2}" ] && { title="${2}"; shift; } || title="${1:-untitled}"
+  list ${1:-"gentoo/terraform.tfvars"}
+  dialog --stdout --title "${title}" \
+		--menu "Please choose a setting:" 0 0 0 "${ar[@]}"
+}
+
 rlist() {
   file=${1:-"gentoo/terraform.tfvars"}
   oldifs="${IFS}"
@@ -61,7 +93,8 @@ rlist() {
 		--radiolist "Please choose Image:" 0 0 0 "${ar[@]}"
 }
 
-item() { tag="${@}"
+item() { 
+  tag="${@}"
   if [ -e "${tag}" ]; then type=$(head "${tag}" -n1); fi
   [ ! "${type}" ] && value=$(input "${tag}")
   [ ! "${value}" ] && value="auto"
@@ -75,7 +108,10 @@ input() { tag="${1}"
 
 menu="${service}/terraform.tfvars"
 
+newmenu "${@}"
+exit
+
 while [ "${menu}" ]
 do
-  item $(menu "${@}")
+  item $(newmenu "${@}")
 done

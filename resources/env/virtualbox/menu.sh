@@ -51,7 +51,8 @@ main() {
 			S "Save service and deploy" \
 			A "Save and Apply" \
 			E "Skip to Deployment (!!)" \
-			X "Destroy resources" \
+			T "Terraform Destroy" \
+			X "Destroy service" \
 			R "Refresh menu" \
 			D "Save settings as default (beta)"
 		)
@@ -71,6 +72,7 @@ main() {
 			p) save; plan;;
 			E) deploy;;
 			A) save; apply;;
+			T) terraform destroy --auto-approve | dialog --progressbox "Running terraform destroy..." 15 80;;
 			X) destroy;;
 			x) save;;
 			R) init ${service};;
@@ -397,19 +399,19 @@ deploy() {
 	mv ~/${deploy}/* /home/${deploy}/.ssh/;
 	echo \"${deploy}        ALL=(ALL)       NOPASSWD: ALL\" > /etc/sudoers.d/${deploy}
 	chown ${deploy}. /home/${deploy} -R" 2>&1 | dialog --programbox "Setting up remote users..." 15 80
-	ssh ${ip} "echo ${svc} > hostname; sudo mv hostname /etc; sudo reboot"  2>&1 | dialog --progressbox "Setting hostname and rebooting..." 15 80
+	ssh ${ip} "source /etc/os-release; cd; [ \${ID} == 'gentoo' ] && { sudo sed 's/localhost/gentoo/g' /etc/conf.d/hostname -i; } || { echo ${svc} > ~/hostname; sudo mv ~/hostname /etc; }; sudo reboot;"  2>&1 | dialog --progressbox "Setting hostname and rebooting..." 15 80
 	dialog --infobox "Rebooting host..." 0 0
 	sleep 5
 	dialog --infobox "Waiting for host..." 0 0
-	while ! ssh ${ip} whoami >/dev/null 2>&1; do
+	while ! ssh ${svc} whoami >/dev/null 2>&1; do
 		sleep 0.3
 	done
 	dialog --infobox "Provisioning..." 0 0
-	deployer provisioner $(cat ~/pw) ${ip} 2>&1 | dialog --programbox "Provisioning server..." 15 80
-sleep 5
+	deployer provisioner $(cat ~/pw) ${svc} 2>&1 | dialog --programbox "Provisioning server..." 15 80
 	dialog --infobox "Installing service..." 0 0
-	deployer ${svc} $(cat ~/pw) ${ip} 2>&1 | dialog --programbox "Installing services..." 15 80
-sleep 5
+	for package in ${packages}; do
+	  deployer ${package} $(cat ~/pw) ${ip} 2>&1 | dialog --programbox "Spinning up service. Installing ${package}..." 15 80
+	done
 	dialog --title "Deployment completed" --msgbox "The end." 0 0
 	exit 0
 }
