@@ -1,0 +1,17 @@
+virtualbox_vm.node: Refreshing state... (ID: 2762a73d-75db-4d29-92fb-10fa64ccc7bf)
+virtualbox_vm.node: Modifying... (ID: 2762a73d-75db-4d29-92fb-10fa64ccc7bf)
+  status: "poweroff" => "running"
+virtualbox_vm.node: Still modifying... (ID: 2762a73d-75db-4d29-92fb-10fa64ccc7bf, 10s elapsed)
+virtualbox_vm.node: Still modifying... (ID: 2762a73d-75db-4d29-92fb-10fa64ccc7bf, 20s elapsed)
+virtualbox_vm.node: Still modifying... (ID: 2762a73d-75db-4d29-92fb-10fa64ccc7bf, 30s elapsed)
+virtualbox_vm.node: Modifications complete after 35s (ID: 2762a73d-75db-4d29-92fb-10fa64ccc7bf)
+
+Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+
+Outputs:
+
+IPAddr = [
+    10.37.224.149
+]
+IPAddr1 = 10.37.224.149
+IPAddr2 = 10.37.224.149

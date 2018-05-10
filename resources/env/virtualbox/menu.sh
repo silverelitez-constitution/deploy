@@ -17,7 +17,10 @@ init() {
 
 	# If the name is blank, match it with the service name
 	name=${name:-${service}}
-	[ ! "${packages}" ] && packages="${packages:-${service}}"
+	# Strip the name string for easier mangling
+	#[ echo ${name} | grep 'count.index' ] name=$(echo ${name} | cut -d'$' -f1 | more stuff. sleep time. )
+	
+	[ ! "${packages}" ] && packages="${packages:-default}"
 
 	# Refresh image list
 	dialog --infobox "Refreshing list of VM images..." 0 0
@@ -38,19 +41,22 @@ main() {
 		--menu "Please choose setting to change:" 0 0 0 \
 			s "Service - ${service}" \
 			n "Name - ${name}" \
+			r "Resource count - ${count}" \
 			i "Image - ${os}:${image}" \
 			c "CPUs - ${cpus:-default}" \
-			m "RAM - ${memory:-default}" \
+			m "RAM - ${memory:-default} Available: $(free -h | gawk  '/Mem:/{print $7}')" \
 			d "Disk Space - ${disk:-default}" \
 			N "Networking - ${interface:-auto}" \
 			z "Zone (beta) - ${zone:-default}" \
-			P "Packages - ${packages:-none}" \
+			P "Packages - ${packages:-default}" \
 			e "Edit resource files" \
 			x "Save service" \
 			p "Save service and run Plan" \
 			S "Save service and deploy" \
 			A "Save and Apply" \
 			E "Skip to Deployment (!!)" \
+      Reset "Reset VM" \
+      Shutdown "Shutdown VM" \
 			T "Terraform Destroy" \
 			X "Destroy service" \
 			R "Refresh menu" \
@@ -66,6 +72,7 @@ main() {
 			d) disk;;
 			s) services;;
 			n) setname;;
+			r) count;;
 			z) zone;;
 			P) packages;;
 			e) editor;;
@@ -74,6 +81,8 @@ main() {
 			A) save; apply;;
 			T) terraform destroy --auto-approve | dialog --progressbox "Running terraform destroy..." 15 80;;
 			X) destroy;;
+      Reset) for node in $(seq 1 ${count}); do VBoxManage controlvm "${name}-01" reset | dialog --progressbox "Reset" 15 80; done;;
+      Shutdown) for node in $(seq 1 ${count}); do VBoxManage controlvm "${name}-0${node}" acpipowerbutton | dialog --progressbox "Shutdown" 15 80; done;;
 			x) save;;
 			R) init ${service};;
 			S) save; apply; deploy;;
@@ -117,7 +126,7 @@ memory() {
 		if [ $memory == "${1}" ]; then echo -n on; declare c="1"; else echo -n off; fi
 	}
 	MEMORY=$(
-		dialog --stdout --title "$output" \
+		dialog --stdout --title "Available: $(free -h | gawk  '/Mem:/{print $7}')" \
 		--radiolist "Please choose $output:" 0 0 0 \
 			"64 mib" "64MB" $(isChecked "64 mib") \
 			"128 mib" "128MB" $(isChecked "128 mib") \
@@ -145,7 +154,19 @@ setname() {
 	name="${output:-${name}}"
 }
 
-# Define deployment zone
+# Dialog to change resource value
+inputbox() { #inputbox count "Change the resource count: "
+	str="${1}"; shift; msg="${@}"
+	eval ${!str}="${$(dialog --stdout --inputbox "${msg}:" 0 0 "${!str}"):-${!str}}"
+}
+
+# Dialog to change resource count
+count() {
+	output=$(dialog --stdout --inputbox "Count:" 0 0 "${count}")
+	count="${output:-${count}}"
+}
+
+# Define deployment zone. not implemented yet
 zone() {
 	output=$(dialog --stdout --inputbox "Zone:" 0 0 "${zone}")
 	zone="${output:-${zone}}"
@@ -202,10 +223,12 @@ save() {
 	# Clean the slate
 	rm terraform.tfvars
 	# Set variables and write tfvars file with new values
-	[ ${cpus} == 'auto' ] && { dialog --infobox "Autodetecting cpus..." 3 34; cpus=$(grep -e '^processor' /proc/cpuinfo|wc -l); }
-	[ ${disk} == 'auto' ] && disk=""
-	[ ${interface} == 'auto' ] && interface="$(route | grep '^default' | grep -o '[^ ]*$'| head -n1)"
+	#[ "${count}" -gt "1" ] && fname="${name}-\${count.index+1}" || fname="${name}"
+	[ "${cpus}" == 'auto' ] && { dialog --infobox "Autodetecting cpus..." 3 34; cpus=$(grep -e '^processor' /proc/cpuinfo|wc -l); }
+	[ "${disk}" == 'auto' ] && disk=""
+	[ "${interface}" == 'auto' ] && interface="$(route | grep '^default' | grep -o '[^ ]*$'| head -n1)"
 	dialog --infobox "Writing terraform data..." 3 34
+	#name="${fname}"
 	for variable in ${vars}
 	do
 		declare ${variable}="$(echo ${!variable})"
@@ -240,33 +263,10 @@ plan() {
 apply() { 
 	dialog --infobox "Initializing..." 3 34
 	terraform init >/dev/null
-
 	dialog --infobox "Applying..." 3 34
-	# Clean slate
-	rm "./.terraform/terraform.tfapply.txt"
-	(terraform apply -auto-approve -no-color >> ./.terraform/terraform.tfapply.txt 2>&1;err=$?; echo -e "Exit code:\n${err}" >> ./.terraform/terraform.tfapply.txt) &
-	dialog --tailbox "./.terraform/terraform.tfapply.txt" 20 80
-	results=$(cat "./.terraform/terraform.tfapply.txt")
-	# Read exit code from end of file
-	err=$(tail -n1 ./.terraform/terraform.tfapply.txt)
-	case $err in
-		0) output=$(
-			dialog --stdout --title "Results" \
-				--yesno "Apply succeeded.\nProceed with deployment?" 7 20 )
-			case $? in
-				0) deploy; return;;
-				1) output="main_menu"; return;;
-			esac
-		;;
-		*) output=$(
-			dialog --stdout --title "Results" \
-				--yesno "\n Apply failed!\n Attempt destroy and retry? \n\n ${results}" 20 80)
-			case $? in
-				0) destroy; plan; return;;
-				1) output="main_menu"; return;;
-			esac
-		;;
-	esac
+	terraform apply -auto-approve -no-color | tee ./.terraform/terraform.tfapply.txt 2>&1 | dialog --progressbox "Applying plan..." 20 80
+	[ "${?}" == "0" ] || sleep 5
+	output="main_menu"; return
 }
 
 # Function to destroy resource with name specified
@@ -284,7 +284,7 @@ destroy() {
 			dialog --title "Destroying ${service}" --infobox "Unregistering VM..." 3 44
 			result+=$(VBoxManage unregistervm ${service} > /dev/null);
 			cd ~/deploy/resources/env/virtualbox
-			result+=$(rm -r ${service})
+			result+=$(rm -rv "${service}")
 			dialog --title "Results" \
 			--msgbox "${result}" 0 0;
 			services;
@@ -301,10 +301,13 @@ services() {
 	SERVICE=$(
 		dialog --stdout --title "Services" \
 		--menu "Please choose a service:" 0 0 0 \
-			$(i=0; oldIFS=${IFS}; IFS=$'\n'; for service in $(ls -1| grep -ve "menu.sh\|base" )
+			$(i=0; oldIFS=${IFS}; IFS=$'\n'; for service in $(ls -1| grep -ve "menu.sh\|base\|dia\|vmip\|deploy" )
 				do
-					echo -n $service | cut -d'.' -f1 | rev | cut -d'/' -f1 | rev
-					echo -n " service "
+					pretty_name="$(grep 'name=' ${service}/terraform.tfvars | cut -d'"' -f2)-01"
+					status=$(VBoxManage showvminfo "${pretty_name}" --machinereadable | egrep VMState= | cut -d'"' -f2)
+					[ ! "${status}" ] && status="unavailable"
+          echo -n "${service} "
+					echo -n " Status:${status} "
 				done
 				) \
 			N "New service" \
@@ -340,80 +343,25 @@ packages() {
 		)
 	err="${?}"
 	cd "${cwd}"
-	case "${err}" in
-		0) packages="${PACKAGES:-${packages}}";[ "${PACKAGES}" == 'N' ] && PACKAGES=$(dialog --stdout --inputbox "Package:" 0 0); init; output="main_menu"; return;;
-		1) output="main_menu";return ;;
-		*) echo ERROR; exit 1 ;;
-		esac
+	packages="${PACKAGES:-${packages}}"; [ "${PACKAGES}" == 'N' ] && packages=$(dialog --stdout --inputbox "Package:" 0 0)
+	output="main_menu"
 }
 
 # Function to deploy new resource and provision services
 deploy() { 
-	deployer() {
-	  service=${1}; shift
-	  password=${1}; shift
-	  hosts=${@:-${service}}
-	  if [[ ${hosts} == "all" ]]; then
-		echo "Deploying to all hosts. Press enter to continue..."
-		read
-		hosts="$(nmap 10.37.224.* -sn | grep 'scan report for ' | cut -d' ' -f5)"
-	  else
-		mosts="${hosts}"
-		hosts=$(echo "${mosts}" | sed 's/ /\n/g')
-	  fi
-	  oldIFS=${IFS}
-	  IFS=$'\n'
-	  for host in ${hosts}
-	  do
-		declare "$(ssh -oBatchMode=yes ${host} cat /etc/os-release)"
-		echo Host ID is ${ID}
-		echo Deploying to ${host}...
-		#ping -c1 ${host} >/dev/null && 
-		cd ~/deploy && scp packages/${service}.sh ${host}:~/ && ssh -oBatchMode=yes ${host} "~/${service}.sh ${password} && rm ${service}.sh"
-	  done
-	  IFS=${oldIFS}
-	}
-
-	declare `terraform output | sed 's/ //'g` >/dev/null;
-	if [ ! "${IPAddr}" ]; then errmsg 1 "Could not determine IP address. Did resources apply?"; output="main_menu"; return; fi
-	ip="${IPAddr}"
-	svc=${service}
-	#deploy="vboxmanager"
-	deploy="shayne"
-	dialog --infobox "New Service: ${svc}" 0 0
-	sleep 0.5
-	#	cd ~/deploy/resources/env/virtualbox
-#	[ -d "${svc}" ] || { cp -rv --preserve=links base "${svc}" && cd "${_}" || exit 1; } && cd "${svc}"
-
-#	terraform providers
-#	terraform init && terraform apply -auto-approve || exit 1
-	dialog --infobox "Waiting for resource to accept default password..." 0 0
-	while ! sshpass -p vagrant ssh-copy-id root@${ip} > /dev/null 2>&1 ; do
-		sleep 0.3
+	for node in $(seq 0 $((${count}-1))); do
+		if [ "${node}" == "0" ]; then 
+			tmux new-session -d "$(pwd)/../deploy.sh ${service} ${node} $(pwd) ${count} ${packages}"
+			tmux set-hook -g pane-exited 'select-layout tiled'
+		else
+			tmux split-window "$(pwd)/../deploy.sh ${service} ${node} $(pwd) ${count} ${packages}"
+		fi
+		tmux select-layout tiled
 	done
-	dialog --infobox "Setting up ssh keys..." 0 0
-	scp -r /home/${deploy}/.ssh/ root@${ip}:~/${deploy} 2>&1 | dialog --progressbox "Setting up ssh keys..." 15 80
-	ssh root@${ip} sudo sh -c "whoami;
-	useradd -m -G wheel ${deploy};
-	mkdir -p /home/${deploy}/.ssh
-	mv ~/${deploy}/* /home/${deploy}/.ssh/;
-	echo \"${deploy}        ALL=(ALL)       NOPASSWD: ALL\" > /etc/sudoers.d/${deploy}
-	chown ${deploy}. /home/${deploy} -R" 2>&1 | dialog --programbox "Setting up remote users..." 15 80
-	ssh ${ip} "source /etc/os-release; cd; [ \${ID} == 'gentoo' ] && { sudo sed 's/localhost/gentoo/g' /etc/conf.d/hostname -i; } || { echo ${svc} > ~/hostname; sudo mv ~/hostname /etc; }; sudo reboot;"  2>&1 | dialog --progressbox "Setting hostname and rebooting..." 15 80
-	dialog --infobox "Rebooting host..." 0 0
-	sleep 5
-	dialog --infobox "Waiting for host..." 0 0
-	while ! ssh ${svc} whoami >/dev/null 2>&1; do
-		sleep 0.3
-	done
-	dialog --infobox "Provisioning..." 0 0
-	deployer provisioner $(cat ~/pw) ${svc} 2>&1 | dialog --programbox "Provisioning server..." 15 80
-	dialog --infobox "Installing service..." 0 0
-	for package in ${packages}; do
-	  deployer ${package} $(cat ~/pw) ${ip} 2>&1 | dialog --programbox "Spinning up service. Installing ${package}..." 15 80
-	done
-	dialog --title "Deployment completed" --msgbox "The end." 0 0
-	exit 0
+	tmux -2 attach-session -d 
+	dialog --title "Deployment completed for ${service}" --infobox "The end." 0 0
+  sleep 5;
+	[ ! "${1}" ] && services || return;
 }
 
 # Save and exit dialog
@@ -423,23 +371,23 @@ save_exit() { dialog --title "Alert" \
 }
 
 # Temporary shim for getopts
-[ "${1}" == '--X' ] && { [ "${DISPLAY}" ] && dialog() { Xdialog "${@}"; } ;} || shift;
-service="${1}"
-action="${2}"
+[ "${1}" == '--X' ] && { [ "${DISPLAY}" ] && dialog() { Xdialog "${@}"; } ; shift; }
+service="${1}"; shift
+action="${1}"; shift
 
-[ "${action}" ] && { init; deploy; }
 # If the script is run while inside a terraformable resource, open it by default
-[ -e ./terraform.tfvars.default ] && source ./terraform.tfvars.default
+[ -e ./terraform.tfvars.default ] && source ./terraform.tfvars.default; 
 [ -e ./terraform.tfvars ] && source ./terraform.tfvars
 
 # If no service is specified then ask for it, otherwise, run init
 if [ ! ${service} ]; then services; else init "${@}"; fi
+
+[ "${action}" ] && { init; save; apply; deploy "flythrough"; exit; }
 
 # Main Loop
 while [ "${?}" != "1" ] && [ "${output}" != "" ] || [ "${output}" == "main_menu" ]
 do
 	main
 done
-
-dialog --infobox "Quitting..." 0 0
+echo Quitting... #dialog --infobox "Quitting..." 0 0
 sleep 0.5

@@ -7,7 +7,7 @@ source /etc/os-release
 gitsource() {
   script=${1:-default.sh}
   gitsurl="https://raw.githubusercontent.com/silverelitez-${domain}/deploy/master/${script}"
-  source <(curl -s ${gitsurl} | sed 's/^404:.*/echo 404 error - ${gitsurl}/g' | sed 's/^400:.*/echo 400 error - ${gitsurl}/g' | dos2unix || echo echo Error)
+  source <(curl -s ${gitsurl} | sed 's/^404:.*/echo 404 error - ${gitsurl}/g' | sed 's/^400:.*/echo 400 error - ${gitsurl}/g' | dos2unix || echo echo Error) ${2}
 }
 is_sudo() {
   echo -n Check for sudo...
@@ -47,11 +47,14 @@ net.ipv6.conf.lo.disable_ipv6 = 1
 EOL
   sysctl -p  
   password=${1}
+  service=${2}
+  echo ${service}
   echo "Install packages..."
   [ "${ID}" == "gentoo" ] && { echo "Syncing emerge..."; rm "/usr/portage/metadata/timestamp.x"; emerge-webrsync; echo "=sys-auth/realmd-0.16.2 ~amd64" > /etc/portage/package.accept_keywords; eselect profile set default/linux/amd64/17.0; cd; git clone https://anongit.gentoo.org/git/proj/portage.git; sudo eselect python set 1; sudo USE='-filecaps internal-glib' portage/bin/emerge world -NDuv; sudo PYTHON_TARGETS="python2_7" portage/bin/emerge portage -v; }
   q_install dos2unix
   q_install applydeltarpm deltarpm
   ${P_INSTALL} nspr yum-utils *bash-complet* kernel-devel
+  service dbus restart
   [ ${ID} == 'gentoo' ] && { echo -e 'y\n' | layman -a sabayon; emerge realmd --quiet; } || { q_install realm realmd; q_install kinit krb5-workstation; }
   echo Hostname: $(hostname | cut -d'.' -f1)
   if [[ "$(hostname | cut -d'.' -f1)" == "dc" ]]; then echo "Refusing to turn a domain controller into a client. Aborting..."; exit; fi
@@ -66,6 +69,7 @@ EOL
   fi
   echo "Setting time zone..."
   ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
+  echo "Acquiring domain name, username, and realm..."
   domain=$(echo $realm | cut -d'.' -f1)
   if [[ ! ${user} ]]; then user="deployer"; fi #echo "Run as a sudo'er with a username that has domain auth!"; exit 1; fi
   if [[ ! ${realm} ]]; then echo "The router/DHCP  server didn't return useful data!"; exit 1; fi

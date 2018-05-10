@@ -12,14 +12,16 @@ fi
 
 export PATH="${PATH}:/usr/local/go/bin"
 
+cd
+yum install epel-release -y
+yum update -y
+sudo yum install jq awscli unzip git kernel-devel kernel-devel-3.10.0-693.17.1.el7.x86_64 gcc make perl -y
+
 cd /usr/src
 wget -nc "https://releases.hashicorp.com/terraform/0.11.4/terraform_0.11.4_linux_amd64.zip" -O terraform.zip
 unzip terraform.zip -d /usr/local/bin && rm terraform.zip || exit 1
 
 cd
-yum update -y
-sudo yum install jq awscli unzip git kernel-devel kernel-devel-3.10.0-693.17.1.el7.x86_64 gcc make perl -y
-
 version=$(curl https://download.virtualbox.org/virtualbox/LATEST.TXT)
 wget https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack
 rpmfile="$(wget -r -np -nc https://download.virtualbox.org/virtualbox/${version}/ -A VirtualBox*${version}*_el7-1.x86_64.rpm 2>&1 | grep 'download.virtualbox.org/virtualbox/' | grep '\.rpm' | tail -n1 | cut -d"‘" -f2 | cut -d'’' -f1)"

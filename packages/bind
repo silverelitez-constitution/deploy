@@ -1,0 +1,100 @@
+#!/bin/bash
+packages="bind"
+test="" #which named"
+services="named"
+
+_configure() {
+  mkdir /var/named/master -p && chown named.named /var/named/master
+  wget -q -O /var/named/named.root http://www.internic.net/zones/named.root
+  chown root:named /var/named/named.root
+  chmod 640 /var/named/named.root
+  cat >/etc/named.conf <<EOL
+# Global Configuration Options
+options {
+auth-nxdomain yes;
+directory "/var/named";
+notify no;
+empty-zones-enable no;
+
+# IP addresses and network ranges allowed to query the DNS server:
+allow-query {
+127.0.0.1;
+10.37.224.0/24;
+};
+# IP addresses and network ranges allowed to run recursive queries:
+# (Zones not served by this DNS server)
+allow-recursion {
+127.0.0.1;
+10.37.224.0/24;
+};
+
+# Forward queries that can not be answered from own zones
+# to these DNS servers:
+forwarders {
+10.37.224.1;
+8.8.4.4;
+};
+
+# Disable zone transfers 
+allow-transfer {
+none;
+};
+};
+
+# Root Servers
+# (Required for recursive DNS queries)
+zone "." {
+type hint;
+file "named.root";
+};
+
+# localhost zone
+zone "localhost" {
+type master;
+file "master/localhost.zone";
+};
+
+# 127.0.0. zone.
+zone "0.0.127.in-addr.arpa" {
+type master;
+file "master/0.0.127.zone";
+};
+EOL
+  cat >/var/named/master/localhost.zone <<EOL
+\$TTL 3D
+
+\$ORIGIN localhost.
+
+@       1D      IN     SOA     @       root (
+  2013050101      ; serial
+  8H              ; refresh
+  2H              ; retry
+  4W              ; expiry
+  1D              ; minimum
+  )
+
+@       IN      NS      @
+  IN      A       127.0.0.1
+EOL
+cat >/var/named/master/0.0.127.zone <<EOL
+\$TTL 3D
+
+@       IN      SOA     localhost. root.localhost. (
+  2013050101      ; Serial
+  8H              ; Refresh
+  2H              ; Retry
+  4W              ; Expire
+  1D              ; Minimum TTL
+  )
+
+  IN      NS      localhost.
+
+1      IN      PTR     localhost.  
+EOL
+}
+_postinstall() {
+  chown named:named /var/named/master/0.0.127.zone
+  chmod 640 /var/named/master/0.0.127.zone
+  chown named:named /var/named/master/localhost.zone
+  chmod 640 /var/named/master/localhost.zone
+}

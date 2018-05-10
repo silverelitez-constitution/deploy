@@ -1,0 +1,11 @@
+virtualbox_vm.node: Refreshing state... (ID: 9336bce1-0012-4a38-9720-e760838b7ec9)
+
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+IPAddr = [
+    10.37.224.252
+]
+IPAddr1 = 10.37.224.252
+IPAddr2 = 10.37.224.252

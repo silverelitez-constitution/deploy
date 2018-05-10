@@ -21,8 +21,8 @@ scripts=${@:-head functions aliases global tail}
 
 [ ${debug} ] && echo "Scripts to run: ${scripts}"
 
-[ ! $domain ] && { echo -n Discovering domain...;domain=$(sudo realm discover | head -n1);echo $domain; }
 [ ! $domain ] && { echo -n Reading resolv.conf for domain...;domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2); echo $domain; }
+[ ! $domain ] && { echo -n Discovering domain...;domain=$(sudo realm discover | head -n1);echo $domain; }
 
 if [ ! $domain ]; then
   echo \
