@@ -1,8 +1,8 @@
 virtualbox_vm.node: Creating...
   cpus:                                     "" => "4"
-  image:                                    "" => "./terraform.d/images/centos-7.0-x86_64.box"
-  memory:                                   "" => "1024mib"
-  name:                                     "" => "chef"
+  image:                                    "" => "./terraform.d/images//xenial-server-cloudimg-amd64-vagrant.box"
+  memory:                                   "" => "1.0 gib"
+  name:                                     "" => "Ubuntu Server"
   network_adapter.#:                        "" => "1"
   network_adapter.0.device:                 "" => "IntelPro1000MTServer"
   network_adapter.0.host_interface:         "" => "p4p1"
@@ -12,17 +12,21 @@ virtualbox_vm.node: Creating...
   network_adapter.0.status:                 "" => "<computed>"
   network_adapter.0.type:                   "" => "bridged"
   status:                                   "" => "running"
-  url:                                      "" => "https://github.com/tommy-muehle/puppet-vagrant-boxes/releases/download/1.1.0/centos-7.0-x86_64.box"
-virtualbox_vm.node: Still creating... (10s elapsed)
-virtualbox_vm.node: Still creating... (20s elapsed)
-virtualbox_vm.node: Still creating... (30s elapsed)
-virtualbox_vm.node: Still creating... (40s elapsed)
-virtualbox_vm.node: Creation complete after 44s (ID: 9f411f1c-a7b9-464c-9745-61f87610e727)
+  url:                                      "" => "https://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-vagrant.box"
 
-Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+Error: Error applying plan:
 
-Outputs:
+1 error(s) occurred:
 
-IPAddr = 10.37.224.140
+* virtualbox_vm.node: 1 error(s) occurred:
+
+* virtualbox_vm.node: machine already exists
+
+Terraform does not automatically rollback in the face of errors.
+Instead, your Terraform state file has been partially updated with
+any resources that successfully completed. Please address the error
+above and apply again to incrementally change your infrastructure.
+
+
 Exit code:
-0
+1

@@ -14,9 +14,9 @@ Terraform will perform the following actions:
 + virtualbox_vm.node
       id:                                       <computed>
       cpus:                                     "4"
-      image:                                    "./terraform.d/images/centos-7.0-x86_64.box"
-      memory:                                   "1024mib"
-      name:                                     "chef"
+      image:                                    "./terraform.d/images//xenial-server-cloudimg-amd64-vagrant.box"
+      memory:                                   "1.0 gib"
+      name:                                     "Ubuntu Server"
       network_adapter.#:                        "1"
       network_adapter.0.device:                 "IntelPro1000MTServer"
       network_adapter.0.host_interface:         "p4p1"
@@ -26,7 +26,7 @@ Terraform will perform the following actions:
       network_adapter.0.status:                 <computed>
       network_adapter.0.type:                   "bridged"
       status:                                   "running"
-      url:                                      "https://github.com/tommy-muehle/puppet-vagrant-boxes/releases/download/1.1.0/centos-7.0-x86_64.box"
+      url:                                      "https://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-vagrant.box"
 Plan: 1 to add, 0 to change, 0 to destroy.
 
 ------------------------------------------------------------------------
