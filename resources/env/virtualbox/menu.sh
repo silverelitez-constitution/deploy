@@ -423,7 +423,7 @@ save_exit() { dialog --title "Alert" \
 }
 
 # Temporary shim for getopts
-[ ${1} != '--noX' ] && { [ ${DISPLAY} ] && dialog() { Xdialog "${@}"; } ;} || shift;
+[ "${1}" != '--noX' ] && { [ "${DISPLAY}" ] && dialog() { Xdialog "${@}"; } ;} || shift;
 service="${1}"
 action="${2}"
 
