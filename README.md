@@ -90,7 +90,8 @@ To-Do
 - [x] terraform the virtualboxes
 - [ ] set up aws system
 - [ ] link router to aws router via openvpn
-- [x] set up dns system
+- [ ] set up BIND system
+- [ ] configure ProBIND
 - [ ] bridge dns with aws internal dns
 - [ ] set up S3FS for configuration backup/storage
 - [ ] set up gitFS to replace gitsource bash functions (possibly gluster as well)

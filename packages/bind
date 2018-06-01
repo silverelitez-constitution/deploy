@@ -1,6 +1,6 @@
 #!/bin/bash
 packages="bind"
-test="" #which named"
+test="which named"
 services="named"
 
 _configure() {
