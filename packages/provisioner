@@ -17,9 +17,8 @@ is_sudo() {
     sudo ${0} ${@} || exit 1
     exit
   else
-    user=${SUDO_USER}
-    echo "Success as ${user}"
-	source /etc/os-release
+    echo "Success as ${SUDO_USER}"
+    source /etc/os-release
   fi
 }
 q_install() {
@@ -93,12 +92,16 @@ _preinstall() {
   do 
     ${P_INSTALL} ${package}
   done
-  echo Leaving currently joined realm...
-  realm leave
-  echo Discovering DHCP provided realm...
-  realm discover ${realm}
-  echo Joining ${realm}
-  realm join ${realm}
+  if [ "$(hostname)" != "dc" ]; then
+    echo Leaving currently joined realm...
+    realm leave
+    echo Discovering DHCP provided realm...
+    realm discover ${realm}
+    echo Joining ${realm}
+    realm join ${realm}
+  else
+    echo "DC shouldn't join itself. Avoiding severe psychological disorientation..."
+  fi
 }
 _configure() {
   echo "Update global profile.d script on ${domain}..."

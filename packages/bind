@@ -1,13 +1,42 @@
 #!/bin/bash
-packages="bind"
+needs_services="mysql webserver dc"
+packages="bind httpd apache2"
 test="which named"
+#test="[ \"$(named-checkconf)\" == \"\" ]"
 services="named"
+
+_postinstall() {
+  # required for bind/samba operations
+  [ ! nsupdate -v ] && P_INSTALL nsupdate
+  cd /usr/src
+  wget "https://sourceforge.net/projects/probind/files/ProBIND/ProBIND%201.0.3/probind-1.0.3.tar.gz/download"
+  tar -zxvf probind-1.0.3.tar.gz
+  cd probind
+  # install to webserver html directory for our hostname along with a bunch of other things that will need to wait
+  cd
+}
 
 _configure() {
   mkdir /var/named/master -p && chown named.named /var/named/master
   wget -q -O /var/named/named.root http://www.internic.net/zones/named.root
   chown root:named /var/named/named.root
   chmod 640 /var/named/named.root
+  version=${named -v | cut -d' ' -f2 | cut -d'-' -f1 | cut -d'.' -f-2}
+  case "${version}" in
+    9.8)# For BIND 9.8
+    bind_lib='database "dlopen /usr/local/samba/lib/bind9/dlz_bind9.so";';;
+    9.9) # For BIND 9.9
+    bind_lib='database "dlopen /usr/local/samba/lib/bind9/dlz_bind9_9.so";';;
+    9.10) # For BIND 9.10
+    bind_lib='database "dlopen /usr/local/samba/lib/bind9/dlz_bind9_10.so";';;    
+    9.11) # For BIND 9.11
+    bind_lib='database "dlopen /usr/local/samba/lib/bind9/dlz_bind9_11.so";';;
+  esac
+  cat >/var/lib/samba/private/named.conf.test <<EOL
+dlz "AD DNS Zone" {
+${version}
+};
+EOL
   cat >/etc/named.conf <<EOL
 # Global Configuration Options
 options {
@@ -59,6 +88,7 @@ zone "0.0.127.in-addr.arpa" {
 type master;
 file "master/0.0.127.zone";
 };
+include "/var/lib/samba/private/named.conf";
 EOL
   cat >/var/named/master/localhost.zone <<EOL
 \$TTL 3D
@@ -97,4 +127,7 @@ _postinstall() {
   chmod 640 /var/named/master/0.0.127.zone
   chown named:named /var/named/master/localhost.zone
   chmod 640 /var/named/master/localhost.zone
+  chmod 640 /var/lib/samba/private/dns.keytab
+  chown root:named /var/lib/samba/private/dns.keytab
+  chown root:named /etc/krb5.conf
 }
