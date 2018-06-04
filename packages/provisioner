@@ -2,6 +2,7 @@
 # This deployment script has NOT been ravenously tested on:
 # Centos 7, Ubuntu 17.10, Gentoo 17.1
 source /etc/os-release
+test="id ${user}@${realm}"
 
 # Resources
 gitsource() {
@@ -35,8 +36,6 @@ q_install() {
     ${P_INSTALL} ${package}
   }
 }
-
-test="id ${user}@${realm}"
 
 # Steps
 _init() {

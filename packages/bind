@@ -15,7 +15,6 @@ _postinstall() {
   # install to webserver html directory for our hostname along with a bunch of other things that will need to wait
   cd
 }
-
 _configure() {
   mkdir /var/named/master -p && chown named.named /var/named/master
   wget -q -O /var/named/named.root http://www.internic.net/zones/named.root
@@ -106,7 +105,7 @@ EOL
 @       IN      NS      @
   IN      A       127.0.0.1
 EOL
-cat >/var/named/master/0.0.127.zone <<EOL
+  cat >/var/named/master/0.0.127.zone <<EOL
 \$TTL 3D
 
 @       IN      SOA     localhost. root.localhost. (
