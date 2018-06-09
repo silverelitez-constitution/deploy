@@ -16,7 +16,7 @@ gitsource "packages/${package}"
 
 PACKAGE_init() { echo init;
 
-	[ ! "${svc}" ] && svc=$(basename "$0"| cut -d. -f1)
+	[ "${svc}" == "" ] && svc=$(basename "$0"| cut -d. -f1)
   #svc=${${svc}:-$(basename "$0"| cut -d. -f1)}
 	[ "${svc}" == 'default' ] && svc="${2}"
   #case ${svc} in; default) svc="${2}";; esac

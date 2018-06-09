@@ -1,13 +1,13 @@
 #!/bin/bash
-needs_services="mysql webserver dc"
+needs="mysql webserver dc"
 packages="bind httpd apache2"
-test="which named"
+#test="which named"
 #test="[ \"$(named-checkconf)\" == \"\" ]"
 services="named"
 
-_postinstall() {
+_preinstall() {
   # required for bind/samba operations
-  [ ! nsupdate -v ] && P_INSTALL nsupdate
+  P_INSTALL nsupdate
   cd /usr/src
   wget "https://sourceforge.net/projects/probind/files/ProBIND/ProBIND%201.0.3/probind-1.0.3.tar.gz/download"
   tar -zxvf probind-1.0.3.tar.gz
@@ -20,7 +20,7 @@ _configure() {
   wget -q -O /var/named/named.root http://www.internic.net/zones/named.root
   chown root:named /var/named/named.root
   chmod 640 /var/named/named.root
-  version=${named -v | cut -d' ' -f2 | cut -d'-' -f1 | cut -d'.' -f-2}
+  version=$(named -v | cut -d' ' -f2 | cut -d'-' -f1 | cut -d'.' -f-2)
   case "${version}" in
     9.8)# For BIND 9.8
     bind_lib='database "dlopen /usr/local/samba/lib/bind9/dlz_bind9.so";';;
@@ -31,12 +31,12 @@ _configure() {
     9.11) # For BIND 9.11
     bind_lib='database "dlopen /usr/local/samba/lib/bind9/dlz_bind9_11.so";';;
   esac
-  cat >/var/lib/samba/private/named.conf.test <<EOL
+  cat > /var/lib/samba/private/named.conf.test <<EOL
 dlz "AD DNS Zone" {
 ${version}
 };
 EOL
-  cat >/etc/named.conf <<EOL
+  cat > /etc/named.conf <<EOL
 # Global Configuration Options
 options {
 auth-nxdomain yes;
@@ -89,7 +89,7 @@ file "master/0.0.127.zone";
 };
 include "/var/lib/samba/private/named.conf";
 EOL
-  cat >/var/named/master/localhost.zone <<EOL
+  cat > /var/named/master/localhost.zone <<EOL
 \$TTL 3D
 
 \$ORIGIN localhost.
@@ -105,7 +105,7 @@ EOL
 @       IN      NS      @
   IN      A       127.0.0.1
 EOL
-  cat >/var/named/master/0.0.127.zone <<EOL
+  cat > /var/named/master/0.0.127.zone <<EOL
 \$TTL 3D
 
 @       IN      SOA     localhost. root.localhost. (
