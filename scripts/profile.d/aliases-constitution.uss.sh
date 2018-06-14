@@ -5,6 +5,7 @@ alias fucking='sudo'
 
 alias ga='git commit -a --amend && git push -f'
 alias gbr='git branch -r'
+alias gad='git add .'
 alias gl='git checkout -'
 alias gm='git checkout master'
 alias gp='git pull'
