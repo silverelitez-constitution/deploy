@@ -352,10 +352,10 @@ packages() {
 deploy() { 
 	for node in $(seq 0 $((${count}-1))); do
 		if [ "${node}" == "0" ]; then 
-			tmux new-session -d "$(pwd)/../deploy.sh ${service} ${node} $(pwd) ${count} ${packages}"
+			tmux new-session -d "$(pwd)/../deploy.sh $(pwd) ${node} ${service} ${count} ${packages}"
 			tmux set-hook -g pane-exited 'select-layout tiled'
 		else
-			tmux split-window "$(pwd)/../deploy.sh ${service} ${node} $(pwd) ${count} ${packages}"
+			tmux split-window "$(pwd)/../deploy.sh $(pwd) ${node} ${service} ${count} ${packages}"
 		fi
 		tmux select-layout tiled
 	done
