@@ -2,6 +2,14 @@
 
 [ ${debug} ] && echo "Loading functions..."
 
+chances() {
+  command="${@}"
+  chances="3"
+  for i in `seq ${chances}`; do 
+    "${command}" && return
+  done
+}
+
 translation_layer() {
   # Loading translation layer for ${DEPLOY_ID}... 
   #Translation layers will be implemented in the next major merge
