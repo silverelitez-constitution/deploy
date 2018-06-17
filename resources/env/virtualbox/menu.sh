@@ -45,7 +45,7 @@ main() {
 			r "Resource count - ${count}" \
 			i "Image - ${os}:${image}" \
 			c "CPUs - ${cpus:-default}" \
-			m "RAM - ${memory:-default} Available: $(free -h | gawk  '/Mem:/{print $7}')" \
+			m "RAM - ${memory:-default} | Available: $(free -h | gawk  '/Mem:/{print $7}')" \
 			d "Disk Space - ${disk:-default}" \
 			N "Networking - ${interface:-auto}" \
 			z "Zone (beta) - ${zone:-default}" \
