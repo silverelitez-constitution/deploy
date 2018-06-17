@@ -10,7 +10,7 @@ gitsource() {
   realm=$(echo ${domain} | cut -d. -f1)
   gitsurl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/${script}"
   echo ${gitsurl}
-  source <(curl -s ${gitsurl} | sed 's/^404:.*/echo 404 error - ${gitsurl}/g' | dos2unix || echo echo Error)
+  source <(curl -s ${gitsurl} | sed 's/^404:.*/echo 404 error - ${gitsurl}/g'  || echo echo Error)
 }
 
 _init(){ :;}
@@ -63,7 +63,7 @@ PACKAGE_init() { echo Init...
 	echo "Initializing functions..."
 	giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/functions-${domain}.sh"
 	[ $debug ] && echo Executing "${giturl}"
-	source <( curl -s "${giturl}" | sed 's/^404:.*/echo 404 error - ${giturl}/g' | sed 's/^400:.*/echo 400 error - ${giturl}/g' | dos2unix; )
+	source <( curl -s "${giturl}" | sed 's/^404:.*/echo 404 error - ${giturl}/g' | sed 's/^400:.*/echo 400 error - ${giturl}/g' ; )
 
 	echo "Loading translation layer..."
 	translation_layer

@@ -53,7 +53,6 @@ deployer() {
       chmod +x ./deployer.sh; sudo ./deployer.sh ${password} ${package} && rm ./deployer.sh"
 	done
 	IFS=${oldIFS}
-  read pause
 }
 
 IPAddr=$(terraform output -json IPAddr | jq ".value[${node}]")
