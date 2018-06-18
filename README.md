@@ -5,7 +5,7 @@ Currently testing on Centos 7 Core, Ubuntu 17.10.1, Gentoo 17.0-no-multilib
 This is a Proof-Of-Concept project to develop a fully automated system that pays homage to the automatic transmission
 in the way that can turn what is currently a very complicated and messy process to what most people don't even
 give a second thought to. Thus turning a complete waste of resources and time into a way for the average engineer
-to get more stuff done and be tied up with menial tasks.
+to get more stuff done and not be tied up with menial tasks.
 
 It's currently being set up in the way that would be fully turn-key with an initial set up of 15 minutes (automated, naturally)
 and the user only having to supply a domain name for the system to use. Authentication is still a little tricky due to the balance of
