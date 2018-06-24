@@ -46,7 +46,7 @@ EOL
 generator-settings=
 force-gamemode=false
 allow-nether=true
-gamemode=0
+gamemode=1
 enable-query=false
 player-idle-timeout=0
 difficulty=1
@@ -57,7 +57,7 @@ pvp=true
 snooper-enabled=true
 level-type=DEFAULT
 hardcore=false
-enable-command-block=false
+enable-command-block=true
 max-players=20
 network-compression-threshold=256
 resource-pack-sha1=
