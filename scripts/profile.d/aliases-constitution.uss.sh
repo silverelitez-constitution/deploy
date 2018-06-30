@@ -1,3 +1,5 @@
+[ -e ~/.bash_aliases ] && source ~/.bash_aliases
+
 alias egrep='egrep --color=auto'
 alias fano='sudo nano'
 alias fgrep='fgrep --color=auto'
