@@ -5,7 +5,7 @@
 chances() {
   command="${@}"
   chances="3"
-  for i in `seq ${chances}`; do 
+  for i in $(seq ${chances}); do 
     ${command} && return || fuck
   done
 }

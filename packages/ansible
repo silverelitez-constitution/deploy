@@ -1,0 +1,4 @@
+#!/bin/bash
+
+yum install ansible
+ssh-keygen

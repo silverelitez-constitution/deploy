@@ -32,7 +32,7 @@ q_install() {
       gentoo) P_INSTALL="emerge -v";;
 	  *) echo "No distro declared. Please manually install ${package} for ${binary}"
     esac; 
-	#P_INSTALL+="--quiet "
+    #P_INSTALL+="--quiet "
     ${P_INSTALL} ${package}
   }
 }
