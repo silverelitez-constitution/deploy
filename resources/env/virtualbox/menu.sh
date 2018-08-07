@@ -372,7 +372,7 @@ save_exit() { dialog --title "Alert" \
 }
 
 # Temporary shim for getopts
-[ "${1}" == '--X' ] && { [ "${DISPLAY}" ] && dialog() { Xdialog "${@}"; } ; shift; }
+[ "${1}" == '--X' ] && { [ "${DISPLAY}" ] && dialog() { Xdialog "${@}"; } || dialog() { command dialog --ascii-lines "${@}"; } ; shift; }
 service="${1}"; shift
 action="${1}"; shift
 
