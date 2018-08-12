@@ -9,6 +9,8 @@ count=${1};shift
 packages=${@}; shift
 svc=${service}
 
+dialog() { command dialog --ascii-lines "${@}"; }
+
 # Save current variables to file
 save() {
 	dialog --infobox "Preparing files..." 3 34
