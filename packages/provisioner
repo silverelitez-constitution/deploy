@@ -114,6 +114,7 @@ _install() {
   echo "Installing services..."
   [[ ${ID} == "centos" ]] && { echo "Installing crontab..."; echo -e "$(crontab -l)\n*/5 * * * * yum makecache --quiet" | sort -u | crontab; }
   echo "Writing sssd.conf..."
+  mkdir -p /etc/sssd
   cat >/etc/sssd/sssd.conf << EOL
 [sssd]
 domains = $realm

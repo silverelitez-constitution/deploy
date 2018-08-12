@@ -1,30 +1,7 @@
-virtualbox_vm.node[2]: Refreshing state... (ID: 635a44d3-1060-40f3-a476-35185c5ae616)
-virtualbox_vm.node[3]: Refreshing state... (ID: 2b64e236-5094-4bc1-a524-4f4063bd3dd1)
-virtualbox_vm.node[1]: Refreshing state... (ID: 03d1f1d8-a2df-4365-a037-ea6bcb26d02d)
 virtualbox_vm.node[0]: Refreshing state... (ID: c153952f-dc61-4d28-b615-28115f6637e5)
-virtualbox_vm.node[2]: Destroying... (ID: 635a44d3-1060-40f3-a476-35185c5ae616)
-virtualbox_vm.node[3]: Destroying... (ID: 2b64e236-5094-4bc1-a524-4f4063bd3dd1)
-virtualbox_vm.node[1]: Modifying... (ID: 03d1f1d8-a2df-4365-a037-ea6bcb26d02d)
-  memory: "1.0 gib" => "2.0 gib"
-  status: "paused" => "running"
-virtualbox_vm.node[0]: Modifying... (ID: c153952f-dc61-4d28-b615-28115f6637e5)
-  memory: "1.0 gib" => "2.0 gib"
-  status: "aborted" => "running"
-virtualbox_vm.node[3]: Destruction complete after 2s
-virtualbox_vm.node[2]: Destruction complete after 3s
-virtualbox_vm.node.0: Still modifying... (ID: c153952f-dc61-4d28-b615-28115f6637e5, 10s elapsed)
-virtualbox_vm.node.1: Still modifying... (ID: 03d1f1d8-a2df-4365-a037-ea6bcb26d02d, 10s elapsed)
-virtualbox_vm.node.0: Still modifying... (ID: c153952f-dc61-4d28-b615-28115f6637e5, 20s elapsed)
-virtualbox_vm.node.1: Still modifying... (ID: 03d1f1d8-a2df-4365-a037-ea6bcb26d02d, 20s elapsed)
-virtualbox_vm.node.1: Still modifying... (ID: 03d1f1d8-a2df-4365-a037-ea6bcb26d02d, 30s elapsed)
-virtualbox_vm.node.0: Still modifying... (ID: c153952f-dc61-4d28-b615-28115f6637e5, 30s elapsed)
-virtualbox_vm.node.1: Still modifying... (ID: 03d1f1d8-a2df-4365-a037-ea6bcb26d02d, 40s elapsed)
-virtualbox_vm.node.0: Still modifying... (ID: c153952f-dc61-4d28-b615-28115f6637e5, 40s elapsed)
-virtualbox_vm.node[1]: Modifications complete after 48s (ID: 03d1f1d8-a2df-4365-a037-ea6bcb26d02d)
-virtualbox_vm.node.0: Still modifying... (ID: c153952f-dc61-4d28-b615-28115f6637e5, 50s elapsed)
-virtualbox_vm.node[0]: Modifications complete after 57s (ID: c153952f-dc61-4d28-b615-28115f6637e5)
+virtualbox_vm.node[1]: Refreshing state... (ID: 03d1f1d8-a2df-4365-a037-ea6bcb26d02d)
 
-Apply complete! Resources: 0 added, 2 changed, 2 destroyed.
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 
 Outputs:
 
