@@ -1,5 +1,5 @@
-count="4"
-memory="1.0 gib"
+count="2"
+memory="2.0 gib"
 os="3"
 interface="p4p1"
 cpus="4"
