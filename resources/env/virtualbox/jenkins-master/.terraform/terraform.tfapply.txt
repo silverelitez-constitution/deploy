@@ -1,15 +1,11 @@
-virtualbox_vm.node: Creating...
-  cpus:                                     "" => "1"
-  image:                                    "" => "./terraform.d/images//CentOS-7.1.1503-x86_64-netboot.box"
-  memory:                                   "" => "1.0 gib"
-  name:                                     "" => "Jenkins Master-01"
-  network_adapter.#:                        "" => "1"
-  network_adapter.0.device:                 "" => "IntelPro1000MTServer"
-  network_adapter.0.host_interface:         "" => "p4p1"
-  network_adapter.0.ipv4_address:           "" => "<computed>"
-  network_adapter.0.ipv4_address_available: "" => "<computed>"
-  network_adapter.0.mac_address:            "" => "<computed>"
-  network_adapter.0.status:                 "" => "<computed>"
-  network_adapter.0.type:                   "" => "bridged"
-  status:                                   "" => "running"
-  url:                                      "" => "https://github.com/holms/vagrant-centos7-box/releases/download/7.1.1503.001/CentOS-7.1.1503-x86_64-netboot.box"
+virtualbox_vm.node: Refreshing state... (ID: c086867e-b22a-411e-a8f5-01a95ed7ac82)
+
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+IPAddr = [
+    10.37.224.229
+]
+IPAddr1 = 10.37.224.229
+IPAddr2 = 10.37.224.229
