@@ -7,9 +7,15 @@ in the way that can turn what is currently a very complicated and messy process 
 give a second thought to. Thus turning a complete waste of resources and time into a way for the average engineer
 to get more stuff done and not be tied up with menial tasks.
 
+NEW! The translator system allows an administrator to run singular commands to interface with any distro. It works by aliasing/translating a list of commands to distro
+specific commands. No more needing to look up what package manager or commands to use or even to read /etc/issue to figure out what to do. Computers are our butlers, let's
+get the most out of our eager servants with as little effort as possible. That way, we can get more done with less unneeded effort.
+
+The translator files are straight-forward. To add your distro, simply copy a translation file, fill in the variables/functions and issue a PR. We love your PR's!
+
 It's currently being set up in the way that would be fully turn-key with an initial set up of 15 minutes (automated, naturally)
 and the user only having to supply a domain name for the system to use. Authentication is still a little tricky due to the balance of
-security and ease-of-use. Most likely a Yubikey will be implemented.
+security and ease-of-use. Most likely a Yubikey will be implemented for initial/master authentication.
 
 I'd like to reiterate that this _IS_ a _POC_. Despite this system being used to run and manage my network, it's NOT in 
 ANY WAY meant to serve as a production deployment system. But instead, parts of this system that work very well are welcomed
@@ -26,10 +32,15 @@ To begin, type the following into your terminal and follow the on-screen instruc
 How to execute deploy
 -----
 
-Currently you'd manually do it by cloning a box from the freshbox vm and changing the mac address. ssh into 
+Run ./menu to navigate the virtual machine manager. Through this, you can add services, manage packages, configure default settings, and more.
+The system is developed for initial configurations that will do everything needed to run a network. Be it a home LAN or an enterprise system, it can take care of it all.
+
+You can manually spin up a service by cloning a box from the freshbox vm and changing the mac address. ssh into 
 'freshbox' and change the '/etc/hostname' to the service name for the box. eg. webserver, dns-1, dns-2, dc, 
 backup-dc, or ftp. reboot the box and once it's up, run 'deployer [service] [password] <optional hostnames>' and it 
 should automatically do all the things required to prepare the service.
+
+The menu system will automatically do all of those things, though.
 
 Current deployer examples are as follows:
 ```deployer unifi mypassword123```
