@@ -12,7 +12,7 @@ chances() {
 
 translation_layer() {
   # Loading translation layer for ${DEPLOY_ID}... 
-  #Translation layers will be implemented in the next major merge
+  #Translation layers have been finally implemented! Beta testing welcomed!!
   gitsource resources/translators/default.sh
 }
 

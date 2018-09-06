@@ -1,13 +1,59 @@
 virtualbox_vm.node[0]: Refreshing state... (ID: c153952f-dc61-4d28-b615-28115f6637e5)
 virtualbox_vm.node[1]: Refreshing state... (ID: 03d1f1d8-a2df-4365-a037-ea6bcb26d02d)
+virtualbox_vm.node[1]: Destroying... (ID: 03d1f1d8-a2df-4365-a037-ea6bcb26d02d)
+virtualbox_vm.node[0]: Destroying... (ID: c153952f-dc61-4d28-b615-28115f6637e5)
+virtualbox_vm.node[1]: Destruction complete after 1s
+virtualbox_vm.node[1]: Creating...
+  cpus:                                     "" => "4"
+  image:                                    "" => "./terraform.d/images//CentOS-7.1.1503-x86_64-netboot.box"
+  memory:                                   "" => "2.0 gib"
+  name:                                     "" => "Peppy Playground-02"
+  network_adapter.#:                        "" => "1"
+  network_adapter.0.device:                 "" => "IntelPro1000MTServer"
+  network_adapter.0.host_interface:         "" => "p4p1"
+  network_adapter.0.ipv4_address:           "" => "<computed>"
+  network_adapter.0.ipv4_address_available: "" => "<computed>"
+  network_adapter.0.mac_address:            "" => "<computed>"
+  network_adapter.0.status:                 "" => "<computed>"
+  network_adapter.0.type:                   "" => "bridged"
+  status:                                   "" => "running"
+  url:                                      "" => "https://github.com/holms/vagrant-centos7-box/releases/download/7.1.1503.001/CentOS-7.1.1503-x86_64-netboot.box"
+virtualbox_vm.node[0]: Destruction complete after 2s
+virtualbox_vm.node[0]: Creating...
+  cpus:                                     "" => "4"
+  image:                                    "" => "./terraform.d/images//CentOS-7.1.1503-x86_64-netboot.box"
+  memory:                                   "" => "2.0 gib"
+  name:                                     "" => "Peppy Playground-01"
+  network_adapter.#:                        "" => "1"
+  network_adapter.0.device:                 "" => "IntelPro1000MTServer"
+  network_adapter.0.host_interface:         "" => "p4p1"
+  network_adapter.0.ipv4_address:           "" => "<computed>"
+  network_adapter.0.ipv4_address_available: "" => "<computed>"
+  network_adapter.0.mac_address:            "" => "<computed>"
+  network_adapter.0.status:                 "" => "<computed>"
+  network_adapter.0.type:                   "" => "bridged"
+  status:                                   "" => "running"
+  url:                                      "" => "https://github.com/holms/vagrant-centos7-box/releases/download/7.1.1503.001/CentOS-7.1.1503-x86_64-netboot.box"
+virtualbox_vm.node.1: Still creating... (10s elapsed)
+virtualbox_vm.node.0: Still creating... (10s elapsed)
+virtualbox_vm.node.1: Still creating... (20s elapsed)
+virtualbox_vm.node.0: Still creating... (20s elapsed)
+virtualbox_vm.node.1: Still creating... (30s elapsed)
+virtualbox_vm.node.0: Still creating... (30s elapsed)
+virtualbox_vm.node.1: Still creating... (40s elapsed)
+virtualbox_vm.node.0: Still creating... (40s elapsed)
+virtualbox_vm.node.1: Still creating... (50s elapsed)
+virtualbox_vm.node.0: Still creating... (50s elapsed)
+virtualbox_vm.node[1]: Creation complete after 51s (ID: 9f52a626-8d97-4f3e-90e2-1ff9df320a1b)
+virtualbox_vm.node[0]: Creation complete after 53s (ID: 3e506acc-9ee0-4f73-98f4-f04ea0d061c6)
 
-Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+Apply complete! Resources: 2 added, 0 changed, 2 destroyed.
 
 Outputs:
 
 IPAddr = [
-    10.37.224.169,
-    10.37.224.137
+    10.37.224.152,
+    10.37.224.218
 ]
-IPAddr1 = 10.37.224.137
-IPAddr2 = 10.37.224.169
+IPAddr1 = 10.37.224.218
+IPAddr2 = 10.37.224.152

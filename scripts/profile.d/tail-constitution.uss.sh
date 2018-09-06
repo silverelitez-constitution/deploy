@@ -23,7 +23,7 @@ date
 
 groups=$(id $(whoami) | sed 's/,/\n/g' | grep -oe "(.*)")
 
-# portage takes forever to generate update list. disabled during diag/sanity retention
+# portage takes forever to generate an update list. disabled during diag/sanity retention
 if [[ ${ID} != 'gentoo' ]]; then
   sudo yum-complete-transaction >/dev/null
   if echo "${groups}" | grep --color=never -e 'admin\|user' >/dev/null; then num_updates=$(P_UPDATES | wc -l)

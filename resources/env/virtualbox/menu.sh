@@ -25,8 +25,10 @@ init() {
 
 	# Refresh image list
 	dialog --infobox "Refreshing list of VM images..." 0 0
-	curl -s http://www.vagrantbox.es | grep -e '\.box' | cut -d'>' -f2 | cut -d'?' -f1 | grep -v "dropbox" | cut -d'<' -f1 > ./terraform.d/os.list
-	# Parse list for variable values
+	curl -s http://www.vagrantbox.es | grep -e '\.box' | cut -d'>' -f2 | cut -d'?' -f1 | grep -v "dropbox" | cut -d'<' -f1 > ./terraform.d/os.list.new
+	[ $(cat ./terraform.d/os.list.new | wc -l) -gt "0" ] && cp ./terraform.d/os.list.new ./terraform.d/os.list
+  
+  # Parse list for variable values
 	url=$(cat ./terraform.d/os.list | head -n${os} | tail -n1)
 	image=$(cat ./terraform.d/os.list | head -n${os} | tail -n1 | rev | cut -d'/' -f1 | rev)
 	# Fall into main loop
