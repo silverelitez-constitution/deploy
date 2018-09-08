@@ -1,15 +1,22 @@
 # If not running interactively, don't do anything
 [[ $- == *i* ]] || [[ ${1} ]] || return
 
+echo -n "Testing interconnectivity..."
+ping -q 4.2.2.2 -c3 >/dev/null || { echo "Failed"; return; } && echo "Done"
+
+F=$(curl -s wttr.in/los_angeles | grep °F | head -n1 | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | sed 's/[^0-9]//g')
+[ ! ${F} ] && F="93"
+
 # Welcome greeting
 echo \
 "Good morning and welcome to the Black Mesa Transit System.
 This automated train is provided for the security and
 convenience of the Black Mesa Research Facility personnel.
 The time is $(date +'%I:%M %p'). Current topside temperature
-is 93 degrees, with an estimated high of one hundred and five.
-The Black Mesa compound is maintained at a pleasant 68 degrees
-at all times."
+is ${F}°F, with an estimated high of 105°F. The Black Mesa
+compound is maintained at a pleasant 68°F at all times."
+
+unset F
 
 # debug
 if [ -e /etc/silverelitez/debug ]; then set -x; debug=1; source /etc/silverelitez/debug; fi
@@ -48,9 +55,6 @@ if [ ${TESTING_BRANCH} ]; then
 else
   branch="master"
 fi
-
-echo -n "Testing interconnectivity..."
-ping -q 4.2.2.2 -c3 >/dev/null || { echo "Failed"; return; } && echo "Done"
 
 giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/"
 

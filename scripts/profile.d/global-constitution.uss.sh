@@ -7,5 +7,5 @@ export PATH
 
 translation_layer
 refresh_global
-check_screen
 prep_prompt
+check_screen
