@@ -63,6 +63,6 @@ unset nscripts
 for runscript in ${scripts}
 do
   [ $debug ] && echo Executing "${giturl}${runscript}-${domain}.sh"
-  dialog --yesno "${runscript}" 20 20
+  [ $debug ] && dialog --yesno "${runscript}" 20 20
   source <( curl -s "${giturl}${runscript}-${domain}.sh" | sed 's/^404:.*/echo 404 error/g' | sed 's/^400:.*/echo 400 error/g' | dos2unix; )
 done 
