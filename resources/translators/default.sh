@@ -8,7 +8,7 @@
 echo "You're using ${PRETTY_NAME}"
 echo "OS ID: ${ID}"
 echo "Visit us at ${HOME_URL}"
-echo "Got a distro related problem? Let us know at ${BUG_REPORT_URL}"
+[ ${BUG_REPORT_URL} ] && echo "Got a distro related problem? Let us know at ${BUG_REPORT_URL}"
 
 gitsource resources/translators/${ID}.sh
 [ ${_SHELL_TRANSLATOR} ] || { echo "Translator load error"; return 1; }
