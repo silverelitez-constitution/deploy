@@ -9,10 +9,11 @@ P_UPDATE() { sudo yum update -y; }
 P_UPGRADE() { sudo yum upgrade -y; }
 P_SEARCH() { yum search "${@}"; }
 PG_BASH_COMPLETION() {
-  yum --quiet --cacheonly -y install *bash-complet*;
+  ${P_INSTALL} --cacheonly *bash-complet*;
 }
 
-P_INSTALL+=" --quiet "
-P_REMOVE+=" --quiet "
+P_DEFAULTS=" --quiet "
+P_INSTALL+=" ${P_DEFAULTS} "
+P_REMOVE+=" ${P_DEFAULTS} "
 
 _SHELL_TRANSLATOR=1

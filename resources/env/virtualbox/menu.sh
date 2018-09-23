@@ -42,6 +42,7 @@ main() {
 	output=$(
 		dialog --stdout --title "Service Configuration | $(pwd)" \
 		--menu "Please choose setting to change:" 0 0 0 \
+      P "Provider - ${provider}" \
 			s "Service - ${service}" \
 			n "Name - ${name}" \
 			r "Resource count - ${count}" \
@@ -68,6 +69,7 @@ main() {
 
 	case $? in 
 		0) case $output in
+      P) provider;;
 			i) image;;
 			c) cpus;;
 			m) memory;;
