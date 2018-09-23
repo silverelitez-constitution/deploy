@@ -68,11 +68,11 @@ EOL
   [ ! ${realm} ] && { echo -n Discovering realm...;realm=$(sudo realm discover | head -n1);echo $realm; }
   [ ! ${realm} ] && { echo -n Reading resolv.conf for realm...;realm=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2); echo $realm; }
   [ ! ${realm} ] && { echo No realm could be discovered. Aborting...; exit; }
-  if [[ ${password} ]]; then 
+  if [ "${password}" ]; then 
     echo "${password}" | kinit "${user}@$(echo ${realm} | awk '{print toupper($0)}')"
   else
 	echo "Password not supplied!"
-	kinit "${user}@$(echo ${realm} | awk '{print toupper($0)}')"
+	#kinit "${user}@$(echo ${realm} | awk '{print toupper($0)}')"
   fi
   echo "Setting time zone..."
   ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
@@ -91,6 +91,14 @@ _preinstall() {
   do 
     ${P_INSTALL} ${package}
   done
+
+  echo "Update global profile.d script on ${domain}..."
+  giturl="https://raw.githubusercontent.com/silverelitez-${domain}/deploy/master/scripts/profile.d/global.sh"
+  curl -s ${giturl} | dos2unix > /etc/profile.d/global.sh
+  chown root.root /etc/profile.d/global.sh
+  chmod a+x /etc/profile.d/global.sh
+  sleep 1
+
   if [ "$(hostname)" != "dc" ]; then
     echo Leaving currently joined realm...
     realm leave
@@ -103,13 +111,7 @@ _preinstall() {
   fi
 }
 _configure() {
-  echo "Update global profile.d script on ${domain}..."
-  giturl="https://raw.githubusercontent.com/silverelitez-${domain}/deploy/master/scripts/profile.d/global.sh"
-  curl -s ${giturl} | dos2unix > /etc/profile.d/global.sh
-  chown root.root /etc/profile.d/global.sh
-  chmod a+x /etc/profile.d/global.sh
-  sleep 20
-}
+echo configure; }
 _install() {
   echo "Installing services..."
   [[ ${ID} == "centos" ]] && { echo "Installing crontab..."; echo -e "$(crontab -l)\n*/5 * * * * yum makecache --quiet" | sort -u | crontab; }

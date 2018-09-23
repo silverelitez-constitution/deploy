@@ -289,6 +289,7 @@ destroy() {
 			result+=$(VBoxManage controlvm ${service} poweroff > /dev/null);
 			dialog --title "Destroying ${service}" --infobox "Unregistering VM..." 3 44
 			result+=$(VBoxManage unregistervm ${service} > /dev/null);
+      [ ${service} ] && result+=$(rm -r "/home/shayne/.terraform/virtualbox/machine/${service}-*")
 			cd ~/deploy/resources/env/virtualbox
 			result+=$(rm -rv "${service}")
 			dialog --title "Results" \
