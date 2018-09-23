@@ -86,8 +86,8 @@ main() {
 			A) save; apply;;
 			T) terraform destroy --auto-approve | dialog --progressbox "Running terraform destroy..." 15 80;;
 			X) destroy;;
-      Reset) for node in $(seq 1 ${count}); do VBoxManage controlvm "${name}-01" reset | dialog --progressbox "Reset" 15 80; done;;
-      Shutdown) for node in $(seq 1 ${count}); do VBoxManage controlvm "${name}-0${node}" acpipowerbutton | dialog --progressbox "Shutdown" 15 80; done;;
+      Reset) for node in $(seq 1 ${count}); do VBoxManage controlvm "${name}-01" reset | dialog --progressbox "Reset" 15 80; sleep 1; done;;
+      Shutdown) for node in $(seq 1 ${count}); do VBoxManage controlvm "${name}-0${node}" acpipowerbutton | dialog --progressbox "Shutdown" 15 80; sleep 1; done;;
 			x) save;;
 			R) init ${service};;
 			S) save; apply; deploy;;
@@ -270,7 +270,8 @@ apply() {
 	terraform init >/dev/null
 	dialog --infobox "Applying..." 3 34
 	terraform apply -auto-approve -no-color | tee ./.terraform/terraform.tfapply.txt 2>&1 | dialog --progressbox "Applying plan..." 20 80
-	[ "${?}" == "0" ] || sleep 5
+	[ "${?}" == "0" ] || sleep 4
+  sleep 1
 	output="main_menu"; return
 }
 
