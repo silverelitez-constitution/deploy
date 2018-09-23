@@ -58,8 +58,9 @@ deployer() {
 }
 
 IPAddr=$(terraform output -json IPAddr | jq ".value[${node}]")
+
 [ "${count}" != '1' ] && hostname="${service}-$((${node}+1))" || hostname="${service}"
-if [ ! "${IPAddr}" ]; then errmsg 1 "Could not determine IP address. Did resources apply?"; output="main_menu"; return; fi
+[ "${IPAddr}" ] || ( errmsg 1 "Could not determine IP address. Did resources apply?"; output="main_menu"; return )
 dialog --infobox "${count} IP: ${IPAddr} Hostname: ${hostname}" 0 0
 sleep 1
 ip="$(echo ${IPAddr} | sed 's/\"//g')"
