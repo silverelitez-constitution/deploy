@@ -1,0 +1,12 @@
+name=${1:-default}
+awsenv=$(egrep "^${name}$(printf '\t')" ~/.aws/env) || ( echo ${name} was not found in '~/.aws/env'; exit 1; )
+
+awsid=$(echo ${awsenv} | cut -f2 -d' ')
+awskey=$(echo ${awsenv} | cut -f3 -d' ')
+region=$(echo ${awsenv} | cut -f4 -d' ')
+
+export AWS_ENV="${name}"
+export AWS_ACCESS_KEY_ID="${awsid}"
+export AWS_SECRET_ACCESS_KEY="${awskey}"
+export AWS_DEFAULT_REGION="${region:-us-east-1}"
+
