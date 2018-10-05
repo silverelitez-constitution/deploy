@@ -2,6 +2,13 @@
 
 [ ${debug} ] && echo "Loading functions..."
 
+tube() {
+  url="${@}"
+  while ! youtube-dl "${url}"; do
+    sleep 1
+  done
+}
+
 chances() {
   command="${@}"
   chances="3"
