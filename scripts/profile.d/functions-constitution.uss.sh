@@ -2,17 +2,28 @@
 
 [ ${debug} ] && echo "Loading functions..."
 
-tube() {
+tube() { # tube https://example.com/supercoolvideo
+  # input
   url="${@}"
-  while ! youtube-dl "${url}"; do
+  # ensure counter is 0
+  i=0
+  # keep looping as long as the download fails or the counter is less than 10
+  while ! youtube-dl "${url}" && [[ ${i} -lt '10' ]]; do
+    # increment the counter
+    ((i++))
+    # output the counter
+    echo "Attempt ${i} of 10"
+    # wait 1 second between attempts
     sleep 1
   done
 }
 
 chances() {
   command="${@}"
+  # Kindergarten Teacher Mode
   chances="3"
   for i in $(seq ${chances}); do 
+    # Matt's bashy comedy hour presents:
     ${command} && return || fuck
   done
 }

@@ -1,5 +1,5 @@
-count="2"
-memory="512 mib"
+count="5"
+memory="256 mib"
 os="3"
 interface="p4p1"
 cpus="4"

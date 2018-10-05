@@ -1,24 +1,19 @@
+virtualbox_vm.node[3]: Refreshing state... (ID: 1725b906-f4ad-4a35-a6fa-3e1cb66c3051)
 virtualbox_vm.node[1]: Refreshing state... (ID: 769c6180-7970-46ac-b133-38c37150590c)
+virtualbox_vm.node[4]: Refreshing state... (ID: e57f21e6-3ca4-40f5-88c4-20fca6b14791)
+virtualbox_vm.node[2]: Refreshing state... (ID: e20e5e7b-1932-44dd-bb60-1e7c34afbab2)
 virtualbox_vm.node[0]: Refreshing state... (ID: 671fe4dc-71c5-419e-969a-5a1f072596df)
-virtualbox_vm.node[0]: Modifying... (ID: 671fe4dc-71c5-419e-969a-5a1f072596df)
-  status: "paused" => "running"
-virtualbox_vm.node[1]: Modifying... (ID: 769c6180-7970-46ac-b133-38c37150590c)
-  status: "paused" => "running"
-virtualbox_vm.node.1: Still modifying... (ID: 769c6180-7970-46ac-b133-38c37150590c, 10s elapsed)
-virtualbox_vm.node.0: Still modifying... (ID: 671fe4dc-71c5-419e-969a-5a1f072596df, 10s elapsed)
-virtualbox_vm.node.1: Still modifying... (ID: 769c6180-7970-46ac-b133-38c37150590c, 20s elapsed)
-virtualbox_vm.node.0: Still modifying... (ID: 671fe4dc-71c5-419e-969a-5a1f072596df, 20s elapsed)
-virtualbox_vm.node[0]: Modifications complete after 25s (ID: 671fe4dc-71c5-419e-969a-5a1f072596df)
-virtualbox_vm.node.1: Still modifying... (ID: 769c6180-7970-46ac-b133-38c37150590c, 30s elapsed)
-virtualbox_vm.node[1]: Modifications complete after 35s (ID: 769c6180-7970-46ac-b133-38c37150590c)
 
-Apply complete! Resources: 0 added, 2 changed, 0 destroyed.
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 
 Outputs:
 
 IPAddr = [
     10.37.224.181,
-    10.37.224.55
+    10.37.224.55,
+    10.37.224.51,
+    10.37.224.45,
+    10.37.224.101
 ]
 IPAddr_1 = 10.37.224.55
-IPAddr_2 = 10.37.224.181
+IPAddr_2 = 10.37.224.51
