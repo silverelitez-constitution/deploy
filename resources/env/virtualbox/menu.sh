@@ -366,7 +366,10 @@ deploy() {
 		tmux select-layout tiled
 	done
 	tmux -2 attach-session -d 
-	dialog --title "Deployment completed for ${service}" --infobox "The end." 0 0
+	for file in $(ls --sort time -1 -r *.log); do
+    dialog --title "${file}" --textbox "${file}" 20 80
+  done
+  dialog --title "Deployment completed for ${service}" --infobox "The end." 0 0
   sleep 1;
 	[ ! "${1}" ] && services || return;
 }
