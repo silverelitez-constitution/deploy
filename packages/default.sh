@@ -88,6 +88,7 @@ PACKAGE_configure() { _configure;
 	[ "${services}" ] && service ${service} restart || { echo "Error. Aborting!"; exit 1; }
 }
 PACKAGE_tail() { _tail;
+  echo "End of script."
 }
 
 # Run provisioning stages
