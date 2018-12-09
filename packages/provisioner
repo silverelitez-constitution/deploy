@@ -41,7 +41,7 @@ q_install() {
 _init() {
   echo "Acquiring domain name, username, and realm..."
   domain=$(echo $realm | cut -d'.' -f1)
-  if [[ ! ${user} ]]; then user="deployer"; fi #echo "Run as a sudo'er with a username that has domain auth!"; exit 1; fi
+  if [[ ! ${user} ]]; then user="shayne"; fi #echo "Run as a sudo'er with a username that has domain auth!"; exit 1; fi
   if [[ ! ${realm} ]]; then echo "The router/DHCP server didn't return useful data!"; exit 1; fi
   echo "Preparing host..."
   timedatectl set-ntp false
