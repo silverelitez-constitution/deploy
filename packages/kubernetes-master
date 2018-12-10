@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo "Diagnostics text"
-
-software="docker docker-client kubernetes"
+software="docker docker-client kubernetes kubernetes-client kubernetes-master"
 services="docker"
 test="sudo docker run hello-world"

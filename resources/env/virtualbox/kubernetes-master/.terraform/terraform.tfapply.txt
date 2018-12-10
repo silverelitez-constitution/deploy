@@ -1,11 +1,67 @@
-virtualbox_vm.node: Refreshing state... (ID: 729f58cb-32f4-4b2e-a141-aec42bff3ebe)
+virtualbox_vm.node: Refreshing state... (ID: c4121ef7-07a9-486c-a3c8-9ec4baf0aaa3)
+virtualbox_vm.node: Destroying... (ID: c4121ef7-07a9-486c-a3c8-9ec4baf0aaa3)
+virtualbox_vm.node: Destruction complete after 1s
+virtualbox_vm.node: Creating...
+  cpus:                                     "" => "4"
+  image:                                    "" => "./terraform.d/images//vagrant-centos-7.2.box"
+  memory:                                   "" => "2.0 gib"
+  name:                                     "" => "Kubernetes Master-01"
+  network_adapter.#:                        "" => "1"
+  network_adapter.0.device:                 "" => "IntelPro1000MTServer"
+  network_adapter.0.host_interface:         "" => "p4p1"
+  network_adapter.0.ipv4_address:           "" => "<computed>"
+  network_adapter.0.ipv4_address_available: "" => "<computed>"
+  network_adapter.0.mac_address:            "" => "<computed>"
+  network_adapter.0.status:                 "" => "<computed>"
+  network_adapter.0.type:                   "" => "bridged"
+  status:                                   "" => "running"
+  url:                                      "" => "https://github.com/CommanderK5/packer-centos-template/releases/download/0.7.2/vagrant-centos-7.2.box"
+virtualbox_vm.node: Still creating... (10s elapsed)
+virtualbox_vm.node: Still creating... (20s elapsed)
+virtualbox_vm.node: Still creating... (30s elapsed)
+virtualbox_vm.node: Still creating... (40s elapsed)
+virtualbox_vm.node: Still creating... (50s elapsed)
+virtualbox_vm.node: Still creating... (1m0s elapsed)
+virtualbox_vm.node: Still creating... (1m10s elapsed)
+virtualbox_vm.node: Still creating... (1m20s elapsed)
+virtualbox_vm.node: Still creating... (1m30s elapsed)
+virtualbox_vm.node: Still creating... (1m40s elapsed)
+virtualbox_vm.node: Still creating... (1m50s elapsed)
+virtualbox_vm.node: Still creating... (2m0s elapsed)
+virtualbox_vm.node: Still creating... (2m10s elapsed)
+virtualbox_vm.node: Still creating... (2m20s elapsed)
+virtualbox_vm.node: Still creating... (2m30s elapsed)
+virtualbox_vm.node: Still creating... (2m40s elapsed)
+virtualbox_vm.node: Still creating... (2m50s elapsed)
+virtualbox_vm.node: Still creating... (3m0s elapsed)
+virtualbox_vm.node: Still creating... (3m10s elapsed)
+virtualbox_vm.node: Still creating... (3m20s elapsed)
+virtualbox_vm.node: Still creating... (3m30s elapsed)
+virtualbox_vm.node: Still creating... (3m40s elapsed)
+virtualbox_vm.node: Still creating... (3m50s elapsed)
+virtualbox_vm.node: Still creating... (4m0s elapsed)
+virtualbox_vm.node: Still creating... (4m10s elapsed)
+virtualbox_vm.node: Still creating... (4m20s elapsed)
+virtualbox_vm.node: Still creating... (4m30s elapsed)
+virtualbox_vm.node: Still creating... (4m40s elapsed)
+virtualbox_vm.node: Still creating... (4m50s elapsed)
+virtualbox_vm.node: Still creating... (5m0s elapsed)
+virtualbox_vm.node: Still creating... (5m10s elapsed)
+virtualbox_vm.node: Still creating... (5m20s elapsed)
+virtualbox_vm.node: Still creating... (5m30s elapsed)
+virtualbox_vm.node: Still creating... (5m40s elapsed)
+virtualbox_vm.node: Still creating... (5m50s elapsed)
+virtualbox_vm.node: Still creating... (6m0s elapsed)
+virtualbox_vm.node: Still creating... (6m10s elapsed)
+virtualbox_vm.node: Still creating... (6m20s elapsed)
+virtualbox_vm.node: Creation complete after 6m22s (ID: a26f0b74-35eb-4518-a859-2b9a7f3ff063)
 
-Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+Apply complete! Resources: 1 added, 0 changed, 1 destroyed.
 
 Outputs:
 
 IPAddr = [
-    10.37.224.116
+    10.37.224.251
 ]
-IPAddr1 = 10.37.224.116
-IPAddr2 = 10.37.224.116
+IPAddr1 = 10.37.224.251
+IPAddr2 = 10.37.224.251

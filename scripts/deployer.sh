@@ -95,9 +95,12 @@ PACKAGE_configure() { _configure;
 
 	echo "Starting services..."
 	#service httpd restart || { echo "Error. Aborting!"; exit 1; }
-	[ "${services}" ] && for service in ${services}; do service ${service} restart; done
+	[ "${services}" ] && for service in ${services}; do 
+    systemctl enable ${service}
+    service ${service} restart; done
 }
 PACKAGE_tail() { _tail;
+  [ "${test}" ] && ${test} && exit || exit 1;
 }
 
 # Run provisioning stages
