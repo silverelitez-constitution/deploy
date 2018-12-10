@@ -4,3 +4,4 @@ echo "Diagnostics text"
 
 software="docker docker-client kubernetes"
 services="docker"
+test="sudo docker run hello-world"

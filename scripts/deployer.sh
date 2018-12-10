@@ -68,7 +68,7 @@ PACKAGE_init() { echo Init...
 	echo "Loading translation layer..."
 	translation_layer
   _init
-    # run package-defined check to see if package is already installed
+    # run package-defined check to see if package is already installed and/or configured
   [ "${test}" ] && ${test} && exit;
 }
 PACKAGE_preinstall() { echo Preinstall...
