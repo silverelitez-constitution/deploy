@@ -5,11 +5,11 @@ cd "${dir}"
 source terraform.tfvars
 node=${1}; shift
 service=${1}; shift
-count=${1};shift
+count=${1}; shift
 packages=${@}; shift
 svc=${service}
 
-dialog() { command dialog --ascii-lines "${@}"; }
+dialog() { command dialog --backtitle "SilverElitez Systems | Deployer" --ascii-lines "${@}"; }
 
 # Save current variables to file
 save() {
@@ -102,5 +102,5 @@ fi
 
 #deployer provisioner $(cat ~/pw) ${hostname} 2>&1 | dialog --progressbox "Provisioning ${hostname}..." 25 100
 for package in "provisioner" ${packages}; do
-  deployer ${package} $(cat ~/pw) ${hostname} 2>&1 | tee "${package}.log" | dialog --progressbox "Spinning up ${hostname} for ${svc}. Installing ${package}..." 25 100
+  deployer ${package} $(cat ~/pw) ${hostname} 2>&1 | tee "${package}.log" | dialog --progressbox "Spinning up ${hostname} for ${svc}. Installing ${package}..." 25 80
 done

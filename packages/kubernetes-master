@@ -1,4 +1,6 @@
 #!/bin/bash
 
+echo "Diagnostics text"
+
 software="docker docker-client kubernetes"
 services="docker"
