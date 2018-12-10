@@ -2,7 +2,7 @@
 [ ${debug} ] && set -x
 
 # This deployment script has been lovingly crafted for
-# Gentoo, Centos, Ubuntu
+# Gentoo, Centos, Ubuntu, Amazon Linux
 
 # System ID
 echo "You're using ${PRETTY_NAME}"
