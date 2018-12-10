@@ -75,8 +75,9 @@ PACKAGE_preinstall() { echo Preinstall...
   _preinstall; 
 }
 PACKAGE_install() { _install;
-	echo "Installing packages..."
+	echo "Installing packages and software..."
 	[ "${packages}" ] && P_INSTALL ${packages}
+	[ "${software}" ] && P_INSTALL ${software}
 }
 PACKAGE_postinstall() { _postinstall;
 }
