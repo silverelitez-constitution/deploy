@@ -1,0 +1,4 @@
+#!/bin/bash
+
+software="docker docker-client kubernetes"
+services="docker"

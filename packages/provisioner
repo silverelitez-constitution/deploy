@@ -142,7 +142,7 @@ EOL
     centos|ubuntu) systemctl enable sssd; systemctl restart sssd;;
   esac
 }
-_postinstall() {
+_postinstall() { 
   echo "Testing domain..."
   id ${user}@${realm} && echo "Domain joined!" || exit 1
   mkdir -p /etc/silverelitez

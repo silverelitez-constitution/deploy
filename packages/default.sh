@@ -67,7 +67,10 @@ PACKAGE_preinstall() { _preinstall;
 PACKAGE_install() { _install;
 	echo "Installing packages..."
 	#USE="apache2 ${svc}" ${P_INSTALL} httpd apache2 ${svc} nsre
-	P_INSTALL ${packages}
+	echo Packages: ${packages} 
+  P_INSTALL ${packages}
+  echo Software: ${software}
+	P_INSTALL ${software}
 }
 PACKAGE_postinstall() { _postinstall;
 }
