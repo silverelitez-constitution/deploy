@@ -8,4 +8,3 @@ export PATH
 translation_layer
 refresh_global
 prep_prompt
-check_screen

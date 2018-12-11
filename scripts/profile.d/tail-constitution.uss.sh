@@ -33,3 +33,5 @@ if [[ ${ID} != 'gentoo' ]]; then
     [[ ${num_updates} -gt "0" ]] && P_UPDATES
   fi
 fi
+
+check_screen
