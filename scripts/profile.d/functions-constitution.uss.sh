@@ -138,6 +138,7 @@ command_not_found_handle () {
   fullcommand="${@}";
   #package=$(repoquery --whatprovides "*bin/${1}" -C --qf '%{NAME}' | head -n1);
   echo "Command not found: ${1}"
+  declare | grep 'P_NAME ()' || exit 1
   package=$(P_NAME ${1} |head -n1)
   if [ ! $package ]; then
     echo "No package provides ${1}! Command doesn't exist...";
