@@ -80,7 +80,7 @@ EOL
 }
 _preinstall() {
   echo "Update packager..."
-  [[ ${ID} == 'centos' ]] && { echo "Install delta-rpm etc..."; ${P_INSTALL} tmux yum-utils krb5-workstation deltarpm; yum makecache fast; }
+  [[ ${ID} == 'centos' ]] && { echo "Install delta-rpm etc..."; ${P_INSTALL} tmux yum-utils krb5-workstation deltarpm presto; echo "http_caching=packages" > /etc/yum/pluginconf.d/prestopatch.conf; yum clean all; yum makecache fast; }
   [[ ${ID} == 'centos' ]] && { echo "Remove PackageKit-command-not-found..."; ${P_REMOVE} -y PackageKit-command-not-found; }
   P_UPDATE
   [[ ${ID} == 'centos' ]] && { yum-complete-transaction --cleanup-only; yum makecache; }
