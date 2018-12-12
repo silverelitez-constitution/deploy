@@ -2,4 +2,4 @@
 
 software="docker docker-client kubernetes kubernetes-client kubernetes-master"
 services="docker"
-test="sudo docker run hello-world"
+test="kubectl && sudo docker run hello-world"
