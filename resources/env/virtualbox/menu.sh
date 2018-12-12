@@ -381,7 +381,7 @@ save_exit() { dialog --title "Alert" \
 }
 
 # Temporary shim for getopts
-[ "${1}" == '--X' ] && { [ "${DISPLAY}" ] && dialog() { Xdialog "${@}"; } ; shift; }  || dialog() { command dialog --ascii-lines --backtitle "SilverElitez Systems | Services Manager" "${@}"; }
+[ "${1}" == '--X' ] && { [ "${DISPLAY}" ] && dialog() { Xdialog "${@}"; } ; shift; }  || dialog() { command dialog --backtitle "SilverElitez Systems | Services Manager" "${@}"; }
 service="${1}"; shift
 action="${1}"; shift
 

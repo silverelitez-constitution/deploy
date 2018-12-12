@@ -9,7 +9,7 @@ count=${1}; shift
 packages=${@}; shift
 svc=${service}
 
-dialog() { command dialog --backtitle "SilverElitez Systems | Deployer" --ascii-lines "${@}"; }
+dialog() { command dialog --backtitle "SilverElitez Systems | Deployer" "${@}"; }
 
 # Save current variables to file
 save() {

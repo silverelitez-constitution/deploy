@@ -86,10 +86,7 @@ _preinstall() {
   [[ ${ID} == 'centos' ]] && { yum-complete-transaction --cleanup-only; yum makecache; }
 
   echo "Installing required packages..."
-  for package in $(sudo realm discover ${realm} | grep 'required-package:' | cut -d':' -f2)
-  do 
-    ${P_INSTALL} ${package}
-  done
+  ${P_INSTALL} $(sudo realm discover ${realm} | grep 'required-package:' | cut -d':' -f2)
 
   echo "Update global profile.d script on ${domain}..."
   giturl="https://raw.githubusercontent.com/silverelitez-${domain}/deploy/master/scripts/profile.d/global.sh"
