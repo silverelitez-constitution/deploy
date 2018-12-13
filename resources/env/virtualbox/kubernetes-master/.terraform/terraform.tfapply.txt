@@ -1,25 +1,6 @@
-virtualbox_vm.node: Creating...
-  cpus:                                     "" => "4"
-  image:                                    "" => "./terraform.d/images//centos-7-x86_64.box"
-  memory:                                   "" => "2.0 gib"
-  name:                                     "" => "Kubernetes Master-01"
-  network_adapter.#:                        "" => "1"
-  network_adapter.0.device:                 "" => "IntelPro1000MTServer"
-  network_adapter.0.host_interface:         "" => "p4p1"
-  network_adapter.0.ipv4_address:           "" => "<computed>"
-  network_adapter.0.ipv4_address_available: "" => "<computed>"
-  network_adapter.0.mac_address:            "" => "<computed>"
-  network_adapter.0.status:                 "" => "<computed>"
-  network_adapter.0.type:                   "" => "bridged"
-  status:                                   "" => "running"
-  url:                                      "" => "https://github.com/vezzoni/vagrant-vboxes/releases/download/0.0.1/centos-7-x86_64.box"
-virtualbox_vm.node: Still creating... (10s elapsed)
-virtualbox_vm.node: Still creating... (20s elapsed)
-virtualbox_vm.node: Still creating... (30s elapsed)
-virtualbox_vm.node: Still creating... (40s elapsed)
-virtualbox_vm.node: Creation complete after 43s (ID: 495376d0-2ba7-45a1-9ee5-107056a1a68b)
+virtualbox_vm.node: Refreshing state... (ID: 495376d0-2ba7-45a1-9ee5-107056a1a68b)
 
-Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 
 Outputs:
 
