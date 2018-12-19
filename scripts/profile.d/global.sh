@@ -1,8 +1,8 @@
 # If not running interactively, don't do anything
-[[ $- == *i* ]] || [[ ${1} ]] || return
+[[ ${-} == *i* ]] || [[ ${1} ]] || return
 
 echo -n "Testing interconnectivity..."
-ping -q 4.2.2.2 -c3 >/dev/null || { echo "Failed"; return; } && echo "Done"
+ping -q 4.2.2.2 -c1 >/dev/null || { echo "Failed"; return; } && echo "Done"
 
 F=$(curl -s wttr.in/los_angeles | grep °F | head -n1 | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | sed 's/[^0-9]//g')
 [ ! ${F} ] && F="93"
@@ -28,10 +28,13 @@ scripts=${@:-head functions aliases global tail}
 
 [ ${debug} ] && echo "Scripts to run: ${scripts}"
 
-[ ! $domain ] && { echo -n Reading resolv.conf for domain...;domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2); echo $domain; }
-[ ! $domain ] && { echo -n Discovering domain...;domain=$(sudo realm discover | head -n1);echo $domain; }
+[ ! ${domain} ] && { echo -n Reading resolv.conf for domain...;domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2); echo $domain; }
+[ ! ${domain} ] && { echo -n Discovering domain...;domain=$(sudo realm discover | head -n1);echo $domain; }
 
-if [ ! $domain ]; then
+
+
+
+if [ ! ${domain} ]; then
   echo \
   "Thank you for your interest in the Silver Elitez
   Constitution Class single-system beta test. You are receiving
@@ -62,11 +65,11 @@ nscripts=$(echo ${scripts} | tr ' ' '\n')
 scripts="${nscripts}"
 unset nscripts
 
-[ $debug ] && echo "${scripts}"
+[ ${debug} ] && echo "${scripts}"
 
 for runscript in ${scripts}
 do
-  [ $debug ] && echo Executing "${giturl}${runscript}-${domain}.sh"
-  [ $debug ] && dialog --yesno "${runscript}" 20 20
+  [ ${debug} ] && echo Press enter to execute "${giturl}${runscript}-${domain}.sh"
+  [ ${debug} ] && read #dialog --yesno "${runscript}" 20 20
   source <( curl -s "${giturl}${runscript}-${domain}.sh" | sed 's/^404:.*/echo 404 error/g' | sed 's/^400:.*/echo 400 error/g' | dos2unix; )
 done 

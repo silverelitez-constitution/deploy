@@ -1,6 +1,6 @@
 # - Global script functions
 
-[ ${debug} ] && echo "Loading functions..."
+[ ${debug} ] && echo -n "Loading functions..."
 
 tube() { # tube https://example.com/supercoolvideo
   # input
@@ -109,7 +109,7 @@ mka() {
 }
 
 # removes the alias permanently. the yang to the mka() ying, if you will
-function unalias() { cmd=${1};  grep -v "alias ${cmd}=" ~/.bash_aliases > ~/.bash_aliases.new; mv ~/.bash_aliases.new ~/.bash_aliases; source unalias "${cmd}";}
+function unmka() { cmd=${1};  grep -v "alias ${cmd}=" ~/.bash_aliases > ~/.bash_aliases.new; mv ~/.bash_aliases.new ~/.bash_aliases; source unalias "${cmd}";}
 
 # just restarted a vps? use this and once it's ready for you, you'll be ready for it (within one second)
 function sshw() { while ! ssh "${@}"; do sleep 1; done }
@@ -134,7 +134,7 @@ function gitcat() {
 }
 
 # install packages as you go. no need to mess with package managers
-command_not_found_handle () {
+command_not_found_handle() {
   fullcommand="${@}";
   #package=$(repoquery --whatprovides "*bin/${1}" -C --qf '%{NAME}' | head -n1);
   echo "Command not found: ${1}"
@@ -147,13 +147,13 @@ command_not_found_handle () {
   echo -n "The package ${package} is required to run '${fullcommand}'! Installing...";
   if sudo ${P_INSTALL} "${package}" >/dev/null; then
 	echo "Done!";
-    echo "Okay, now let's try that again...shall we?";
-    # oddly, it's kinda hard to properly echo the bash prompt. this seems to do the magic
-	show-prompt() {
-	  ExpPS1="$(bash --rcfile <(echo "PS1='$PS1'") -i <<<'' 2>&1 |
-	  sed ':;$!{N;b};s/^\(.*\n\)*\(.*\)\n\2exit$/\2/p;d')";
-	  echo -n ${ExpPS1}
-	}
+  echo "Okay, now let's try that again...shall we?";
+  # oddly, it's kinda hard to properly echo the bash prompt. this seems to do the magic
+  show-prompt() {
+    ExpPS1="$(bash --rcfile <(echo "PS1='$PS1'") -i <<<'' 2>&1 |
+    sed ':;$!{N;b};s/^\(.*\n\)*\(.*\)\n\2exit$/\2/p;d')";
+    echo -n ${ExpPS1}
+  }
 	echo -e "$(show-prompt) ${fullcommand}";
     eval ${fullcommand};
   else
@@ -196,3 +196,4 @@ gc() {
 paster() {
   curl -F c=@- https://ptpb.pw; 
 }
+echo "Done!"
