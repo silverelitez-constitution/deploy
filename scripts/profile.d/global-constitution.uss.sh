@@ -1,5 +1,5 @@
 #!/bin/bash
-# This deployment script has been lovingly crafted for 
+# This deployment script has been lovingly crafted for $(ls ../../resources/translators/)
 source /etc/os-release
 
 PATH=$PATH:$HOME/.local/bin:$HOME/bin

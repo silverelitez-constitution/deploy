@@ -4,7 +4,7 @@
 echo -n "Testing interconnectivity..."
 ping -q 4.2.2.2 -c1 >/dev/null || { echo "Failed"; return; } && echo "Done"
 
-F=$(curl -s wttr.in/los_angeles | grep °F | head -n1 | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | sed 's/[^0-9]//g')
+F=$(curl -s wttr.in/detroit | grep °F | head -n1 | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | sed 's/[^0-9]//g')
 [ ! ${F} ] && F="93"
 
 # Welcome greeting
@@ -67,9 +67,13 @@ unset nscripts
 
 [ ${debug} ] && echo "${scripts}"
 
-for runscript in ${scripts}
+for script in ${scripts}
 do
-  [ ${debug} ] && echo Press enter to execute "${giturl}${runscript}-${domain}.sh"
-  [ ${debug} ] && read #dialog --yesno "${runscript}" 20 20
-  source <( curl -s "${giturl}${runscript}-${domain}.sh" | sed 's/^404:.*/echo 404 error/g' | sed 's/^400:.*/echo 400 error/g' | dos2unix; )
+  url="${giturl}${script}-${domain}.sh"
+  [ ${debug} ] && { echo Press enter to execute "${url}"; read; }
+# Shim for cleaner code. Vote yes on prop 1337!
+#  output=$(curl -s "${url}.sh")
+#  [ ${?} != '0' ] && output="echo ${output}"
+#  [ ${?} == '0' ] || output="echo ${output}"
+  source <( curl -s "${url}.sh" | sed 's/^404:.*/echo 404 error/g' | sed 's/^400:.*/echo 400 error/g'; )
 done 
