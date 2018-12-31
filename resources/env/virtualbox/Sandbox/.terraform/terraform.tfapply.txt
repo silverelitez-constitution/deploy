@@ -1,8 +1,10 @@
-virtualbox_vm.node: Creating...
+virtualbox_vm.node[0]: Refreshing state... (ID: 3e506acc-9ee0-4f73-98f4-f04ea0d061c6)
+virtualbox_vm.node[1]: Refreshing state... (ID: 9f52a626-8d97-4f3e-90e2-1ff9df320a1b)
+virtualbox_vm.node[0]: Creating...
   cpus:                                     "" => "4"
-  image:                                    "" => "./terraform.d/images//centos-7.0-x86_64.box"
-  memory:                                   "" => "1.0 gib"
-  name:                                     "" => "Sandbox-01"
+  image:                                    "" => "./terraform.d/images//opscode_centos-7.1_chef-provisionerless.box"
+  memory:                                   "" => "2.0 gib"
+  name:                                     "" => "Peppy Playground-01"
   network_adapter.#:                        "" => "1"
   network_adapter.0.device:                 "" => "IntelPro1000MTServer"
   network_adapter.0.host_interface:         "" => "p4p1"
@@ -12,4 +14,19 @@ virtualbox_vm.node: Creating...
   network_adapter.0.status:                 "" => "<computed>"
   network_adapter.0.type:                   "" => "bridged"
   status:                                   "" => "running"
-  url:                                      "" => "https://github.com/tommy-muehle/puppet-vagrant-boxes/releases/download/1.1.0/centos-7.0-x86_64.box"
+  url:                                      "" => "http://opscode-vm-bento.s3.amazonaws.com/vagrant/vmware/opscode_centos-7.1_chef-provisionerless.box"
+virtualbox_vm.node[1]: Creating...
+  cpus:                                     "" => "4"
+  image:                                    "" => "./terraform.d/images//opscode_centos-7.1_chef-provisionerless.box"
+  memory:                                   "" => "2.0 gib"
+  name:                                     "" => "Peppy Playground-02"
+  network_adapter.#:                        "" => "1"
+  network_adapter.0.device:                 "" => "IntelPro1000MTServer"
+  network_adapter.0.host_interface:         "" => "p4p1"
+  network_adapter.0.ipv4_address:           "" => "<computed>"
+  network_adapter.0.ipv4_address_available: "" => "<computed>"
+  network_adapter.0.mac_address:            "" => "<computed>"
+  network_adapter.0.status:                 "" => "<computed>"
+  network_adapter.0.type:                   "" => "bridged"
+  status:                                   "" => "running"
+  url:                                      "" => "http://opscode-vm-bento.s3.amazonaws.com/vagrant/vmware/opscode_centos-7.1_chef-provisionerless.box"
