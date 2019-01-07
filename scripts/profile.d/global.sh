@@ -72,6 +72,6 @@ do
   url="${giturl}${script}-${domain}.sh"
   [ ${debug} ] && { echo Press enter to execute "${url}"; read; }
   output=$(curl -f -s "${url}")
-  [ ${?} == '0' ] || output="echo ERROR: curl returned ${?} for ${url}" && source <(echo ${output})
+  [ ${?} == '0' ] || output="echo ERROR: curl returned ${?} for ${url}" && source <(echo "${output}")
   #source <( curl -s "${url}" | sed 's/^404:.*/echo 404 error/g' | sed 's/^400:.*/echo 400 error/g'; )
 done 
