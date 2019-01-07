@@ -4,7 +4,7 @@
 echo -n "Testing interconnectivity..."
 ping -q 4.2.2.2 -c1 >/dev/null || { echo "Failed"; return; } && echo "Done"
 
-F=$(curl -s wttr.in/detroit | grep °F | head -n1 | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | sed 's/[^0-9]//g')
+F=$(curl -s wttr.in/detroit | grep °F | head -n1 | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | sed 's/[^0-9.]//g')
 [ ! ${F} ] && F="93"
 
 # Welcome greeting
@@ -71,9 +71,7 @@ for script in ${scripts}
 do
   url="${giturl}${script}-${domain}.sh"
   [ ${debug} ] && { echo Press enter to execute "${url}"; read; }
-# Shim for cleaner code. Vote yes on prop 1337!
-#  output=$(curl -s "${url}.sh")
-#  [ ${?} != '0' ] && output="echo ${output}"
-#  [ ${?} == '0' ] || output="echo ${output}"
-  source <( curl -s "${url}" | sed 's/^404:.*/echo 404 error/g' | sed 's/^400:.*/echo 400 error/g'; )
+  output=$(curl -f -s "${url}")
+  [ ${?} == '0' ] || output="echo ERROR: curl returned ${?} for ${url}" && source <(echo ${output})
+  #source <( curl -s "${url}" | sed 's/^404:.*/echo 404 error/g' | sed 's/^400:.*/echo 400 error/g'; )
 done 
