@@ -75,5 +75,5 @@ do
 #  output=$(curl -s "${url}.sh")
 #  [ ${?} != '0' ] && output="echo ${output}"
 #  [ ${?} == '0' ] || output="echo ${output}"
-  source <( curl -s "${url}.sh" | sed 's/^404:.*/echo 404 error/g' | sed 's/^400:.*/echo 400 error/g'; )
+  source <( curl -s "${url}" | sed 's/^404:.*/echo 404 error/g' | sed 's/^400:.*/echo 400 error/g'; )
 done 
