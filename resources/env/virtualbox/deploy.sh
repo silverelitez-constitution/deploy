@@ -85,6 +85,8 @@ if ! ssh ${username}@${hostname} whoami >/dev/null 2>&1; then
   sleep 1
   scp -r /home/${deploy}/.ssh/ "${username}@${ip}:~/${deploy}" 2>&1 | dialog --progressbox "Setting up ssh keys..." 15 80
   ssh "${username}@${ip}" sudo sh -c "whoami;
+    sudo groupadd wheel
+    sudo mkdir -p /etc/sudoers.d
     sudo useradd -m -G wheel ${deploy};
     sudo mkdir -p /home/${deploy}/.ssh
     sudo mv ~/${deploy}/* /home/${deploy}/.ssh/;
