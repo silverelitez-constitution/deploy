@@ -85,11 +85,12 @@ if ! ssh ${username}@${hostname} whoami >/dev/null 2>&1; then
   sleep 1
   scp -r /home/${deploy}/.ssh/ "${username}@${ip}:~/${deploy}" 2>&1 | dialog --progressbox "Setting up ssh keys..." 15 80
   ssh "${username}@${ip}" sudo sh -c "whoami;
-    useradd -m -G wheel ${deploy};
-    mkdir -p /home/${deploy}/.ssh
-    mv ~/${deploy}/* /home/${deploy}/.ssh/;
-    echo \"${deploy}        ALL=(ALL)       NOPASSWD: ALL\" > /etc/sudoers.d/${deploy}
-    chown ${deploy}. /home/${deploy} -R" 2>&1 | dialog --progressbox "Setting up remote users..." 15 80
+    sudo useradd -m -G wheel ${deploy};
+    sudo mkdir -p /home/${deploy}/.ssh
+    sudo mv ~/${deploy}/* /home/${deploy}/.ssh/;
+    sudo echo \"${deploy}        ALL=(ALL)       NOPASSWD: ALL\" > /etc/sudoers.d/${deploy}
+    sudo chown ${deploy}. /home/${deploy} -R" 2>&1 | dialog --progressbox "Setting up remote users..." 15 80
+    echo ENTER; read
   ssh "${username}@${ip}" "source /etc/os-release; cd; [ \${ID} == 'gentoo' ] && { sudo sed 's/localhost/${hostname}/g' /etc/conf.d/hostname -i; } || { echo ${hostname} > ~/hostname; sudo mv ~/hostname /etc; }; sudo reboot;"  2>&1 | dialog --progressbox "Setting hostname and rebooting..." 15 80
   dialog --infobox "Rebooting ${hostname}..." 0 0
   sleep 5
@@ -102,5 +103,6 @@ fi
 
 #deployer provisioner $(cat ~/pw) ${hostname} 2>&1 | dialog --progressbox "Provisioning ${hostname}..." 25 100
 for package in "provisioner" ${packages}; do
+  [ "${package}" == 'default' ] && package="${hostname}"
   deployer ${package} $(cat ~/pw) ${hostname} 2>&1 | tee "${package}.log" | dialog --progressbox "Spinning up ${hostname} for ${svc}. Installing ${package}..." 25 80
 done

@@ -1,6 +1,5 @@
 virtualbox_vm.node: Refreshing state... (ID: c086867e-b22a-411e-a8f5-01a95ed7ac82)
 virtualbox_vm.node: Modifying... (ID: c086867e-b22a-411e-a8f5-01a95ed7ac82)
-  cpus:   "1" => "4"
   status: "poweroff" => "running"
 virtualbox_vm.node: Still modifying... (ID: c086867e-b22a-411e-a8f5-01a95ed7ac82, 10s elapsed)
 virtualbox_vm.node: Still modifying... (ID: c086867e-b22a-411e-a8f5-01a95ed7ac82, 20s elapsed)
