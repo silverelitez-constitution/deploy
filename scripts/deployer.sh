@@ -69,6 +69,7 @@ PACKAGE_init() { echo Init...
 	translation_layer
   _init
     # run package-defined check to see if package is already installed and/or configured
+  echo "Testing system for package evaluation..."
   [ "${test}" ] && ${test} && exit;
 }
 PACKAGE_preinstall() { echo Preinstall...
