@@ -269,9 +269,8 @@ apply() {
 	dialog --infobox "Initializing..." 3 34
 	terraform init >/dev/null
 	dialog --infobox "Applying..." 3 34
-	terraform apply -auto-approve -no-color | tee ./.terraform/terraform.tfapply.txt 2>&1 | dialog --progressbox "Applying plan..." 20 80
-	[ "${?}" != "0" ] && sleep 4
-  sleep 1
+	terraform apply -auto-approve -no-color | tee ./.terraform/terraform.tfapply.txt 2>&1 | dialog --progressbox "Applying plan..." 20 80; err=${PIPESTATUS[0]}
+	[ "${err}" != "0" ] && (echo "Press ENTER to continue..."; read); unset err
 	output="main_menu"; return
 }
 
