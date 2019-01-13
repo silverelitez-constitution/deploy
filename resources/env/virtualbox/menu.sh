@@ -90,7 +90,7 @@ main() {
       Shutdown) for node in $(seq 1 ${count}); do VBoxManage controlvm "${name}-0${node}" acpipowerbutton | dialog --progressbox "Shutdown" 15 80; sleep 1; done;;
 			x) save;;
 			R) init ${service};;
-			S) save; apply; deploy;;
+			S) save; apply && deploy;;
 			?) echo wat;;
 		esac
 		;;
@@ -270,7 +270,7 @@ apply() {
 	terraform init >/dev/null
 	dialog --infobox "Applying..." 3 34
 	terraform apply -auto-approve -no-color | tee ./.terraform/terraform.tfapply.txt 2>&1 | dialog --progressbox "Applying plan..." 20 80; err=${PIPESTATUS[0]}
-	[ "${err}" != "0" ] && (echo "Press ENTER to continue..."; read); unset err
+	if [ "${err}" != "0" ]; then echo "Press ENTER to continue..."; read; unset err; output="main_menu"; return 1; fi
 	output="main_menu"; return
 }
 
