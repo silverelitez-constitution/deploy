@@ -270,7 +270,7 @@ apply() {
 	terraform init >/dev/null
 	dialog --infobox "Applying..." 3 34
 	terraform apply -auto-approve -no-color | tee ./.terraform/terraform.tfapply.txt 2>&1 | dialog --progressbox "Applying plan..." 20 80
-	[ "${?}" == "0" ] || sleep 4
+	[ "${?}" != "0" ] && sleep 4
   sleep 1
 	output="main_menu"; return
 }
