@@ -58,14 +58,16 @@ EOL
   echo "Install packages..."
   [ "${ID}" == "gentoo" ] && { echo "Syncing emerge..."; rm "/usr/portage/metadata/timestamp.x"; emerge-webrsync; echo "=sys-auth/realmd-0.16.2 ~amd64" > /etc/portage/package.accept_keywords; eselect profile set default/linux/amd64/17.0; cd; git clone https://anongit.gentoo.org/git/proj/portage.git; sudo eselect python set 1; sudo USE='-filecaps internal-glib' portage/bin/emerge world -NDuv; sudo PYTHON_TARGETS="python2_7" portage/bin/emerge portage -v; }
   [ "${ID}" == "ubuntu" ] && {
-    sudo dpkg --configure -a --force-confdef,confnew;
-    q_install apt-file;
-    echo "Updating apt-file cache...";
-    sudo apt-file update; 
     cat >/etc/apt/apt.conf.d/90forceyes << EOL
 APT::Get::Assume-Yes "true";
 APT::Get::force-yes "true";  
 EOL
+    sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" dist-upgrade;
+    sudo dpkg --configure -a --force-confdef,confnew;
+    sudo apt update;
+    q_install apt-file;
+    echo "Updating apt-file cache...";
+    sudo apt-file update; 
     echo Completed ubuntu specific configuration;
   }
   [ -e "/etc/yum.repos.d/epel.repo" ] && [ "${ID}" == "centos" ] || q_install epel-release

@@ -1,6 +1,6 @@
 virtualbox_vm.node: Creating...
   cpus:                                     "" => "4"
-  image:                                    "" => "./terraform.d/images//ubuntu-14.04-amd64-vbox.box"
+  image:                                    "" => "./terraform.d/images//ubuntu-16.04.box"
   memory:                                   "" => "2.0 gib"
   name:                                     "" => "KubernetesMaster-01"
   network_adapter.#:                        "" => "1"
@@ -12,15 +12,27 @@ virtualbox_vm.node: Creating...
   network_adapter.0.status:                 "" => "<computed>"
   network_adapter.0.type:                   "" => "bridged"
   status:                                   "" => "running"
-  url:                                      "" => "https://oss-binaries.phusionpassenger.com/vagrant/boxes/latest/ubuntu-14.04-amd64-vbox.box"
+  url:                                      "" => "https://github.com/jose-lpa/packer-ubuntu_lts/releases/download/v3.1/ubuntu-16.04.box"
 virtualbox_vm.node: Still creating... (10s elapsed)
 virtualbox_vm.node: Still creating... (20s elapsed)
-virtualbox_vm.node: Creation complete after 25s (ID: 0026cc64-0b00-4286-8a3a-71f48cddda3f)
+virtualbox_vm.node: Still creating... (30s elapsed)
+virtualbox_vm.node: Still creating... (40s elapsed)
+virtualbox_vm.node: Still creating... (50s elapsed)
+virtualbox_vm.node: Still creating... (1m0s elapsed)
+virtualbox_vm.node: Still creating... (1m10s elapsed)
+virtualbox_vm.node: Still creating... (1m20s elapsed)
+virtualbox_vm.node: Still creating... (1m30s elapsed)
+virtualbox_vm.node: Still creating... (1m40s elapsed)
+virtualbox_vm.node: Still creating... (1m50s elapsed)
+virtualbox_vm.node: Still creating... (2m0s elapsed)
+virtualbox_vm.node: Still creating... (2m10s elapsed)
+virtualbox_vm.node: Still creating... (2m20s elapsed)
+virtualbox_vm.node: Creation complete after 2m28s (ID: 9af999aa-6521-4626-84ab-7afebe141cf9)
 
 Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
 
 Outputs:
 
 IPAddr = [
-    10.37.224.112
+    10.37.224.56
 ]

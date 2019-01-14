@@ -3,3 +3,12 @@
 packages="docker docker-client kubernetes kubernetes-client kubernetes-master"
 services="docker"
 test='which kubectl && sudo docker run hello-world'
+
+_install() { 
+  [ ${ID} == "ubuntu" ] && {
+    sudo apt update
+    P_INSTALL docker.io snapd;
+    sudo snap install conjure-up --classic;
+    sudo conjure-up kubernetes;
+  }
+}
