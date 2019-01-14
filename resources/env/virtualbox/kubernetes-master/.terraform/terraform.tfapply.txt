@@ -1,6 +1,9 @@
 virtualbox_vm.node: Refreshing state... (ID: e09fe578-702c-4b44-a119-638202f9e167)
+virtualbox_vm.node: Modifying... (ID: e09fe578-702c-4b44-a119-638202f9e167)
+  memory: "1.0 gib" => "2.0 gib"
+virtualbox_vm.node: Modifications complete after 5s (ID: e09fe578-702c-4b44-a119-638202f9e167)
 
-Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
 
 Outputs:
 

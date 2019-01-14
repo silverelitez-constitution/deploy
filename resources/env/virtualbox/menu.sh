@@ -1,6 +1,8 @@
 #!/bin/bash
 export NCURSES_NO_UTF8_ACS=1
 
+debugger() { echo ENTER; read; }
+
 # Init
 init() {
 	# Optionally get service name from cmdline
@@ -52,7 +54,7 @@ main() {
 			d "Disk Space - ${disk:-default}" \
 			N "Networking - ${interface:-auto}" \
 			z "Zone (beta) - ${zone:-default}" \
-			P "Packages - ${packages:-default}" \
+			Packages "Packages - ${packages:-default}" \
 			e "Edit resource files" \
 			x "Save service" \
 			p "Save service and run Plan" \
@@ -79,7 +81,7 @@ main() {
 			n) setname;;
 			r) count;;
 			z) zone;;
-			P) packages;;
+			Packages) packages;;
 			e) editor;;
 			p) save; plan;;
 			E) deploy;;
