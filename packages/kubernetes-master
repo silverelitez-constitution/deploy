@@ -2,4 +2,4 @@
 
 packages="docker docker-client kubernetes kubernetes-client kubernetes-master badpackagetest"
 services="docker"
-test='kubectl version && sudo docker run hello-world'
+test='which kubectl && sudo docker run hello-world'

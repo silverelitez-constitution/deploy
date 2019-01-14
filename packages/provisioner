@@ -58,7 +58,7 @@ EOL
   echo "Install packages..."
   [ "${ID}" == "gentoo" ] && { echo "Syncing emerge..."; rm "/usr/portage/metadata/timestamp.x"; emerge-webrsync; echo "=sys-auth/realmd-0.16.2 ~amd64" > /etc/portage/package.accept_keywords; eselect profile set default/linux/amd64/17.0; cd; git clone https://anongit.gentoo.org/git/proj/portage.git; sudo eselect python set 1; sudo USE='-filecaps internal-glib' portage/bin/emerge world -NDuv; sudo PYTHON_TARGETS="python2_7" portage/bin/emerge portage -v; }
   [ "${ID}" == "ubuntu" ] && { sudo dpkg --configure -a; q_install apt-file; echo "Updating apt-file cache..."; sudo apt-file update; }
-  [ -e "/etc/yum.repos.d/epel.repo" && "${ID}" == "centos" ] || q_install epel-release
+  [ -e "/etc/yum.repos.d/epel.repo" ] && [ "${ID}" == "centos" ] || q_install epel-release
   q_install applydeltarpm deltarpm dos2unix realmd
   ${P_INSTALL} nspr yum-utils *bash-complet* kernel-devel dos2unix
   service dbus restart
@@ -72,8 +72,8 @@ EOL
   if [ "${password}" ]; then 
     echo "${password}" | kinit "${user}@$(echo ${realm} | awk '{print toupper($0)}')"
   else
-	echo "Password not supplied!"
-	#kinit "${user}@$(echo ${realm} | awk '{print toupper($0)}')"
+    echo "Password not supplied!"
+    #kinit "${user}@$(echo ${realm} | awk '{print toupper($0)}')"
   fi
   echo "Setting time zone..."
   ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
@@ -91,7 +91,8 @@ _preinstall() {
     echo "Remove PackageKit-command-not-found..."; 
     ${P_REMOVE} -y PackageKit-command-not-found;
   }
-  P_UPDATE
+  
+  P_UPDATE; P_UPGRADE
   [[ ${ID} == 'centos' ]] && { yum-complete-transaction --cleanup-only; yum makecache; }
 
   echo "Installing required packages..."
