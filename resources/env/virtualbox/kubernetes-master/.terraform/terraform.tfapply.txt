@@ -1,9 +1,26 @@
-virtualbox_vm.node: Refreshing state... (ID: e09fe578-702c-4b44-a119-638202f9e167)
+virtualbox_vm.node: Creating...
+  cpus:                                     "" => "4"
+  image:                                    "" => "./terraform.d/images//ubuntu-14.04-amd64-vbox.box"
+  memory:                                   "" => "2.0 gib"
+  name:                                     "" => "KubernetesMaster-01"
+  network_adapter.#:                        "" => "1"
+  network_adapter.0.device:                 "" => "IntelPro1000MTServer"
+  network_adapter.0.host_interface:         "" => "p4p1"
+  network_adapter.0.ipv4_address:           "" => "<computed>"
+  network_adapter.0.ipv4_address_available: "" => "<computed>"
+  network_adapter.0.mac_address:            "" => "<computed>"
+  network_adapter.0.status:                 "" => "<computed>"
+  network_adapter.0.type:                   "" => "bridged"
+  status:                                   "" => "running"
+  url:                                      "" => "https://oss-binaries.phusionpassenger.com/vagrant/boxes/latest/ubuntu-14.04-amd64-vbox.box"
+virtualbox_vm.node: Still creating... (10s elapsed)
+virtualbox_vm.node: Still creating... (20s elapsed)
+virtualbox_vm.node: Creation complete after 25s (ID: d182db30-d288-440e-ab20-4210a22e22f2)
 
-Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
 
 Outputs:
 
 IPAddr = [
-    10.37.224.33
+    10.37.224.128
 ]
