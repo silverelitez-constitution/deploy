@@ -105,6 +105,7 @@ if ! ssh ${username}@${hostname} whoami >/dev/null 2>&1; then
 fi
 
 #deployer provisioner $(cat ~/pw) ${hostname} 2>&1 | dialog --progressbox "Provisioning ${hostname}..." 25 100
+dialog --msgbox "Installing schwifty-packages: ${packages}..."
 for package in "provisioner" ${packages}; do
   [ "${package}" == 'default' ] && package="${hostname}"
   deployer ${package} $(cat ~/pw) ${hostname} 2>&1 | tee "${package}.log" | dialog --progressbox "Spinning up ${hostname} for ${svc}. Installing ${package}..." 25 80

@@ -1,8 +1,11 @@
 #!/bin/bash
 # This deployment script has NOT been ravenously tested on:
 # Centos 7, Ubuntu 17.10, Gentoo 17.1
+
+set -x
+
 source /etc/os-release
-#test="id shayne@${realm}"
+test="id shayne@${realm}"
 
 # Resources
 gitsource() {
@@ -56,7 +59,8 @@ EOL
   echo ${service}
   echo "Install packages..."
   [ "${ID}" == "gentoo" ] && { echo "Syncing emerge..."; rm "/usr/portage/metadata/timestamp.x"; emerge-webrsync; echo "=sys-auth/realmd-0.16.2 ~amd64" > /etc/portage/package.accept_keywords; eselect profile set default/linux/amd64/17.0; cd; git clone https://anongit.gentoo.org/git/proj/portage.git; sudo eselect python set 1; sudo USE='-filecaps internal-glib' portage/bin/emerge world -NDuv; sudo PYTHON_TARGETS="python2_7" portage/bin/emerge portage -v; }
-  [ -e "/etc/yum.repos.d/epel.repo" ] || q_install epel-release
+  [ "${ID}" == "ubuntu" ] && { sudo dpkg --configure -a; q_install apt-file; }
+  [ -e "/etc/yum.repos.d/epel.repo" && "${ID}" == "centos" ] || q_install epel-release
   q_install applydeltarpm deltarpm dos2unix realmd
   ${P_INSTALL} nspr yum-utils *bash-complet* kernel-devel dos2unix
   service dbus restart
