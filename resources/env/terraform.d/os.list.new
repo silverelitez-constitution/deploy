@@ -214,3 +214,4 @@ https://github.com/vezzoni/vagrant-vboxes/releases/download/0.0.1/centos-7-x86_6
 https://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-vagrant.box
 https://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-i386-vagrant.box
 https://github.com/jose-lpa/packer-ubuntu_lts/releases/download/v3.1/ubuntu-16.04.box
+https://cdn.amazonlinux.com/os-images/2.0.20190115/virtualbox/amzn2-virtualbox-2.0.20190115-x86_64.xfs.gpt.vdi

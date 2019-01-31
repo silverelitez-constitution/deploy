@@ -1,6 +1,9 @@
+virtualbox_vm.node: Refreshing state... (ID: 9af999aa-6521-4626-84ab-7afebe141cf9)
+virtualbox_vm.node: Destroying... (ID: 9af999aa-6521-4626-84ab-7afebe141cf9)
+virtualbox_vm.node: Destruction complete after 1s
 virtualbox_vm.node: Creating...
   cpus:                                     "" => "4"
-  image:                                    "" => "./terraform.d/images//ubuntu-16.04.box"
+  image:                                    "" => "./terraform.d/images//CentOS-7.1.1503-x86_64-netboot.box"
   memory:                                   "" => "2.0 gib"
   name:                                     "" => "KubernetesMaster-01"
   network_adapter.#:                        "" => "1"
@@ -12,27 +15,16 @@ virtualbox_vm.node: Creating...
   network_adapter.0.status:                 "" => "<computed>"
   network_adapter.0.type:                   "" => "bridged"
   status:                                   "" => "running"
-  url:                                      "" => "https://github.com/jose-lpa/packer-ubuntu_lts/releases/download/v3.1/ubuntu-16.04.box"
+  url:                                      "" => "https://github.com/holms/vagrant-centos7-box/releases/download/7.1.1503.001/CentOS-7.1.1503-x86_64-netboot.box"
 virtualbox_vm.node: Still creating... (10s elapsed)
 virtualbox_vm.node: Still creating... (20s elapsed)
 virtualbox_vm.node: Still creating... (30s elapsed)
-virtualbox_vm.node: Still creating... (40s elapsed)
-virtualbox_vm.node: Still creating... (50s elapsed)
-virtualbox_vm.node: Still creating... (1m0s elapsed)
-virtualbox_vm.node: Still creating... (1m10s elapsed)
-virtualbox_vm.node: Still creating... (1m20s elapsed)
-virtualbox_vm.node: Still creating... (1m30s elapsed)
-virtualbox_vm.node: Still creating... (1m40s elapsed)
-virtualbox_vm.node: Still creating... (1m50s elapsed)
-virtualbox_vm.node: Still creating... (2m0s elapsed)
-virtualbox_vm.node: Still creating... (2m10s elapsed)
-virtualbox_vm.node: Still creating... (2m20s elapsed)
-virtualbox_vm.node: Creation complete after 2m28s (ID: 9af999aa-6521-4626-84ab-7afebe141cf9)
+virtualbox_vm.node: Creation complete after 36s (ID: 95b73a95-a5c2-42bc-bae7-7be3d46f2430)
 
-Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+Apply complete! Resources: 1 added, 0 changed, 1 destroyed.
 
 Outputs:
 
 IPAddr = [
-    10.37.224.56
+    10.37.224.87
 ]

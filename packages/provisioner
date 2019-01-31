@@ -2,6 +2,7 @@
 # This deployment script has NOT been ravenously tested on:
 # Centos 7, Ubuntu 17.10, Gentoo 17.1
 
+set -x
 source /etc/os-release
 test="id shayne@${realm}"
 
