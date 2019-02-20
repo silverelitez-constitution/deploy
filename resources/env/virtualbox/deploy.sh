@@ -94,7 +94,7 @@ if ! ssh ${username}@${hostname} whoami >/dev/null 2>&1; then
     echo "Fixing sudoers.d ownership..."
     sudo chown root.root /etc/sudoers.d/${deploy};
     sudo chown ${deploy}. /home/${deploy} -R;" 2>&1 | dialog --progressbox "Setting up remote users..." 15 80
-    echo ENTER; read
+    #echo ENTER; read
   ssh "${username}@${ip}" "source /etc/os-release; cd; [ \${ID} == 'gentoo' ] && { sudo sed 's/localhost/${hostname}/g' /etc/conf.d/hostname -i; } || { echo ${hostname} > ~/hostname; sudo mv ~/hostname /etc; }; sudo reboot;"  2>&1 | dialog --progressbox "Setting hostname and rebooting..." 15 80
   dialog --infobox "Rebooting ${hostname}..." 0 0
   # we don't wanna hop back on a terminating host!! give it a bit to kill sshd
