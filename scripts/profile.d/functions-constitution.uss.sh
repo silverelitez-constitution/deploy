@@ -196,4 +196,8 @@ gc() {
 paster() {
   curl -F c=@- https://ptpb.pw; 
 }
+seenet() {
+  watch --interval=0.5 'netstat -anupt | grep -e "ESTABLISH\|TIME_WAIT"'
+}
+
 echo "Done!"
