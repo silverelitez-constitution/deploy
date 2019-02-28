@@ -164,7 +164,7 @@ command_not_found_handle() {
   return $retval;
 }
 
-# remove package/binary
+# remove package/binary and flush the hash tables before the fuzz finds it!
 r() {
   echo 'Flushing hash tables...';
   for package in "${@}";
@@ -200,4 +200,13 @@ seenet() {
   watch --interval=0.5 'netstat -anupt | grep -e "ESTABLISH\|TIME_WAIT"'
 }
 
-echo "Done!"
+refresh() {
+  [ ${realm} ] || [ ${branch} ] || { echo This guitar is missing strings; return 1; }
+  refreshurl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/global.sh"
+  [ ${debug} ] && echo "${scripts}"
+  [ ${debug} ] && { echo Press enter to execute "${url}"; read; }
+  output=$(curl -f -s "${refreshurl}")
+  [ ${?} == '0' ] || output="echo ERROR: curl returned ${?} for ${url}" && source <(echo "${output}")
+}
+
+[ ${debug} ] && echo "Done!"
