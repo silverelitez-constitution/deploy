@@ -9,4 +9,8 @@ resource "virtualbox_vm" "node" {
 		type = "bridged"
 		host_interface = "${var.interface}"
 	}
+	network_adapter {
+		type = "bridged"
+		host_interface = "${var.interface2}"
+	}
 }

@@ -40,6 +40,12 @@ variable "interface" {
   EOF
 }
 
+variable "interface2" {
+  description = <<-EOF
+    Secondary interface to bridge to.
+  EOF
+}
+
 variable "cpus" {
   description = <<-EOF
     Amount of CPU's to set for VM.
