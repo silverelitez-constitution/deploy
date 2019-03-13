@@ -36,7 +36,7 @@ variable "imagedir" {
 
 variable "interface" {
   description = <<-EOF
-    Interface to bridge to.
+    Primary interface to bridge to.
   EOF
 }
 

@@ -2,9 +2,11 @@
 # If not running interactively, don't do anything
 [[ ${-} == *i* ]] || [[ ${1} ]] || return
 
+# Ensure the system can reach the internet so there's no lag during the priming process
 echo -n "Testing interconnectivity..."
 ping -q 4.2.2.2 -c1 >/dev/null || { echo "Failed"; return; } && echo "Done"
 
+# Get the weather
 F=$(curl -s wttr.in/detroit | grep °F | head -n1 | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | sed 's/[^0-9.]//g')
 [ ! ${F} ] && F="93"
 
@@ -43,7 +45,8 @@ if [ ! ${domain} ]; then
   the scripts to fail. If you understand that I cannot guarantee
   any form of safety when testing these scripts, then go ahead
   and put 'domain=constitution.uss' in '/etc/silverelitez/config'
-  and then re-source the URL."
+  or have your DHCP server set your domain name to the one matching
+  the git repository you're testing from and then re-source the URL."
   echo
   read
   return

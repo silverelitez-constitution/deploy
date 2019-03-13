@@ -1,5 +1,7 @@
 #!/bin/bash
+# Distro packages to install
 software="docker"
+# Services to enable and start
 services="docker"
 
 PACKAGE_init() { echo init;
@@ -9,7 +11,7 @@ PACKAGE_init() { echo init;
 	[ ! ${svc} ] && return
 	
 	# if service is undefined or script is default then get service name from input
-	case $svc in
+	case ${svc} in
 	  ''|'default') svc="${1}"; echo ${svc};;
 	esac
 
@@ -36,7 +38,7 @@ PACKAGE_init() { echo init;
 	fi
 
 	echo Hostname: $(hostname | cut -d'.' -f1)
-	if [[ "$(hostname | cut -d'.' -f1)" != "${svc}" ]]; then echo "Can only be deployed to the ${svc} server. Aborting.."; return; fi
+	if [[ "$(hostname | cut -d'.' -f1)" != "${svc}" ]]; then echo "Should only be deployed to the ${svc} server. Aborting.."; return; fi
 	[ ! $domain ] && { echo -n Discovering domain...;domain=$(sudo realm discover | head -n1);echo $domain; }
 	[ ! $domain ] && { echo -n Reading resolv.conf for domain...;domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2); echo $domain; }
 	[ ! $domain ] && { echo "Could not determine domain name. Fatal Error"; exit; }
