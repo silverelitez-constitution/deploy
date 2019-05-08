@@ -22,6 +22,8 @@ curl -s ${motd} | sed "s/^404:.*/echo 404 error/g" | sed 's/^400:.*/echo 400 err
 cal
 fortune
 date
+uptime
+uname -a
 
 groups=$(id $(whoami) | sed 's/,/\n/g' | grep -oe "(.*)")
 
