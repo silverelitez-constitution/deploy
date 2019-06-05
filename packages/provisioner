@@ -71,7 +71,7 @@ EOL
     sudo apt-file update; 
     echo Completed ubuntu specific configuration;
   }
-  [ -e "/etc/yum.repos.d/epel.repo" ] && [ "${ID}" == "centos" ] || q_install epel-release
+  [ -e "/etc/yum.repos.d/epel.repo" ] && [ "${ID}" == "centos" ] || ( sudo yum update && q_install epel-release )
   q_install applydeltarpm deltarpm dos2unix realmd
   ${P_INSTALL} nspr yum-utils *bash-complet* kernel-devel dos2unix
   service dbus restart
