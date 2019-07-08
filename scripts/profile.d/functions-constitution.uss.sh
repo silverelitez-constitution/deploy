@@ -210,3 +210,7 @@ refresh() {
 }
 
 [ ${debug} ] && echo "Done!"
+
+myip() {
+  curl ipinfo.io/ip
+}
