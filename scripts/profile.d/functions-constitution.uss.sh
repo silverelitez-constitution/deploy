@@ -214,3 +214,7 @@ refresh() {
 myip() {
   curl ipinfo.io/ip
 }
+
+seelog() {
+  sudo tail -f /var/log/messages
+}
