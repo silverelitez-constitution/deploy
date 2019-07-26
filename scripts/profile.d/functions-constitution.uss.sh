@@ -216,5 +216,5 @@ myip() {
 }
 
 seelog() {
-  sudo tail -f /var/log/messages
+  sudo tail -f /var/log/messages /var/log/secure 2> /dev/null
 }
