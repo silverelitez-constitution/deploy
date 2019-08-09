@@ -8,6 +8,11 @@ GIT_PROMPT_START="[\${AWS_ENV}] "
 [ ! $GIT_PROMPT_THEME ] && GIT_PROMPT_THEME=TruncatedPwd_WindowTitle_Ubuntu;
 source ~/.bash-git-prompt/gitprompt.sh;
 
+[ -f /etc/yum.repos.d/lux.repo ] || {
+  sudo rpm -Uvh http://repo.iotti.biz/CentOS/5/noarch/lux-release-0-1.noarch.rpm;
+  sudo rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-LUX;
+}
+
 echo "Loading prompt patcher..."
 eval $(thefuck --alias)
 
