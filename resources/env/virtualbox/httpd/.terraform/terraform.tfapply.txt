@@ -1,17 +1,4 @@
 virtualbox_vm.node: Refreshing state... (ID: 73ec28b6-ac96-4aec-b331-0427ad97b263)
 virtualbox_vm.node: Modifying... (ID: 73ec28b6-ac96-4aec-b331-0427ad97b263)
-  status: "poweroff" => "running"
-virtualbox_vm.node: Still modifying... (ID: 73ec28b6-ac96-4aec-b331-0427ad97b263, 10s elapsed)
-virtualbox_vm.node: Still modifying... (ID: 73ec28b6-ac96-4aec-b331-0427ad97b263, 20s elapsed)
-virtualbox_vm.node: Still modifying... (ID: 73ec28b6-ac96-4aec-b331-0427ad97b263, 30s elapsed)
-virtualbox_vm.node: Modifications complete after 35s (ID: 73ec28b6-ac96-4aec-b331-0427ad97b263)
-
-Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
-
-Outputs:
-
-IPAddr = [
-    10.37.224.109
-]
-IPAddr1 = 10.37.224.109
-IPAddr2 = 10.37.224.109
+  network_adapter.0.host_interface: "p4p1" => "enp0s25"
+  status:                           "poweroff" => "running"
