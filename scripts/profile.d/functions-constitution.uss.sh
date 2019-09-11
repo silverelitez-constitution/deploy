@@ -220,5 +220,5 @@ myip() {
 }
 
 seelog() {
-  sudo tail -f /var/log/messages /var/log/secure /var/log/apache2/*_log
+  sudo tail -f /var/log/messages /var/log/secure /var/log/{httpd,apache2}/{access,error}_log
 }
