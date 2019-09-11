@@ -18,6 +18,10 @@ tube() { # tube https://example.com/supercoolvideo
   done
 }
 
+tuber() {
+  youtube-dl -x --audio-format mp3 ${@};
+}
+
 chances() {
   command="${@}"
   # Kindergarten Teacher Mode
