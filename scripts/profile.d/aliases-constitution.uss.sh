@@ -14,6 +14,7 @@ alias gm='git checkout master'
 alias gp='git pull'
 alias gs='git status'
 
+alias dmesg='dmesg -T'
 alias grep='grep --color=auto'
 alias l.='ls -d .* --color=auto'
 alias ll='ls -lah'
