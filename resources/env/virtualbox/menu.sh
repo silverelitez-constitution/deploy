@@ -33,7 +33,9 @@ init() {
   # Parse list for variable values
 	url=$(cat ./terraform.d/os.list | head -n${os} | tail -n1)
 	image=$(cat ./terraform.d/os.list | head -n${os} | tail -n1 | rev | cut -d'/' -f1 | rev)
-	# Fall into main loop
+	# Get instance IP if available
+  IPAddr=$(terraform output -json IPAddr | jq ".value[${node}]" 2>/dev/null)
+  # Fall into main loop
 	dialog --infobox "Ready!" 0 0
 	sleep 0.1
 	output="main_menu"
@@ -52,7 +54,7 @@ main() {
 			c "CPUs - ${cpus:-default}" \
 			m "RAM - ${memory:-default} | Available: $(free -h | gawk  '/Mem:/{print $7}')" \
 			d "Disk Space - ${disk:-default}" \
-			N "Networking - ${interface:-auto}" \
+			N "Networking - ${interface:-auto} - IP(s): $IPAddr" \
 			z "Zone (beta) - ${zone:-default}" \
 			Packages "Packages - ${packages:-default}" \
 			e "Edit resource files" \
