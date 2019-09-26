@@ -17,6 +17,10 @@ PACKAGE_init() { echo init;
 
 	echo "Setting up ${svc}..."
 
+  # for src in "/etc/silverelitez/debug /etc/silverelitez/config"
+    # do
+      # [ -e ${src} ] && source ${src}
+    # done
 	src=/etc/silverelitez/debug; [ -e ${src} ] && { set -x; debug=1; source ${src}; }
 	src=/etc/silverelitez/config; [ -e ${src} ] && source ${src}
 	source /etc/os-release
