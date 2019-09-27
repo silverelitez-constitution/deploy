@@ -73,8 +73,9 @@ EOL
   }
   [ -e "/etc/yum.repos.d/epel.repo" ] && [ "${ID}" == "centos" ] || ( sudo yum clean all; sudo yum update -y && q_install epel-release )
   q_install applydeltarpm deltarpm dos2unix realmd
-  ${P_INSTALL} nspr yum-utils *bash-complet* kernel-devel dos2unix
+  ${P_INSTALL} nspr yum-utils *bash-complet* kernel-devel dos2unix 
   service dbus restart
+  sudo yum clean all
   systemctl restart systemd-logind
   [ "${ID}" == 'gentoo' ] && { echo -e 'y\n' | layman -a sabayon; emerge realmd --quiet; } || { q_install realm realmd; q_install kinit krb5-workstation; }
   echo Hostname: $(hostname | cut -d'.' -f1)
