@@ -1,7 +1,7 @@
 #!/bin/bash
 
 packages="docker docker-client kubernetes kubernetes-client kubernetes-master"
-services="docker"
+services="docker kubelet"
 #test='which kubectl && sudo docker run hello-world'
 
 _install() { 

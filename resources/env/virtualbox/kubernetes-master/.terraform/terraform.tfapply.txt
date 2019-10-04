@@ -1,12 +1,6 @@
 virtualbox_vm.node: Refreshing state... (ID: 95b73a95-a5c2-42bc-bae7-7be3d46f2430)
-virtualbox_vm.node: Modifying... (ID: 95b73a95-a5c2-42bc-bae7-7be3d46f2430)
-  status: "poweroff" => "running"
-virtualbox_vm.node: Still modifying... (ID: 95b73a95-a5c2-42bc-bae7-7be3d46f2430, 10s elapsed)
-virtualbox_vm.node: Still modifying... (ID: 95b73a95-a5c2-42bc-bae7-7be3d46f2430, 20s elapsed)
-virtualbox_vm.node: Still modifying... (ID: 95b73a95-a5c2-42bc-bae7-7be3d46f2430, 30s elapsed)
-virtualbox_vm.node: Modifications complete after 36s (ID: 95b73a95-a5c2-42bc-bae7-7be3d46f2430)
 
-Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 
 Outputs:
 
