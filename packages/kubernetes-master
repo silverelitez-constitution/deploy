@@ -13,6 +13,8 @@ net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 EOF
   sysctl -p
+  sudo yum install -y http://mirror.centos.org/centos/7/os/x86_64/Packages/gnupg2-2.0.22-5.el7_5.x86_64.rpm --skip-broken 
+  yum install -y http://mirror.centos.org/centos/7/extras/x86_64/Packages/container-selinux-2.42-1.gitad8f0f7.el7.noarch.rpm
   cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
@@ -23,7 +25,6 @@ repo_gpgcheck=1
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
         https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 EOF
-  sudo yum install -y http://mirror.centos.org/centos/7/os/x86_64/Packages/gnupg2-2.0.22-5.el7_5.x86_64.rpm --skip-broken 
   sudo yum clean all
 }
 
@@ -100,4 +101,5 @@ EOF
   sudo chown $(id -u):$(id -g) $HOME/.kube/config
   kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
   #kubectl apply --filename https://git.io/weave-kube-1.6
+  kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
 }
