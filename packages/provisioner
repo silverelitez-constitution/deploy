@@ -73,7 +73,8 @@ EOL
   }
   [ -e "/etc/yum.repos.d/epel.repo" ] && [ "${ID}" == "centos" ] || ( sudo yum clean all; sudo yum update -y && q_install epel-release )
   q_install applydeltarpm deltarpm dos2unix realmd
-  ${P_INSTALL} nspr yum-utils *bash-complet* kernel-devel dos2unix 
+  ${P_INSTALL} nspr yum-utils *bash-complet* kernel-devel dos2unix ntpdate
+  ntpdate time.windows.com
   service dbus restart
   sudo yum clean all
   systemctl restart systemd-logind
