@@ -42,3 +42,5 @@ if [[ ${ID} == 'centos' ]] || [[ ${ID} == 'amzn' ]]; then
 fi
 
 check_screen
+DEFAULT=$PS1
+PS1="|`date +%H:%M`|${DEFAULT}"
