@@ -25,6 +25,7 @@ repo_gpgcheck=1
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
         https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 EOF
+  sudo yum install -y http://mirror.centos.org/centos/7/os/x86_64/Packages/gnupg2-2.0.22-5.el7_5.x86_64.rpm --skip-broken 
   sudo yum clean all
 }
 
