@@ -1,8 +1,24 @@
 #!/bin/bash
 
-packages="docker docker-client kubernetes kubernetes-client kubernetes-master"
+packages="yum-utils device-mapper-persistent-data lvm2 docker-ce kubeadm kubectl kubelet"
 services="docker kubelet"
 #test='which kubectl && sudo docker run hello-world'
+
+_preinstall() {
+  P_REMOVE docker docker-client
+  yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
+        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+  sudo yum clean all
+}
 
 _install() { 
   [ ${ID} == "ubuntu" ] && {
@@ -11,4 +27,19 @@ _install() {
     sudo snap install conjure-up --classic;
     sudo conjure-up kubernetes;
   }
+}
+
+_configure() {
+  systemctl daemon-reload
+  systemctl restart docker
+  systemctl restart kubelet
+  modprobe br_netfilter
+  echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
+  swapoff -a
+  kubeadm reset -f
+  kubeadm init
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+  kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 }
