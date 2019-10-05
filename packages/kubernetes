@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/bash 
+set -x
 
 packages="yum-utils device-mapper-persistent-data lvm2 docker-ce kubeadm kubectl kubelet"
 services="docker kubelet"
@@ -112,16 +113,17 @@ EOF
       kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
       # set up Dashboard
       kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
-      join-token=$(grep -B1 '\-\-discovery-token-ca-cert-hash' /home/shayne/secret.key)
+      jointoken=$(grep -B1 '\-\-discovery-token-ca-cert-hash' /home/shayne/secret.key)
       # fetch private key
-      sudo -u shayne scp -oStrictHostKeyChecking=no 10.8.0.1:~/.ssh/id_rsa /home/shayne/.ssh/
+      sudo -u shayne scp -oStrictHostKeyChecking=no 10.8.0.1:~/.ssh/id_rsa ~/
+      mv ~/id_rsa /home/shayne/.ssh/
       # set owner and permissions
       chown shayne. /home/shayne/.ssh/id_rsa
       chmod 0600 /home/shayne/.ssh/id_rsa
       for node in ${nodes}
       do
         # read join-token command from master and execute on node in nodes list
-        sudo -u shayne ssh -oStrictHostKeyChecking=no $node sudo ${join-token}
+        sudo -u shayne ssh -oStrictHostKeyChecking=no $node sudo ${jointoken}
       done
       rm -f /home/shayne/.ssh/id_rsa
     ;;
@@ -129,7 +131,8 @@ EOF
       # get master ip from router dns
       kmaster=$(host kubernetes-master 10.8.0.1 | grep 'has address' | cut -d' ' -f4)
       # fetch private key
-      sudo -u shayne scp -oStrictHostKeyChecking=no 10.8.0.1:~/.ssh/id_rsa /home/shayne/.ssh/
+      sudo -u shayne scp -oStrictHostKeyChecking=no 10.8.0.1:~/.ssh/id_rsa ~/
+      mv ~/id_rsa /home/shayne/.ssh/
       # set owner and permissions
       chown shayne. /home/shayne/.ssh/id_rsa
       chmod 0600 /home/shayne/.ssh/id_rsa
