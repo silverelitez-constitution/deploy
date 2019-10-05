@@ -72,6 +72,7 @@ EOL
     echo Completed ubuntu specific configuration;
   }
   [ -e "/etc/yum.repos.d/epel.repo" ] && [ "${ID}" == "centos" ] || ( sudo yum clean all; sudo yum update -y && q_install epel-release )
+  [[ ${ID} == "amzl" ]] && [[ -e /etc/yum.repos.d/epel* ]] || sudo amazon-linux-extras install epel -y
   q_install applydeltarpm deltarpm dos2unix realmd
   ${P_INSTALL} nspr yum-utils *bash-complet* kernel-devel dos2unix ntpdate
   ntpdate time.windows.com
