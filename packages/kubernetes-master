@@ -3,6 +3,7 @@
 packages="yum-utils device-mapper-persistent-data lvm2 docker-ce kubeadm kubectl kubelet"
 services="docker kubelet"
 #test='which kubectl && sudo docker run hello-world'
+nodes="www ssc vfd"
 
 _preinstall() {
   P_REMOVE docker docker-client
@@ -94,12 +95,42 @@ EOF
   systemctl restart docker
   systemctl restart kubelet
   kubeadm reset -f
-  kubeadm init --pod-network-cidr 10.244.0.0/16
-  mkdir -p $HOME/.kube
-  sudo rm $HOME/.kube/config
-  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-  sudo chown $(id -u):$(id -g) $HOME/.kube/config
-  kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-  #kubectl apply --filename https://git.io/weave-kube-1.6
-  kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
+  
+  case $(hostname) in
+    kubernetes-master)
+      # initialize cluster
+      kubeadm init --pod-network-cidr 10.244.0.0/16 | tee /home/shayne/secret.key
+      # secure key
+      chown shayne. /home/shayne/secret.key
+      chmod go-rwx /home/shayne/secret.key
+      # prepare local config
+      mkdir -p $HOME/.kube
+      sudo rm $HOME/.kube/config
+      sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+      sudo chown $(id -u):$(id -g) $HOME/.kube/config
+      # configure cni
+      kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+      # set up Dashboard
+      kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
+      join-token=$(grep -B1 '\-\-discovery-token-ca-cert-hash' /home/shayne/secret.key)
+      for node in ${}
+        do
+        done
+    ;;
+    kubernetes-node-*)
+      # get master ip from router dns
+      kmaster=$(host kubernetes-master 10.8.0.1 | grep 'has address' | cut -d' ' -f4)
+      # fetch private key
+      sudo -u shayne scp -oStrictHostKeyChecking=no 10.8.0.1:~/.ssh/id_rsa /home/shayne/.ssh/
+      # set owner and permissions
+      chown shayne. /home/shayne/.ssh/id_rsa
+      chmod 0600 /home/shayne/.ssh/id_rsa
+      # read join-token command from master and execute
+      sudo -u shayne ssh -oStrictHostKeyChecking=no $kmaster grep -B1 '\-\-discovery-token-ca-cert-hash' secret.key > join-token.sh
+      source ./join-token.sh
+      # destroy private key and join-token
+      rm -f /home/shayne/.ssh/id_rsa
+      rm -f join-token.sh
+    ;;
+  esac
 }

@@ -2,7 +2,7 @@ Refreshing Terraform state in-memory prior to plan...
 The refreshed state will be used to calculate this plan, but will not be
 persisted to local or remote state storage.
 
-virtualbox_vm.node: Refreshing state... (ID: a7cc21cf-4f94-400f-84ab-3c44bef71c81)
+virtualbox_vm.node: Refreshing state... (ID: 19761715-52c0-4634-b980-964c7a800e81)
 
 ------------------------------------------------------------------------
 
