@@ -113,7 +113,24 @@ EOF
       kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
       # set up Dashboard
       kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
-      jointoken=$(grep -B1 '\-\-discovery-token-ca-cert-hash' /home/shayne/secret.key)
+      cat <<EOF > ~/kube-dashboard-access.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: kubernetes-dashboard
+  labels:
+    k8s-app: kubernetes-dashboard
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: kubernetes-dashboard
+  namespace: kube-system
+EOF
+      kubectl create -f ~/kube-dashboard-access.yaml
+      jointoken=$(grep -B1 '\-\-discovery-token-ca-cert-hash' /home/shayne/secret.key | sed 's/\\$//g')
       # fetch private key
       sudo -u shayne scp -oStrictHostKeyChecking=no 10.8.0.1:~/.ssh/id_rsa /home/shayne/.ssh/
       # set owner and permissions
@@ -121,8 +138,11 @@ EOF
       chmod 0600 /home/shayne/.ssh/id_rsa
       for node in ${nodes}
       do
+        [[ ! ${jointoken} ]] && return # if the join token is null, don't bother running host provisioning
         # read join-token command from master and execute on node in nodes list
+        sudo -u shayne ssh -oStrictHostKeyChecking=no $node sudo kubeadm reset -f
         sudo -u shayne ssh -oStrictHostKeyChecking=no $node sudo ${jointoken}
+        kubectl get nodes
       done
       #rm -f /home/shayne/.ssh/id_rsa
     ;;
@@ -136,7 +156,7 @@ EOF
       chown shayne. /home/shayne/.ssh/id_rsa
       chmod 0600 /home/shayne/.ssh/id_rsa
       # read join-token command from master and execute
-      sudo -u shayne ssh -oStrictHostKeyChecking=no $kmaster grep -B1 '\-\-discovery-token-ca-cert-hash' secret.key > join-token.sh
+      sudo -u shayne ssh -oStrictHostKeyChecking=no $kmaster grep -B1 '\-\-discovery-token-ca-cert-hash' secret.key | sed 's/\\$//g' > join-token.sh
       source ./join-token.sh
       # destroy private key and join-token
       #rm -f /home/shayne/.ssh/id_rsa
