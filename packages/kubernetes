@@ -1,0 +1,144 @@
+#!/bin/bash
+
+packages="yum-utils device-mapper-persistent-data lvm2 docker-ce kubeadm kubectl kubelet"
+services="docker kubelet"
+#test='which kubectl && sudo docker run hello-world'
+nodes="www ssc vfd"
+
+_preinstall() {
+  P_REMOVE docker docker-client
+  yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  cat <<EOF > /etc/sysctl.d/99-kubernetes.conf
+net.bridge.bridge-nf-call-arptables = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+  sysctl -p
+  sudo yum install -y http://mirror.centos.org/centos/7/os/x86_64/Packages/gnupg2-2.0.22-5.el7_5.x86_64.rpm --skip-broken 
+  yum install -y http://mirror.centos.org/centos/7/extras/x86_64/Packages/container-selinux-2.42-1.gitad8f0f7.el7.noarch.rpm
+  cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
+        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+  sudo yum clean all
+}
+
+_install() { 
+  [ ${ID} == "ubuntu" ] && {
+    sudo apt update
+    P_INSTALL docker.io snapd;
+    sudo snap install conjure-up --classic;
+    sudo conjure-up kubernetes;
+  }
+}
+
+_configure() {
+  sed -i 's/cgroup-driver=cgroupfs/cgroup-driver=systemd/g' /usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf
+  cat <<EOF > /usr/lib/systemd/system/docker.service
+[Unit]
+Description=Docker Application Container Engine
+Documentation=https://docs.docker.com
+BindsTo=containerd.service
+After=network-online.target firewalld.service containerd.service
+Wants=network-online.target
+Requires=docker.socket
+
+[Service]
+Type=notify
+# the default is not to use systemd for cgroups because the delegate issues still
+# exists and systemd currently does not support the cgroup feature set required
+# for containers run by docker
+ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock --exec-opt native.cgroupdriver=systemd
+ExecReload=/bin/kill -s HUP $MAINPID
+TimeoutSec=0
+RestartSec=2
+Restart=always
+
+# Note that StartLimit* options were moved from "Service" to "Unit" in systemd 229.
+# Both the old, and new location are accepted by systemd 229 and up, so using the old location
+# to make them work for either version of systemd.
+StartLimitBurst=3
+
+# Note that StartLimitInterval was renamed to StartLimitIntervalSec in systemd 230.
+# Both the old, and new name are accepted by systemd 230 and up, so using the old name to make
+# this option work for either version of systemd.
+StartLimitInterval=60s
+
+# Having non-zero Limit*s causes performance problems due to accounting overhead
+# in the kernel. We recommend using cgroups to do container-local accounting.
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+
+# Comment TasksMax if your systemd version does not support it.
+# Only systemd 226 and above support this option.
+TasksMax=infinity
+
+# set delegate yes so that systemd does not reset the cgroups of docker containers
+Delegate=yes
+
+# kill only the docker process, not all processes in the cgroup
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
+EOF
+  modprobe br_netfilter
+  swapoff -a
+  systemctl daemon-reload
+  systemctl restart docker
+  systemctl restart kubelet
+  kubeadm reset -f
+  
+  case $(hostname) in
+    kubernetes-master)
+      # initialize cluster
+      kubeadm init --pod-network-cidr 10.244.0.0/16 | tee /home/shayne/secret.key
+      # secure key
+      chown shayne. /home/shayne/secret.key
+      chmod go-rwx /home/shayne/secret.key
+      # prepare local config
+      mkdir -p $HOME/.kube
+      sudo rm $HOME/.kube/config
+      sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+      sudo chown $(id -u):$(id -g) $HOME/.kube/config
+      # configure cni
+      kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+      # set up Dashboard
+      kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
+      join-token=$(grep -B1 '\-\-discovery-token-ca-cert-hash' /home/shayne/secret.key)
+      # fetch private key
+      sudo -u shayne scp -oStrictHostKeyChecking=no 10.8.0.1:~/.ssh/id_rsa /home/shayne/.ssh/
+      # set owner and permissions
+      chown shayne. /home/shayne/.ssh/id_rsa
+      chmod 0600 /home/shayne/.ssh/id_rsa
+      for node in ${nodes}
+      do
+        # read join-token command from master and execute on node in nodes list
+        sudo -u shayne ssh -oStrictHostKeyChecking=no $node sudo ${join-token}
+      done
+      rm -f /home/shayne/.ssh/id_rsa
+    ;;
+    kubernetes-node-*)
+      # get master ip from router dns
+      kmaster=$(host kubernetes-master 10.8.0.1 | grep 'has address' | cut -d' ' -f4)
+      # fetch private key
+      sudo -u shayne scp -oStrictHostKeyChecking=no 10.8.0.1:~/.ssh/id_rsa /home/shayne/.ssh/
+      # set owner and permissions
+      chown shayne. /home/shayne/.ssh/id_rsa
+      chmod 0600 /home/shayne/.ssh/id_rsa
+      # read join-token command from master and execute
+      sudo -u shayne ssh -oStrictHostKeyChecking=no $kmaster grep -B1 '\-\-discovery-token-ca-cert-hash' secret.key > join-token.sh
+      source ./join-token.sh
+      # destroy private key and join-token
+      rm -f /home/shayne/.ssh/id_rsa
+      rm -f join-token.sh
+    ;;
+  esac
+}
