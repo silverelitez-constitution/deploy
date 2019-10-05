@@ -89,6 +89,7 @@ if ! ssh ${username}@${hostname} whoami >/dev/null 2>&1; then
     sudo mkdir -p /etc/sudoers.d;
     sudo useradd -s /bin/bash -m -G wheel ${deploy};
     sudo mkdir -p /home/${deploy}/.ssh;
+    sudo cp ~/${deploy}/.ssh/id_rsa /root/.ssh/id_rsa;
     sudo mv ~/${deploy}/* /home/${deploy}/.ssh/;
     sudo echo \"${deploy}        ALL=(ALL)       NOPASSWD: ALL\" > ~/${deploy}.sudoers && sudo mv ~/${deploy}.sudoers /etc/sudoers.d/${deploy};
     echo "Fixing sudoers.d ownership..."
