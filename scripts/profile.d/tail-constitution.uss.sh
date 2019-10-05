@@ -43,4 +43,4 @@ fi
 
 check_screen
 DEFAULT=$PS1
-PS1="|`date +%H:%M`|${debian_chroot:+($debian_chroot)}\u@\h:\w\$ "
+PS1="|\`date +%H:%M\`|${debian_chroot:+($debian_chroot)}\u@\h:\w\$ "

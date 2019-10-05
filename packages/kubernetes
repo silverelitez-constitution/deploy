@@ -2,19 +2,23 @@
 set -x
 
 packages="yum-utils device-mapper-persistent-data lvm2 docker-ce kubeadm kubectl kubelet"
-services="docker kubelet"
+services=""
 #test='which kubectl && sudo docker run hello-world'
 nodes="www ssc vfd"
 
 _preinstall() {
+  service docker stop
   P_REMOVE docker docker-client
+  service kubelet stop
+  pr kubelet kubeadm docker-ce kubectl
+  rm -rf ~/.kube
   yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
   cat <<EOF > /etc/sysctl.d/99-kubernetes.conf
 net.bridge.bridge-nf-call-arptables = 1
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 EOF
-  sysctl -p
+  sysctl -a
   sudo yum install -y http://mirror.centos.org/centos/7/os/x86_64/Packages/gnupg2-2.0.22-5.el7_5.x86_64.rpm --skip-broken 
   yum install -y http://mirror.centos.org/centos/7/extras/x86_64/Packages/container-selinux-2.42-1.gitad8f0f7.el7.noarch.rpm
   cat <<EOF > /etc/yum.repos.d/kubernetes.repo
@@ -90,13 +94,17 @@ KillMode=process
 [Install]
 WantedBy=multi-user.target
 EOF
+
+  cat <<EOF> /etc/sysconfig/kubelet
+KUBELET_EXTRA_ARGS=" --cgroup-driver=systemd  --feature-gates=SupportPodPidsLimit=false --feature-gates=SupportNodePidsLimit=false "
+EOF
   modprobe br_netfilter
+  sysctl -a
   swapoff -a
   systemctl daemon-reload
-  systemctl restart docker
-  systemctl restart kubelet
+  systemctl start docker
   kubeadm reset -f
-  
+  systemctl start kubelet.service
   case $(hostname) in
     kubernetes-master)
       # initialize cluster
@@ -106,30 +114,78 @@ EOF
       chmod go-rwx /home/shayne/secret.key
       # prepare local config
       mkdir -p $HOME/.kube
+      mkdir -p /home/shayne/.kube
       sudo rm $HOME/.kube/config
+      sudo rm /home/shayne/.kube/config
       sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+      sudo cp -i /etc/kubernetes/admin.conf /home/shayne/.kube/config
       sudo chown $(id -u):$(id -g) $HOME/.kube/config
+      sudo chown shayne. /home/shayne/.kube/config
       # configure cni
       kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
       # set up Dashboard
-      kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
-      cat <<EOF > ~/kube-dashboard-access.yaml
+      cat <<EOF> ~/kube-dash.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admin-user
+  namespace: kubernetes-dashboard
+EOF
+      cat <<EOF> /etc/kubernetes/kubeconfig.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: kube-dashboard
+rules:
+- apiGroups: ["*"]
+  resources: ["*"]
+  verbs: ["*"]
+---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
-  name: kubernetes-dashboard
-  labels:
-    k8s-app: kubernetes-dashboard
+  name: rook-operator
+  namespace: rook-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: cluster-admin
+  name: kubernetes-dashboard
 subjects:
 - kind: ServiceAccount
   name: kubernetes-dashboard
   namespace: kube-system
 EOF
-      kubectl create -f ~/kube-dashboard-access.yaml
+      kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
+      kubectl apply -f ~/kube-dash.yaml
+      kubectl apply -f ~/kubeconfig.yaml
+      kubectl create clusterrolebinding kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
+      # cat <<EOF > ~/kube-dashboard-access.yaml
+# apiVersion: rbac.authorization.k8s.io/v1beta1
+# kind: ClusterRoleBinding
+# metadata:
+  # name: kubernetes-dashboard
+  # labels:
+    # k8s-app: kubernetes-dashboard
+# roleRef:
+  # apiGroup: rbac.authorization.k8s.io
+  # kind: ClusterRole
+  # name: cluster-admin
+# subjects:
+# - kind: ServiceAccount
+  # name: kubernetes-dashboard
+  # namespace: kube-system
+# EOF
+      # kubectl create -f ~/kube-dashboard-access.yaml && rm -f ~/kube-dashboard-access.yaml
+      kubectl proxy --address=0.0.0.0 &
+      kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}')
+      echo "Waiting for Dashboard IP..."
+      while [[ ! ${daship} ]]
+      do
+        sleep 1
+        daship=$(kubectl describe pods -n kubernetes-dashboard | grep '^IP:' | tail -n1 | cut -d: -f2 | sed 's/^[ ]*//g')
+      done
+      echo "========== The Dashboard is now accessable at:"
+      echo "https://${daship}:8443/"
       jointoken=$(grep -B1 '\-\-discovery-token-ca-cert-hash' /home/shayne/secret.key | sed 's/\\$//g')
       # fetch private key
       sudo -u shayne scp -oStrictHostKeyChecking=no 10.8.0.1:~/.ssh/id_rsa /home/shayne/.ssh/

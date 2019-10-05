@@ -75,7 +75,7 @@ EOL
   [[ ${ID} == "amzl" ]] && [[ -e /etc/yum.repos.d/epel* ]] || sudo amazon-linux-extras install epel -y
   q_install applydeltarpm deltarpm dos2unix realmd
   ${P_INSTALL} nspr yum-utils *bash-complet* kernel-devel dos2unix ntpdate
-  ntpdate time.windows.com
+  ntpdate time.windows.com &
   service dbus restart
   sudo yum clean all
   systemctl restart systemd-logind
