@@ -46,6 +46,7 @@ main() {
 	output=$(
 		dialog --stdout --title "Service Configuration | $(pwd)" \
 		--menu "Please choose setting to change:" 0 0 0 \
+			S "Save service and deploy" \
       P "Provider - ${provider}" \
 			s "Service - ${service}" \
 			n "Name - ${name}" \
@@ -57,10 +58,10 @@ main() {
 			N "Networking - ${interface:-auto} - IP(s): $IPAddr" \
 			z "Zone (beta) - ${zone:-default}" \
 			Packages "Packages - ${packages:-default}" \
+      shell "Open SSH session on ${service}" \
 			e "Edit resource files" \
 			x "Save service" \
 			p "Save service and run Plan" \
-			S "Save service and deploy" \
 			A "Save and Apply" \
 			E "Skip to Deployment (!!)" \
       Reset "Reset VM" \
@@ -84,6 +85,7 @@ main() {
 			r) count;;
 			z) zone;;
 			Packages) packages;;
+      shell) clear; ssh ${service};;
 			e) editor;;
 			p) save; plan;;
 			E) deploy;;
