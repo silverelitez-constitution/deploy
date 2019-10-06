@@ -96,7 +96,7 @@ WantedBy=multi-user.target
 EOF
 
   cat <<EOF> /etc/sysconfig/kubelet
-KUBELET_EXTRA_ARGS=" --cgroup-driver=systemd  --feature-gates=SupportPodPidsLimit=false --feature-gates=SupportNodePidsLimit=false "
+KUBELET_EXTRA_ARGS=" --cgroup-driver=systemd  --feature-gates=SupportPodPidsLimit=false --feature-gates=SupportNodePidsLimit=false --fail-swap-on=false "
 EOF
   modprobe br_netfilter
   sysctl -a
@@ -109,6 +109,7 @@ EOF
     kubernetes-master)
       # initialize cluster
       kubeadm init --pod-network-cidr 10.244.0.0/16 | tee /home/shayne/secret.key
+      kubectl taint nodes --all node-role.kubernetes.io/master-
       # secure key
       chown shayne. /home/shayne/secret.key
       chmod go-rwx /home/shayne/secret.key
@@ -130,18 +131,22 @@ kind: ServiceAccount
 metadata:
   name: admin-user
   namespace: kubernetes-dashboard
+rules:
+- apiGroups: ["*"]
+  resources: ["*"]
+  verbs: ["*"]
 EOF
-      cat <<EOF> /etc/kubernetes/kubeconfig.yaml
-apiVersion: rbac.authorization.k8s.io/v1beta1
+      cat <<EOF> ~/kubeconfig.yaml
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: kube-dashboard
+  name: admin-user
 rules:
 - apiGroups: ["*"]
   resources: ["*"]
   verbs: ["*"]
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: rook-operator
@@ -149,14 +154,14 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: kubernetes-dashboard
+  name: cluster-admin
 subjects:
 - kind: ServiceAccount
-  name: kubernetes-dashboard
-  namespace: kube-system
+  name: admin-user
+  namespace: kubernetes-dashboard
 EOF
       kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
-      kubectl apply -f ~/kube-dash.yaml
+      #kubectl apply -f ~/kube-dash.yaml
       kubectl apply -f ~/kubeconfig.yaml
       kubectl create clusterrolebinding kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
       # cat <<EOF > ~/kube-dashboard-access.yaml
@@ -176,8 +181,8 @@ EOF
   # namespace: kube-system
 # EOF
       # kubectl create -f ~/kube-dashboard-access.yaml && rm -f ~/kube-dashboard-access.yaml
-      kubectl proxy --address=0.0.0.0 &
-      kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}')
+      sudo kubectl proxy --address='0.0.0.0' --accept-hosts='^*$' --disable-filter=true --port=80 &
+      kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}') | grep '^token:'
       echo "Waiting for Dashboard IP..."
       while [[ ! ${daship} ]]
       do
