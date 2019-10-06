@@ -1,5 +1,5 @@
 #!/bin/bash 
-set -x
+#set -x
 
 packages="yum-utils device-mapper-persistent-data lvm2 docker-ce kubeadm kubectl kubelet"
 services=""
