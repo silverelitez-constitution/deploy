@@ -162,8 +162,9 @@ subjects:
 EOF
       kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
       #kubectl apply -f ~/kube-dash.yaml
-      kubectl apply -f ~/kubeconfig.yaml
+      #kubectl apply -f ~/kubeconfig.yaml
       kubectl create clusterrolebinding kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
+      kubectl -n kube-system get secret admin-token-xmflj -o yaml
       # cat <<EOF > ~/kube-dashboard-access.yaml
 # apiVersion: rbac.authorization.k8s.io/v1beta1
 # kind: ClusterRoleBinding
@@ -181,7 +182,7 @@ EOF
   # namespace: kube-system
 # EOF
       # kubectl create -f ~/kube-dashboard-access.yaml && rm -f ~/kube-dashboard-access.yaml
-      sudo kubectl proxy --address='0.0.0.0' --accept-hosts='^*$' --disable-filter=true --port=80 &
+      kubectl proxy --address='0.0.0.0' --accept-hosts='^*$' --disable-filter=true --port=8001 &
       kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}') | grep '^token:'
       echo "Waiting for Dashboard IP..."
       while [[ ! ${daship} ]]
@@ -191,6 +192,7 @@ EOF
       done
       echo "========== The Dashboard is now accessable at:"
       echo "https://${daship}:8443/"
+      echo "http://$(hostname -f):8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/"
       jointoken=$(grep -B1 '\-\-discovery-token-ca-cert-hash' /home/shayne/secret.key | sed 's/\\$//g')
       # fetch private key
       sudo -u shayne scp -oStrictHostKeyChecking=no 10.8.0.1:~/.ssh/id_rsa /home/shayne/.ssh/
