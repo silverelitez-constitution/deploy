@@ -1,25 +1,9 @@
-virtualbox_vm.node: Creating...
-  cpus:                                     "" => "4"
-  image:                                    "" => "./terraform.d/images//vagrant-centos-7.2.box"
-  memory:                                   "" => "1.0 gib"
-  name:                                     "" => "KubernetesMaster-01"
-  network_adapter.#:                        "" => "1"
-  network_adapter.0.device:                 "" => "IntelPro1000MTServer"
-  network_adapter.0.host_interface:         "" => "p4p1"
-  network_adapter.0.ipv4_address:           "" => "<computed>"
-  network_adapter.0.ipv4_address_available: "" => "<computed>"
-  network_adapter.0.mac_address:            "" => "<computed>"
-  network_adapter.0.status:                 "" => "<computed>"
-  network_adapter.0.type:                   "" => "bridged"
-  status:                                   "" => "running"
-  url:                                      "" => "https://github.com/CommanderK5/packer-centos-template/releases/download/0.7.2/vagrant-centos-7.2.box"
-virtualbox_vm.node: Still creating... (10s elapsed)
-virtualbox_vm.node: Still creating... (20s elapsed)
-virtualbox_vm.node: Still creating... (30s elapsed)
-virtualbox_vm.node: Still creating... (40s elapsed)
-virtualbox_vm.node: Creation complete after 42s (ID: 36a6b666-6476-4cfe-b9ea-18b4bc340934)
+virtualbox_vm.node: Refreshing state... (ID: 36a6b666-6476-4cfe-b9ea-18b4bc340934)
+virtualbox_vm.node: Modifying... (ID: 36a6b666-6476-4cfe-b9ea-18b4bc340934)
+  memory: "1.0 gib" => "2.0 gib"
+virtualbox_vm.node: Modifications complete after 6s (ID: 36a6b666-6476-4cfe-b9ea-18b4bc340934)
 
-Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
 
 Outputs:
 

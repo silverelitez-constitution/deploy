@@ -2,9 +2,10 @@
 # This deployment script has NOT been ravenously tested on:
 # Centos 7, Ubuntu 17.10, Gentoo 17.1
 
+rev="1.3"
 set -x
 source /etc/os-release
-test="id shayne@${realm}"
+test="grep ${rev} /etc/silverelitez/provisioner"
 
 # Resources
 gitsource() {
@@ -175,4 +176,6 @@ _postinstall() {
     sudo dpkg --configure -a --force-confdef,confnew;
     sudo apt-get autoremove -y
   }
+  mkdir -p /etc/silverelitez
+  echo ${rev} > /etc/silverelitez/provisioner
 }
