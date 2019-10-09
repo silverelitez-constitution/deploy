@@ -18,7 +18,7 @@ net.bridge.bridge-nf-call-arptables = 1
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 EOF
-  sysctl -a
+  sysctl --system
   sudo yum install -y http://mirror.centos.org/centos/7/os/x86_64/Packages/gnupg2-2.0.22-5.el7_5.x86_64.rpm --skip-broken 
   yum install -y http://mirror.centos.org/centos/7/extras/x86_64/Packages/container-selinux-2.42-1.gitad8f0f7.el7.noarch.rpm
   cat <<EOF > /etc/yum.repos.d/kubernetes.repo
