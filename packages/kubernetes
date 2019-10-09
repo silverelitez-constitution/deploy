@@ -144,10 +144,10 @@ rules:
     verbs:
     - '*'
 EOF
-      kubectl apply -f ~/recommended.yaml
       kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
       kubectl create role access-secrets --verb=get,list,watch,update,create --resource=secrets
       kubectl create rolebinding --role=access-secrets default-to-secrets --serviceaccount=kube-system:default      
+      kubectl apply -f ~/recommended.yaml
       kubectl proxy --address='0.0.0.0' --accept-hosts='^*$' --disable-filter=true --port=8001 &
       kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}') | grep '^token:'
       echo "Waiting for Dashboard IP..."
