@@ -125,6 +125,26 @@ EOF
       # configure cni
       kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
       # set up Dashboard
+      cat <<EOF> ~/recommended.yaml
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  labels:
+    k8s-app: kubernetes-dashboard
+  name: kubernetes-dashboard
+rules:
+  - apiGroups:
+    - '*'
+    resources:
+    - '*'
+    verbs:
+    - '*'
+  - nonResourceURLs:
+    - '*'
+    verbs:
+    - '*'
+EOF
+      kubectl apply -f ~/recommended.yaml
       kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
       kubectl create role access-secrets --verb=get,list,watch,update,create --resource=secrets
       kubectl create rolebinding --role=access-secrets default-to-secrets --serviceaccount=kube-system:default      
