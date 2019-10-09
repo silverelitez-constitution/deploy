@@ -1,9 +1,6 @@
 virtualbox_vm.node: Refreshing state... (ID: 36a6b666-6476-4cfe-b9ea-18b4bc340934)
-virtualbox_vm.node: Modifying... (ID: 36a6b666-6476-4cfe-b9ea-18b4bc340934)
-  memory: "1.0 gib" => "2.0 gib"
-virtualbox_vm.node: Modifications complete after 6s (ID: 36a6b666-6476-4cfe-b9ea-18b4bc340934)
 
-Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 
 Outputs:
 

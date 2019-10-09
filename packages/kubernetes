@@ -103,6 +103,8 @@ EOF
   swapoff -a
   systemctl daemon-reload
   systemctl start docker
+  systemctl enable docker
+  systemctl enable kubelet
   kubeadm reset -f
   systemctl start kubelet.service
   case $(hostname) in
