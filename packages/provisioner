@@ -2,7 +2,7 @@
 # This deployment script has NOT been ravenously tested on:
 # Centos 7, Ubuntu 17.10, Gentoo 17.1
 
-rev="1.3"
+rev="1.4"
 set -x
 source /etc/os-release
 test="grep ${rev} /etc/silverelitez/provisioner"
@@ -76,6 +76,7 @@ EOL
   [[ ${ID} == "amzl" ]] && [[ -e /etc/yum.repos.d/epel* ]] || sudo amazon-linux-extras install epel -y
   q_install applydeltarpm deltarpm dos2unix realmd
   ${P_INSTALL} nspr yum-utils *bash-complet* kernel-devel dos2unix ntpdate
+  ln -sf /usr/share/zoneinfo/America/Detroit /etc/localtime
   ntpdate time.windows.com &
   service dbus restart
   sudo yum clean all
