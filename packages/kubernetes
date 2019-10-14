@@ -96,7 +96,7 @@ WantedBy=multi-user.target
 EOF
 
   cat <<EOF> /etc/sysconfig/kubelet
-KUBELET_EXTRA_ARGS=" --cgroup-driver=systemd  --feature-gates=SupportPodPidsLimit=false --feature-gates=SupportNodePidsLimit=false --fail-swap-on=false "
+KUBELET_EXTRA_ARGS=" --cgroup-driver=systemd --feature-gates=SupportPodPidsLimit=false --feature-gates=SupportNodePidsLimit=false --fail-swap-on=false "
 EOF
   modprobe br_netfilter
   sysctl -a
