@@ -1,4 +1,5 @@
 #!/bin/bash
+# Tag: OLD_PACKAGE_FORMATE
 # Distro packages to install
 software="docker"
 # Services to enable and start
