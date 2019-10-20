@@ -334,3 +334,8 @@ myip() {
 seelog() {
   sudo tail -f /var/log/messages /var/log/secure /var/log/{httpd,apache2}/{access,error}_log
 }
+
+oui() {
+  OUI=$(ip addr list|grep -w 'link'|awk '{print $2}'|grep -P '^(?!00:00:00)'| grep -P '^(?!fe80)' | tr -d ':' | head -c 6)
+  curl -sS "http://standards-oui.ieee.org/oui.txt" | grep -i "$OUI" | cut -d')' -f2 | tr -d '\t'
+}
