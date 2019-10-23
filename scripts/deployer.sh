@@ -96,10 +96,13 @@ PACKAGE_configure() { _configure;
 	# cp --preserve=links -r ${svc}/* /
 
 	echo "Starting services..."
-	#service httpd restart || { echo "Error. Aborting!"; exit 1; }
-	[ "${services}" ] && for service in ${services}; do 
-    systemctl enable ${service}
-    service ${service} restart; done
+	# If no services were specified in package file then exit function, otherwise, (re)start services
+  [ "${services}" ] || return 
+  for service in ${services}
+  do 
+    # If service start succeeds, add it to the bootup 
+    service ${service} restart && systemctl enable ${service}
+  done
 }
 PACKAGE_tail() { _tail;
   [ "${test}" ] && ${test} && exit || exit 1;
