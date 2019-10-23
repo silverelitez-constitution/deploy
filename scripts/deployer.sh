@@ -13,6 +13,7 @@ gitsource() {
   source <(curl -s ${gitsurl} | sed 's/^404:.*/echo 404 error - ${gitsurl}/g'  || echo echo Error)
 }
 
+#declare the pipeline stages
 _init(){ :;}
 _preinstall(){ :;}
 _install(){ :;}
@@ -86,13 +87,13 @@ PACKAGE_configure() { _configure;
 	echo "Configuring ${svc}..."
 
 	#is it backed up? no? back it up. yes? delete it
-	# cd /etc/; [ ! -e /etc/${svc}.distro ] && mv ${svc} ${svc}.distro || rm -rf /etc/powerdns
+	# cd /etc/; [ ! -e /etc/${svc}.distro ] && mv ${svc} ${svc}.distro || rm -rf /etc/${svc}
 	# cd /usr/src 
 	# [ -e config ] && rm -rf config
 
 	# git clone https://github.com/silverelitez-constitution/config.git
 	# cd config
-	# cp --preserve=links -r ${svc} /etc
+	# cp --preserve=links -r ${svc}/* /
 
 	echo "Starting services..."
 	#service httpd restart || { echo "Error. Aborting!"; exit 1; }
