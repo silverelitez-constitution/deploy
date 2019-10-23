@@ -109,5 +109,5 @@ fi
 
 #deployer provisioner $(cat ~/pw) ${hostname} 2>&1 | dialog --progressbox "Provisioning ${hostname}..." 25 100
 for package in "provisioner" ${packages}; do
-  deployer ${package} $(cat ~/pw) ${hostname} 2>&1 | tee "${package}.log" | dialog --progressbox "Spinning up ${hostname} for ${svc}. Installing ${package}..." 25 80
+  deployer ${package} $(cat ~/pw) ${hostname} 2>&1 | tee "${hostname}-${package}.log" | dialog --progressbox "Spinning up ${hostname} for ${svc}. Installing ${package}..." 25 80
 done
