@@ -4,7 +4,7 @@
 packages="yum-utils device-mapper-persistent-data lvm2 docker-ce kubeadm kubectl kubelet"
 services=""
 #test='which kubectl && sudo docker run hello-world'
-nodes="www ssc vfd"
+nodes="kubernetesworker-1 kubernetesworker-2"
 
 _preinstall() {
   service docker stop
@@ -177,7 +177,7 @@ EOF
       done
       #rm -f /home/shayne/.ssh/id_rsa
     ;;
-    kubernetes-node-*)
+    kubernetes-node-* | kubernetesworker-*)
       # get master ip from router dns
       kmaster=$(host kubernetes-master 10.8.0.1 | grep 'has address' | cut -d' ' -f4)
       # fetch private key
