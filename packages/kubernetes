@@ -1,5 +1,5 @@
 #!/bin/bash 
-set -x
+#set -x
 
 packages="yum-utils device-mapper-persistent-data lvm2 docker-ce kubeadm kubectl kubelet"
 services=""
@@ -158,8 +158,12 @@ EOF
         sleep 1
         daship=$(kubectl describe pods -n kubernetes-dashboard | grep '^IP:' | tail -n1 | cut -d: -f2 | sed 's/^[ ]*//g')
       done
+      # push ip to vpc dnsmasq and add command to /etc/rc.local
+      #ssh -oStrictHostKeyChecking=no shayne@10.37.224.1 "echo '${daship}  kubernetes.dashboard' > ~/hosts.kubedash; sudo mv ~/hosts.kubedash /etc/hosts.kubedash"
+      
       echo "========== The Dashboard is now accessable at:"
       echo "https://${daship}:8443/"
+      echo "https://kubernetes.dashboard:8443/ (currently unimplemented)"
       echo "http://$(hostname -f):8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/"
       jointoken=$(grep -B1 '\-\-discovery-token-ca-cert-hash' /home/shayne/secret.key | sed 's/\\$//g')
       # fetch private key
