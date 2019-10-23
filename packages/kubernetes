@@ -180,6 +180,7 @@ EOF
     kubernetes-node-* | kubernetesworker-*)
       # get master ip from router dns
       kmaster=$(host kubernetes-master 10.8.0.1 | grep 'has address' | cut -d' ' -f4)
+      [[ ${kmaster} ]] || echo "Master node DNS resolution failed. Aborting configuration of worker nodes. Please initiate kubernetes master deployment and it will complete the init. To prevent seeing this message in the future, deploy the master node first. Future versions of this script will nest the deployment automatically."; return
       # fetch private key
       sudo -u shayne scp -oStrictHostKeyChecking=no 10.8.0.1:~/.ssh/id_rsa ~/
       mv ~/id_rsa /home/shayne/.ssh/
