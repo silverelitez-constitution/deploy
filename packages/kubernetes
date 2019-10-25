@@ -8,7 +8,7 @@ nodes="kubernetesworker-1 kubernetesworker-2"
 
 _preinstall() {
   # temporary shim for crashing dhcp client
-  sudo dhclient enp0s17
+  sudo dhclient -H $(hostname -s) enp0s17
   service docker stop
   P_REMOVE docker docker-client
   service kubelet stop
