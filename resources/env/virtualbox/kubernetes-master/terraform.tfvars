@@ -1,6 +1,6 @@
 provider="virtualbox"
 count="1"
-memory="2.0 gib"
+memory="4.0 gib"
 os="4"
 interface="p4p1"
 cpus="4"
