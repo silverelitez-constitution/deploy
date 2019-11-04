@@ -2,7 +2,7 @@
 # This deployment script has NOT been ravenously tested on:
 # Centos 7, Ubuntu 17.10, Gentoo 17.1
 
-rev="1.4"
+rev="1.5"
 set -x
 source /etc/os-release
 test="grep ${rev} /etc/silverelitez/provisioner"
@@ -94,7 +94,7 @@ EOL
     #kinit "${user}@$(echo ${realm} | awk '{print toupper($0)}')"
   fi
   echo "Setting time zone..."
-  ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
+  ln -sf /usr/share/zoneinfo/America/Detroit /etc/localtime
   echo "Loading Translator..."
   gitsource resources/translators/default.sh
 }
