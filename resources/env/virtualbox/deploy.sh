@@ -35,7 +35,8 @@ save() {
 
 deployer() {
 	package=${1}; shift
-	password=${1}; shift
+  # integrate github vault for this function
+	#password=${1}; shift
 
 	# if no host is specified then the host is the package name
 	hosts=${@:-${package}}
@@ -109,5 +110,5 @@ fi
 
 #deployer provisioner $(cat ~/pw) ${hostname} 2>&1 | dialog --progressbox "Provisioning ${hostname}..." 25 100
 for package in "provisioner" ${packages}; do
-  deployer ${package} $(cat ~/pw) ${hostname} 2>&1 | tee "${hostname}-${package}.log" | dialog --progressbox "Spinning up ${hostname} for ${svc}. Installing ${package}..." 25 80
+  deployer ${package} ${hostname} 2>&1 | tee "${hostname}-${package}.log" | dialog --progressbox "Spinning up ${hostname} for ${svc}. Installing ${package}..." 25 80
 done
