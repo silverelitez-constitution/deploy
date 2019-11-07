@@ -107,7 +107,7 @@ PACKAGE_configure() { _configure;
   done
 }
 PACKAGE_tail() { _tail;
-  [ "${test}" ] && ${test} && exit || exit 1;
+  #[ "${test}" ] && ${test} && exit || exit 1;
   mkdir -p /etc/silverelitez
   echo ${rev} > /etc/silverelitez/${1}
 }
