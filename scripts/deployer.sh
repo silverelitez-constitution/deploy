@@ -112,8 +112,9 @@ PACKAGE_tail() { _tail;
   echo ${rev} > /etc/silverelitez/${1}
 }
 
-if grep ${rev} /etc/silverelitez/${1} 
-  echo "Package revision current. Exiting..."; exit;
+if [ grep ${rev} /etc/silverelitez/${1} ]; then
+  echo "Package revision current. Exiting..."; 
+  exit
 fi
 
 # Run provisioning stages
