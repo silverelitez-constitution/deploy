@@ -1,0 +1,7 @@
+#!/bin/bash
+set -x
+
+rev="0.1"
+packages="https://packages.chef.io/files/current/chef-server/12.17.39+20180322095710/el/7/chef-server-core-12.17.39+20180322095710-1.el7.x86_64.rpm"
+services=""
+#test=""
