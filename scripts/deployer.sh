@@ -21,7 +21,7 @@ _postinstall(){ :;}
 _configure(){ :;}
 _tail(){ :;}
 
-gitsource "packages/${2}"
+gitsource "packages/${1}"
 
 PACKAGE_init() { echo Init...
 	[ ! "${svc}" ] && svc=$(basename "$0"| cut -d. -f1)
