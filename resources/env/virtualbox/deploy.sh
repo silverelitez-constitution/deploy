@@ -53,7 +53,7 @@ deployer() {
     echo Deploying to ${host}...
     ssh -oBatchMode=yes "${username}@${host}" "realm=\$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2 | cut -d. -f1)
       curl -s https://raw.githubusercontent.com/silverelitez-\${realm}/deploy/master/scripts/deployer.sh > ./deployer.sh
-      chmod +x ./deployer.sh; sudo ./deployer.sh ${package} && rm ./deployer.sh"
+      chmod +x ./deployer.sh; sudo ./deployer.sh ${package}; rm ./deployer.sh"
 	done
 	IFS=${oldIFS}
 }
