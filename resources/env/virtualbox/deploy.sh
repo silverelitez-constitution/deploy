@@ -48,12 +48,12 @@ deployer() {
     echo Host ID is ${ID}
     echo Package is ${package}
     echo Service is ${service}
-    echo Password length is ${#password}
+    #echo Password length is ${#password}
     echo Deployment username is ${username}
     echo Deploying to ${host}...
     ssh -oBatchMode=yes "${username}@${host}" "realm=\$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2 | cut -d. -f1)
       curl -s https://raw.githubusercontent.com/silverelitez-\${realm}/deploy/master/scripts/deployer.sh > ./deployer.sh
-      chmod +x ./deployer.sh; sudo ./deployer.sh ${password} ${package} && rm ./deployer.sh"
+      chmod +x ./deployer.sh; sudo ./deployer.sh ${package} && rm ./deployer.sh"
 	done
 	IFS=${oldIFS}
 }
