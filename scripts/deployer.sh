@@ -112,7 +112,8 @@ PACKAGE_tail() { _tail;
   echo ${rev} > /etc/silverelitez/${1}
 }
 
-if [ grep ${rev} /etc/silverelitez/${1} ]; then
+echo -n "Revision: "
+if grep ${rev} /etc/silverelitez/${1}; then
   echo "Package revision current. Exiting..."; 
   exit
 fi
