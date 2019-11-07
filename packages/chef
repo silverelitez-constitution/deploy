@@ -3,5 +3,5 @@ set -x
 
 rev="0.3"
 packages="https://packages.chef.io/files/stable/chef-server/13.0.17/el/7/chef-server-core-13.0.17-1.el7.x86_64.rpm"
-services=""
+services="chef"
 #test=""
