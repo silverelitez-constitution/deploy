@@ -2,17 +2,23 @@
 # This deployment script has NOT been ravenously tested on:
 # Centos 7, Ubuntu 17.10, Gentoo 17.1
 
+# script revision
 rev="1.5"
-set -x
-source /etc/os-release
+# command to test if script needs to be run (single stage)
 test="grep ${rev} /etc/silverelitez/provisioner"
+# enable debugging
+set -x
+# get variables for translator. this probably should go into the deployer script
+source /etc/os-release
 
 # Resources
+# function to pull data from github - should integrate the global profile function later
 gitsource() {
   script=${1:-default.sh}
   gitsurl="https://raw.githubusercontent.com/silverelitez-${domain}/deploy/master/${script}"
   source <(curl -s ${gitsurl} | sed 's/^404:.*/echo 404 error - ${gitsurl}/g' | sed 's/^400:.*/echo 400 error - ${gitsurl}/g' || echo echo Error) ${2}
 }
+# verify root access
 is_sudo() {
   echo -n Check for sudo...
   if [[ ! ${SUDO_USER} ]]; then
@@ -22,9 +28,11 @@ is_sudo() {
     exit
   else
     echo "Success as ${SUDO_USER}"
+    # not sure why i declared this so many times but eh
     source /etc/os-release
   fi
 }
+# a function of pure brilliant laziness - quick install!
 q_install() {
   binary=${1}
   package=${2:-${binary}}
