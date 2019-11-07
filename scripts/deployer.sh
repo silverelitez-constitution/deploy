@@ -24,6 +24,8 @@ _tail(){ :;}
 gitsource "packages/${1}"
 
 PACKAGE_init() { echo Init...
+  # get variables for translator
+  source /etc/os-release
 	[ ! "${svc}" ] && svc=$(basename "$0"| cut -d. -f1)
   #svc=${${svc}:-$(basename "$0"| cut -d. -f1)}
 	[ "${svc}" == 'default' ] && svc="${2}"
@@ -106,7 +108,11 @@ PACKAGE_configure() { _configure;
 }
 PACKAGE_tail() { _tail;
   [ "${test}" ] && ${test} && exit || exit 1;
+  mkdir -p /etc/silverelitez
+  echo ${rev} > /etc/silverelitez/${1}
 }
+
+grep ${rev} /etc/silverelitez/${1} && { echo "Package revision current. Exiting..."; exit }
 
 # Run provisioning stages
 for stage in ${stages}; do PACKAGE_${stage} "${@}"; done

@@ -3,13 +3,9 @@
 # Centos 7, Ubuntu 17.10, Gentoo 17.1
 
 # script revision
-rev="1.5"
-# command to test if script needs to be run (single stage)
-test="grep ${rev} /etc/silverelitez/provisioner"
+rev="1.6"
 # enable debugging
-set -x
-# get variables for translator. this probably should go into the deployer script
-source /etc/os-release
+#set -x
 
 # Resources
 # function to pull data from github - should integrate the global profile function later
