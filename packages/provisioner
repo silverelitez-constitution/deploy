@@ -3,9 +3,9 @@
 # Centos 7, Ubuntu 17.10, Gentoo 17.1
 
 # script revision
-rev="1.6"
+rev="1.7"
 # enable debugging
-#set -x
+set -x
 
 # Resources
 # function to pull data from github - should integrate the global profile function later
@@ -181,6 +181,4 @@ _postinstall() {
     sudo dpkg --configure -a --force-confdef,confnew;
     sudo apt-get autoremove -y
   }
-  mkdir -p /etc/silverelitez
-  echo ${rev} > /etc/silverelitez/provisioner
 }
