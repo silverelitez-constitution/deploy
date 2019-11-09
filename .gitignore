@@ -8,3 +8,5 @@
 *.tfplan.txt
 *.tfstate
 *.tfstate.backup
+*.tfstate.lock
+*.tfstate.lock.info
