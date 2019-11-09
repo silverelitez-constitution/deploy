@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Rev0.3"
+echo "Rev0.4"
 
 packages="yum-utils device-mapper-persistent-data lvm2 docker-ce kubeadm kubectl kubelet"
 services="docker kubelet"
@@ -9,7 +9,7 @@ services="docker kubelet"
 _preinstall() {
   P_REMOVE docker docker-client
   yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-sudo yum install -y http://mirror.centos.org/centos/7/extras/x86_64/Packages/container-selinux-2.21-1.el7.noarch.rpm 
+  sudo yum install -y http://mirror.centos.org/centos/7/extras/x86_64/Packages/container-selinux-2.21-1.el7.noarch.rpm 
   yum-config-manager --enable rhel-7-server-extras-rpms
   yum-config-manager --enable rhui-REGION-rhel-server-extras
 
