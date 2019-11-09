@@ -44,3 +44,4 @@ fi
 check_screen
 DEFAULT=$PS1
 PS1="|\`date +%H:%M\`|${debian_chroot:+($debian_chroot)}\u@\h:\w\$ "
+echo "Silver layer loaded. Run 'h' to show a help menu"
