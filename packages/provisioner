@@ -3,7 +3,7 @@
 # Centos 7, Ubuntu 17.10, Gentoo 17.1
 
 # script revision
-rev="1.7"
+rev="1.8"
 # enable debugging
 set -x
 
