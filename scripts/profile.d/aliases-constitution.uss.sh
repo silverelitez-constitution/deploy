@@ -32,5 +32,3 @@ alias pf='P_SEARCH'
 alias pu="P_UPDATE"
 alias pug="P_UPGRADE"
 alias pn="P_NAME"
-
-alias awsenv=". ~/.aws/awsenv"

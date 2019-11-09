@@ -231,7 +231,7 @@ function sshw() { # sshw <ssh flags and stuff> - Runs ssh once a second. Useful 
 }
 
 # alpha function to run a script straight from git from the prompt. testing and streamlining for better git-sh scripting
-function gitsource() { # gitsource <filename|default.sh> <branch|master> - source a script from github
+function gitsource() { # gitsource <filename|default.sh> <branch|master> - Source a script from github
   script=${1:-default.sh}
   branch=${2:-master}
   [ ! $domain ] && domain=$(sudo grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
@@ -329,6 +329,20 @@ seelog() { # seelog - Show various system and server/daemon logs in realtime
 oui() { # oui - print a comprehensive vendor list from mac addresses
   OUI=$(ip addr list|grep -w 'link'|awk '{print $2}'|grep -P '^(?!00:00:00)'| grep -P '^(?!fe80)' | tr -d ':' | head -c 6)
   curl -sS "http://standards-oui.ieee.org/oui.txt" | grep -i "$OUI" | cut -d')' -f2 | tr -d '\t'
+}
+
+awsenv() { # awsenv <name|default> - Set aws access keys as specified in ~/.aws/env
+  name=${1:-default}
+  awsenv=$(egrep "^${name}$(printf '\t')" ~/.aws/env) || ( echo ${name} was not found in '~/.aws/env'; exit 1; )
+
+  awsid=$(echo ${awsenv} | cut -f2 -d' ')
+  awskey=$(echo ${awsenv} | cut -f3 -d' ')
+  region=$(echo ${awsenv} | cut -f4 -d' ')
+
+  export AWS_ENV="${name}"
+  export AWS_ACCESS_KEY_ID="${awsid}"
+  export AWS_SECRET_ACCESS_KEY="${awskey}"
+  export AWS_DEFAULT_REGION="${region:-us-east-1}"
 }
 
 h() { # h - show basic help for main commands
