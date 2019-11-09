@@ -1,13 +1,11 @@
-virtualbox_vm.node[0]: Refreshing state... (ID: d6d166ac-f610-4abb-96f3-d571555a0998)
-virtualbox_vm.node[1]: Refreshing state... (ID: 8d18da28-87bf-4ec4-a3ea-8655491c8dda)
+virtualbox_vm.node: Refreshing state... (ID: d209ea09-687d-433f-8fea-5696156d0488)
 
 Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 
 Outputs:
 
 IPAddr = [
-    10.37.224.195,
-    10.37.224.249
+    10.37.224.171
 ]
-IPAddr1 = 10.37.224.249
-IPAddr2 = 10.37.224.195
+IPAddr1 = 10.37.224.171
+IPAddr2 = 10.37.224.171
