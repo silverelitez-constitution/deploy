@@ -114,7 +114,7 @@ deployer() {
   echo "The End."
 }
 
-tube() { # tube https://example.com/supercoolvideo
+tube() { # tube <video service urls> - Rip video service videos
   # input
   url="${@}"
   # ensure counter is 0
@@ -130,7 +130,7 @@ tube() { # tube https://example.com/supercoolvideo
   done
 }
 
-tuber() {
+tuber() { # tuber <youtube urls> - Download youtube links as mp3's. Also supports a lot of other popular video url services
   youtube-dl -x --audio-format mp3 ${@};
 }
 
@@ -183,8 +183,7 @@ prep_prompt() {
 
 # - User Environment functions
 
-# temporary function to test overall auto-deploy manager
-deployer() {
+deployer() { # temporary function to test overall auto-deploy manager
   service=${1}; shift
   password=${1}; shift
   hosts=${@:-${service}}
@@ -209,9 +208,7 @@ deployer() {
   IFS=${oldIFS}
 }
 
-# beta function to add an alias to current session and permanently store it as well
-# will be adding git sync support in next major merge
-mka() {
+mka() { # mka <alias string> - Beta function to add an alias to current session and permanently store it as well
     shopt -s expand_aliases;
     if [ ! ${1} ]; then
         cat ~/.bash_aliases 2> /dev/null;
@@ -224,14 +221,17 @@ mka() {
     source ~/.bash_aliases
 }
 
-# removes the alias permanently. the yang to the mka() ying, if you will
-function unmka() { cmd=${1};  grep -v "alias ${cmd}=" ~/.bash_aliases > ~/.bash_aliases.new; mv ~/.bash_aliases.new ~/.bash_aliases; source unalias "${cmd}";}
+function unmka() { # unmka <command> - Removes the alias permanently. the yang to the mka() ying, if you will
+  cmd=${1};  grep -v "alias ${cmd}=" ~/.bash_aliases > ~/.bash_aliases.new; mv ~/.bash_aliases.new ~/.bash_aliases; source unalias "${cmd}";
+}
 
 # just restarted a vps? use this and once it's ready for you, you'll be ready for it (within one second)
-function sshw() { while ! ssh "${@}"; do sleep 1; done }
+function sshw() { # sshw <ssh flags and stuff> - Runs ssh once a second. Useful when waiting for a system to boot up
+  while ! ssh "${@}"; do sleep 1; done 
+}
 
 # alpha function to run a script straight from git from the prompt. testing and streamlining for better git-sh scripting
-function gitsource() {
+function gitsource() { # gitsource <filename|default.sh> <branch|master> - source a script from github
   script=${1:-default.sh}
   branch=${2:-master}
   [ ! $domain ] && domain=$(sudo grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
@@ -240,7 +240,7 @@ function gitsource() {
   source <(curl -s ${gitsurl} | sed 's/^404:.*/echo 404 error - ${gitsurl}/g' || echo echo Error)
 }
 
-function gitcat() {
+function gitcat() { # gitcat <filename|default.sh> <branch|master> - echo out contents of github file like 'cat'
   script=${1:-default.sh}
   branch=${2:-master}
   [ ! $domain ] && domain=$(sudo grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
@@ -249,8 +249,7 @@ function gitcat() {
   curl -s ${gitcurl} | dos2unix || echo echo Error;
 }
 
-# install packages as you go. no need to mess with package managers
-command_not_found_handle() {
+command_not_found_handle() { # Auto install packages as you go. No need to mess with package managers
   fullcommand="${@}";
   #package=$(repoquery --whatprovides "*bin/${1}" -C --qf '%{NAME}' | head -n1);
   echo "Command not found: ${1}"
@@ -264,12 +263,6 @@ command_not_found_handle() {
   if sudo ${P_INSTALL} "${package}" >/dev/null; then
 	echo "Done!";
   echo "Okay, now let's try that again...shall we?";
-  # oddly, it's kinda hard to properly echo the bash prompt. this seems to do the magic
-  show-prompt() {
-    ExpPS1="$(bash --rcfile <(echo "PS1='$PS1'") -i <<<'' 2>&1 |
-    sed ':;$!{N;b};s/^\(.*\n\)*\(.*\)\n\2exit$/\2/p;d')";
-    echo -n ${ExpPS1}
-  }
 	echo -e "$(show-prompt) ${fullcommand}";
     eval ${fullcommand};
   else
@@ -280,8 +273,7 @@ command_not_found_handle() {
   return $retval;
 }
 
-# remove package/binary and flush the hash tables before the fuzz finds it!
-r() {
+r() { # r - Remove package/binary and flush the hash tables
   echo 'Flushing hash tables...';
   for package in "${@}";
   do
@@ -297,26 +289,25 @@ r() {
   fi
 }
 
-# oddly, it's kinda hard to properly echo the bash prompt. this seems to do the magic
-show-prompt() {
+show-prompt() { # oddly, it's kinda hard to properly echo the bash prompt. this seems to do the magic
     ExpPS1="$(bash --rcfile <(echo "PS1='$PS1'") -i <<<'' 2>&1 |
      sed ':;$!{N;b};s/^\(.*\n\)*\(.*\)\n\2exit$/\2/p;d')";
     echo -n ${ExpPS1}
 }
 
-gc() {
+gc() { # gc <message> - Set commit message and push
   message=${@}
   git commit -am "${message}" && git push
 }
 
-paster() {
+paster() { # paster <content> - Pastebin to 'https://ptpb.pw'
   curl -F c=@- https://ptpb.pw; 
 }
-seenet() {
+seenet() { # seenet - Show a live list of network connections
   watch --interval=0.5 'netstat -aupt | grep -e "ESTABLISH\|LISTEN\|TIME_WAIT"'
 }
 
-refresh() {
+refresh() { # refresh - Reload the Silver layer system
   [ ${realm} ] || [ ${branch} ] || { echo This guitar is missing strings; return 1; }
   refreshurl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/global.sh"
   [ ${debug} ] && echo "${scripts}"
@@ -327,20 +318,20 @@ refresh() {
 
 [ ${debug} ] && echo "Done!"
 
-myip() {
+myip() { # myip - Print external IP address
   curl ipinfo.io/ip
 }
 
-seelog() {
+seelog() { # seelog - Show various system and server/daemon logs in realtime
   sudo tail -f /var/log/messages /var/log/secure /var/log/{httpd,apache2}/{access,error}_log
 }
 
-oui() {
+oui() { # oui - print a comprehensive vendor list from mac addresses
   OUI=$(ip addr list|grep -w 'link'|awk '{print $2}'|grep -P '^(?!00:00:00)'| grep -P '^(?!fe80)' | tr -d ':' | head -c 6)
   curl -sS "http://standards-oui.ieee.org/oui.txt" | grep -i "$OUI" | cut -d')' -f2 | tr -d '\t'
 }
 
 h() { # h - show basic help for main commands
-  alias | less
-  gitcat scripts/profile.d/functions-constitution.uss.sh | grep '() { #'
+  alias
+  gitcat scripts/profile.d/functions-constitution.uss.sh | grep '() { #' --color=never | grep -v 'gitcat scripts'
 }
