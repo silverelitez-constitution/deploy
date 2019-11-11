@@ -252,7 +252,6 @@ function gitcat() { # gitcat <filename|default.sh> <branch|master> - echo out co
 
 command_not_found_handle() { # Auto install packages as you go. No need to mess with package managers
   fullcommand="${@}";
-  #package=$(repoquery --whatprovides "*bin/${1}" -C --qf '%{NAME}' | head -n1);
   echo "Command not found: ${1}"
   declare | grep 'P_NAME ()' >/dev/null || exit 1
   package=$(P_NAME ${1} |head -n1)
@@ -268,7 +267,7 @@ command_not_found_handle() { # Auto install packages as you go. No need to mess 
     eval ${fullcommand};
   else
     echo "Err!";
-	echo 'Unfortunately the installation failed :(';
+	echo 'Unfortunately, the installation failed :(';
   fi;
   retval=$?;
   return $retval;
@@ -284,7 +283,7 @@ r() { # r - Remove package/binary and flush the hash tables
     done;
   done;
   if sudo ${P_REMOVE} ${@}; then
-	echo 'Package has been removed!';
+    echo 'Package has been removed!';
   else
     echo 'Package removal failed!';
   fi
@@ -309,7 +308,7 @@ seenet() { # seenet - Show a live list of network connections
 }
 
 refresh() { # refresh - Reload the Silver layer system
-  [ ${realm} ] || [ ${branch} ] || { echo This guitar is missing strings; return 1; }
+  [ ${realm} ] || [ ${branch} ] || { echo This guitar is missing strings; exit 1; }
   refreshurl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/global.sh"
   [ ${debug} ] && echo "${scripts}"
   [ ${debug} ] && { echo Press enter to execute "${url}"; read; }

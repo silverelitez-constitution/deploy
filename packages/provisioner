@@ -3,7 +3,7 @@
 # Centos 7, Ubuntu 17.10, Gentoo 17.1
 
 # script revision
-rev="1.8"
+rev="1.8.1"
 # enable debugging
 set -x
 
@@ -12,7 +12,8 @@ set -x
 gitsource() {
   script=${1:-default.sh}
   gitsurl="https://raw.githubusercontent.com/silverelitez-${domain}/deploy/master/${script}"
-  source <(curl -s ${gitsurl} | sed 's/^404:.*/echo 404 error - ${gitsurl}/g' | sed 's/^400:.*/echo 400 error - ${gitsurl}/g' || echo echo Error) ${2}
+  output=$(curl -f -s "${gitsurl}")
+  [ ${?} == '0' ] || output="echo ERROR: curl returned ${?} for ${gitsurl}" && source <(echo "${output}")
 }
 # verify root access
 is_sudo() {
