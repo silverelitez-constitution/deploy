@@ -5,9 +5,9 @@
 # script revision
 rev="1.8.1"
 # enable debugging
-set -x
+#set -x
 
-# Resources
+# Resources and objects
 # function to pull data from github - should integrate the global profile function later
 gitsource() {
   script=${1:-default.sh}
@@ -29,7 +29,7 @@ is_sudo() {
     source /etc/os-release
   fi
 }
-# a function of pure brilliant laziness - quick install!
+# a function of pure brilliant laziness - quick install! manages universally installing packages after performing a quick test to see if it needs to be installed
 q_install() {
   binary=${1}
   package=${2:-${binary}}
@@ -37,7 +37,7 @@ q_install() {
     case "${ID}" in
       centos) P_INSTALL="yum install -y " ;;
       ubuntu) P_INSTALL="apt install -y " ;;
-      gentoo) P_INSTALL="emerge -v";;
+      gentoo) P_INSTALL="emerge -v ";;
 	  *) echo "No distro declared. Please manually install ${package} for ${binary}"
     esac; 
     #P_INSTALL+="--quiet "
@@ -45,12 +45,31 @@ q_install() {
   }
 }
 
+join_domain() {
+  if [ "$(hostname)" != "dc" ]; then
+    echo Leaving currently joined realm...
+    realm leave
+    echo Discovering DHCP provided realm...
+    realm discover ${realm}
+    echo Joining ${realm}
+    realm join ${realm}
+  else
+    echo "Not joining DC to itself. Aborting join..."
+  fi
+}
+
 # Steps
 _init() {
+  echo "Setting time zone..."
+  ln -sf /usr/share/zoneinfo/America/Detroit /etc/localtime
+  echo "Loading Translator..."
+  gitsource resources/translators/default.sh
   echo "Acquiring domain name, username, and realm..."
   domain=$(echo $realm | cut -d'.' -f1)
   if [[ ! ${user} ]]; then user="shayne"; fi #echo "Run as a sudo'er with a username that has domain auth!"; exit 1; fi
   if [[ ! ${realm} ]]; then echo "The router/DHCP server didn't return useful data!"; exit 1; fi
+  echo "Loading global functions..."
+  gitsource scripts/profile.d/functions-${domain}.sh
   echo "Preparing host..."
   [[ ${ID} == "gentoo" ]] && sudo emerge --sync; sudo emerge -v pfl || timedatectl set-ntp false
   cat >/etc/sysctl.d/00-noipv6.conf <<EOL
@@ -81,7 +100,6 @@ EOL
   [[ ${ID} == "amzl" ]] && [[ -e /etc/yum.repos.d/epel* ]] || sudo amazon-linux-extras install epel -y
   q_install applydeltarpm deltarpm dos2unix realmd
   ${P_INSTALL} nspr yum-utils *bash-complet* kernel-devel dos2unix ntpdate
-  ln -sf /usr/share/zoneinfo/America/Detroit /etc/localtime
   ntpdate time.windows.com &
   service dbus restart
   sudo yum clean all
@@ -98,10 +116,6 @@ EOL
     echo "Password not supplied!"
     #kinit "${user}@$(echo ${realm} | awk '{print toupper($0)}')"
   fi
-  echo "Setting time zone..."
-  ln -sf /usr/share/zoneinfo/America/Detroit /etc/localtime
-  echo "Loading Translator..."
-  gitsource resources/translators/default.sh
 }
 _preinstall() {
   echo "Update packager..."
@@ -130,16 +144,7 @@ _preinstall() {
   chmod a+x /etc/profile.d/global.sh
   sleep 1
 
-  if [ "$(hostname)" != "dc" ]; then
-    echo Leaving currently joined realm...
-    realm leave
-    echo Discovering DHCP provided realm...
-    realm discover ${realm}
-    echo Joining ${realm}
-    realm join ${realm}
-  else
-    echo "DC shouldn't join itself. Avoiding severe psychological disorientation..."
-  fi
+  join_domain
 }
 _configure() {
 echo configure; }
