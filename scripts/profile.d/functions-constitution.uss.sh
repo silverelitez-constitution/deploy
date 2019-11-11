@@ -237,7 +237,8 @@ function gitsource() { # gitsource <filename|default.sh> <branch|master> - Sourc
   [ ! $domain ] && domain=$(sudo grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
   realm=$(echo ${domain} | cut -d. -f1)
   gitsurl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/${script}"
-  source <(curl -s ${gitsurl} | sed 's/^404:.*/echo 404 error - ${gitsurl}/g' || echo echo Error)
+  output=$(curl -f -s "${gitsurl}")
+  [ ${?} == '0' ] || output="echo ERROR: curl returned ${?} for ${gitsurl}" && source <(echo "${output}")
 }
 
 function gitcat() { # gitcat <filename|default.sh> <branch|master> - echo out contents of github file like 'cat'
