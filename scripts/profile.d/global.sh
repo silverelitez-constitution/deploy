@@ -7,7 +7,7 @@ echo -n "Testing interconnectivity..."
 ping -q 4.2.2.2 -c1 >/dev/null || { echo "Failed"; return; } && echo "Done"
 
 # Get the weather
-F=$(curl -s wttr.in/detroit | grep °F | head -n1 | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | sed 's/[^0-9.]//g')
+F=$(curl -s wttr.in/detroit | grep °F | head -n1 | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | sed 's/[^0-9.]//g' | sed 's/^..//g' | sed 's/\.\./-/g')
 [ ! ${F} ] && F="93"
 
 # Welcome greeting
@@ -77,5 +77,4 @@ do
   [ ${debug} ] && { echo Press enter to execute "${url}"; read; }
   output=$(curl -f -s "${url}")
   [ ${?} == '0' ] || output="echo ERROR: curl returned ${?} for ${url}" && source <(echo "${output}")
-  #source <( curl -s "${url}" | sed 's/^404:.*/echo 404 error/g' | sed 's/^400:.*/echo 400 error/g'; )
 done 
