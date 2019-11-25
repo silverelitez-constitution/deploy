@@ -1,4 +1,5 @@
 #!/bin/bash 
 #set -x
-packages="maven"
+packages="maven nagios"
 services=""
+rev="0.2"
