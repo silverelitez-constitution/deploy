@@ -35,8 +35,8 @@ q_install() {
   package=${2:-${binary}}
   which ${binary}  >/dev/null || { echo "Install ${package}..."
     case "${ID}" in
-      centos) P_INSTALL="yum install -y " ;;
-      ubuntu) P_INSTALL="apt install -y " ;;
+      redhat|centos) P_INSTALL="yum install -y " ;;
+      debian|ubuntu) P_INSTALL="apt install -y " ;;
       gentoo) P_INSTALL="emerge -v ";;
 	  *) echo "No distro declared. Please manually install ${package} for ${binary}"
     esac; 
@@ -175,16 +175,16 @@ EOL
   echo "Engaging sssd service..."
   case "${ID}" in
     gentoo) rc-update add sssd default; /etc/init.d/sssd restart;;
-    centos|ubuntu) systemctl enable sssd; systemctl restart sssd;;
+    debian|centos|ubuntu) systemctl enable sssd; systemctl restart sssd;;
   esac
 }
 _postinstall() { 
-  echo "Testing domain..."
-  id ${user}@${realm} && echo "Domain joined!" || echo exit 1
   mkdir -p /etc/silverelitez
   [ ${ID} == 'ubuntu' ] && {
     echo "Tidy up!"
     sudo dpkg --configure -a --force-confdef,confnew;
     sudo apt-get autoremove -y
   }
+  echo "Testing domain..."
+  id ${user}@${realm} && echo "Domain joined!" || echo exit 1
 }
