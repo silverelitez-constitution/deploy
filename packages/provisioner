@@ -4,7 +4,7 @@
 
 packages="xauth"
 # script revision
-rev="1.8.2"
+rev="1.8.3"
 # enable debugging
 #set -x
 
