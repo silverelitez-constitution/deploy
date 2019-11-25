@@ -3,7 +3,7 @@
 
 packages="bind-utils yum-utils device-mapper-persistent-data lvm2 docker-ce kubeadm kubectl kubelet"
 services=""
-#test='which kubectl && sudo docker run hello-world'
+rev="1.0"
 nodes="kubernetesworker-1 kubernetesworker-2"
 
 _preinstall() {
