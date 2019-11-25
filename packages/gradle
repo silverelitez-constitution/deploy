@@ -1,9 +1,9 @@
 #!/bin/bash 
 #set -x
 
-packages=""
+packages="java"
 services=""
-rev="0.1"
+rev="0.2"
 
 _install() {
   wget https://services.gradle.org/distributions/gradle-5.0-bin.zip -P /tmp
