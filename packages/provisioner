@@ -2,8 +2,9 @@
 # This deployment script has NOT been ravenously tested on:
 # Centos 7, Ubuntu 17.10, Gentoo 17.1
 
+packages="xauth"
 # script revision
-rev="1.8.1"
+rev="1.8.2"
 # enable debugging
 #set -x
 
