@@ -1,9 +1,9 @@
 #!/bin/bash 
-#set -x
+set -x
 
 packages="bind-utils yum-utils device-mapper-persistent-data lvm2 docker-ce kubeadm kubectl kubelet"
 services=""
-rev="1.0"
+rev="1.0.1"
 nodes="kubernetesworker-1 kubernetesworker-2"
 
 _preinstall() {
