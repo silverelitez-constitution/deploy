@@ -3,11 +3,11 @@
 
 packages="java unzip"
 services=""
-rev="0.3"
+rev="0.3.1"
 
 _postinstall() {
   wget https://services.gradle.org/distributions/gradle-5.0-bin.zip -P /tmp
-  sudo unzip -d /opt/gradle /tmp/gradle-5.0-bin.zip
+  sudo unzip -d /opt/gradle /tmp/gradle-5.0-bin.zip && rm /tmp/gradle-5.0-bin.zip
   cat <<EOF> /etc/profile.d/gradle.sh
 export GRADLE_HOME=/opt/gradle/gradle-5.0
 export PATH=${GRADLE_HOME}/bin:${PATH}
