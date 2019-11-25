@@ -3,8 +3,8 @@
 
 packages="bind-utils yum-utils device-mapper-persistent-data lvm2 docker-ce kubeadm kubectl kubelet"
 services=""
-rev="1.0"
-nodes="kubernetesworker-1 kubernetesworker-2"
+rev="1.1"
+nodes="kubernetesworker-{1,2,3}"
 
 _preinstall() {
   # temporary shim for crashing dhcp client
