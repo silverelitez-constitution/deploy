@@ -189,6 +189,6 @@ _postinstall() {
     sudo dpkg --configure -a --force-confdef,confnew;
     sudo apt-get autoremove -y
   }
-  echo "Testing domain..."
-  id ${user}@${realm} && echo "Domain joined!" || echo exit 1
+  # echo "Testing domain..."
+  # id ${user}@${realm} && echo "Domain joined!" || echo exit 1
 }
