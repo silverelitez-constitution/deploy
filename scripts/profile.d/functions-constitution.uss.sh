@@ -303,8 +303,8 @@ gc() { # gc <message> - Set commit message and push
 paster() { # paster <content> - Pastebin to 'https://ptpb.pw'
   curl -F c=@- https://ptpb.pw; 
 }
-seenet() { # seenet - Show a live list of network connections
-  watch --interval=0.5 'netstat -aupt | grep -e "ESTABLISH\|LISTEN\|TIME_WAIT"'
+seenet() { # seenet <additional arguments for netstat> - Show a live list of network connections
+  watch --interval=0.5 'netstat -aupt ${@} | grep -e "ESTABLISH\|LISTEN\|TIME_WAIT"'
 }
 
 refresh() { # refresh - Reload the Silver layer system
