@@ -42,6 +42,8 @@ if [[ ${ID} == 'centos' ]] || [[ ${ID} == 'amzn' ]]; then
 fi
 
 check_screen
+# allow X11 forwarding while elevated via 'sudo su -'
+[ $(whoami) == "root" ] && xauth add $(xauth -f ~$(logname)/.Xauthority list|tail -1)
 DEFAULT=$PS1
 PS1="|\`date +%H:%M\`|${debian_chroot:+($debian_chroot)}\u@\h:\w\$ "
 echo "Silver layer loaded. Run 'h' to show a help menu"
