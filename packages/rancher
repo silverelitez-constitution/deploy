@@ -15,6 +15,6 @@ _install() {
   sudo docker run -d \
   -v $HOST_VOLUME:/var/lib/mysql \
   --restart=unless-stopped \
-  -p 8080:8080 \
+  -p 0.0.0.0:8080:8080 \
   rancher/server
 }
