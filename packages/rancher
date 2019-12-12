@@ -1,0 +1,20 @@
+#!/bin/bash
+# Tag: OLD_PACKAGE_FORMAT
+# Distro packages to install
+software="docker"
+# Services to enable and start
+services="docker"
+rev="1.0"
+
+_preinstall() {
+  HOST_VOLUME=$HOME/rancher-data/mysql
+  mkdir -p $HOST_VOLUME
+}
+
+_install() {
+  sudo docker run -d \
+  -v $HOST_VOLUME:/var/lib/mysql \
+  --restart=unless-stopped \
+  -p 8080:8080 \
+  rancher/server
+}
