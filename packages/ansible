@@ -1,4 +1,7 @@
 #!/bin/bash
-
-yum install ansible
-ssh-keygen
+# Tag: OLD_PACKAGE_FORMAT
+# Distro packages to install
+software="ansible"
+# Services to enable and start
+services="ansible"
+rev="1.0"
