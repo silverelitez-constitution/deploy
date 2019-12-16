@@ -5,8 +5,8 @@
 *.tfstate
 *.tfapply.txt
 *.tfplan
-*.tfplan.txt
+**/*.tfplan.txt
 *.tfstate
-*.tfstate.backup
-*.tfstate.lock
-*.tfstate.lock.info
+**/*.tfstate.backup
+**/*.tfstate.lock
+**/*.tfstate.lock.info
