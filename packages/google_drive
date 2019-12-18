@@ -1,6 +1,6 @@
 #!/bin/bash
 # Distro packages to install
-software="google-drive-ocamlfuse"
+software=""
 # Services to enable and start
 services=""
 rev="1.0"
