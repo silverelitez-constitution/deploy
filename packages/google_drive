@@ -1,0 +1,11 @@
+#!/bin/bash
+# Distro packages to install
+software="google-drive-ocamlfuse"
+# Services to enable and start
+services=""
+rev="1.0"
+
+_preinstall() {
+  add-apt-repository ppa:alessandro-strada/ppa
+  P_UPDATE
+}
