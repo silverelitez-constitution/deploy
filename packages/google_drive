@@ -6,6 +6,13 @@ services=""
 rev="1.0"
 
 _preinstall() {
-  add-apt-repository ppa:alessandro-strada/ppa
-  P_UPDATE
+  # Connect CentOS repository. It will work for Amazon-Linux.
+  sudo wget http://download.opensuse.org/repositories/home:ocaml/CentOS_7/home:ocaml.repo -P /etc/yum.repos.d/
+  # Install Ocaml and required dependencies.
+  sudo yum install opam ocaml gcc gcc-c++ m4 make ocamldoc ocaml-camlp4-devel ncurses-devel
+  opam init
+  opam update
+  opam install depext
+  opam depext google-drive-ocamlfuse
+  opam install google-drive-ocamlfuse
 }
