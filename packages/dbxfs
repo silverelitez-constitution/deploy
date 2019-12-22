@@ -1,0 +1,10 @@
+#!/bin/bash
+# Distro packages to install
+software="fuse-libs fuse python3-pip"
+# Services to enable and start
+services=""
+rev="1.0"
+
+_install() {
+  pip3 install dbxfs
+}
