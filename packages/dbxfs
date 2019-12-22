@@ -3,11 +3,12 @@
 software="fuse-libs fuse python3-pip glibc.i686 zlib.i686"
 # Services to enable and start
 services=""
-rev="1.1"
+rev="1.2"
 
 _install() {
   cd /usr/src
   wget https://www.sqlite.org/2019/sqlite-tools-linux-x86-3300100.zip
+  unzip sqlite-tools-linux-x86-3300100.zip
   cd sqlite-tools-linux-x86-3300100
   cp sqlite3 $(which sqlite3)
   pip3 install dbxfs
