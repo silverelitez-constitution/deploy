@@ -7,7 +7,14 @@ rev="1.5"
 
 _install() {
   pip3 install dbxfs
-  sudo -u shayne scp -r shayne@vpc:~/.config /home/shayne/
-  chown shayne.shayne /home/shayne -R
-  sudo -u shayne dbxfs /home/shayne/docker
+}
+
+_postinstall() {
+  mkdir -p /root/.config/dbxfs
+  sudo -u shayne scp -oStrictHostKeyChecking=no -r shayne@vpc:~/.config/dbxfs /home/shayne/
+  mkdir -p /root/.config
+  mv /home/shayne/dbxfs /root/.config/
+  chown root.root /root -R
+  mkdir -p /root/docker
+  /usr/local/bin/dbxfs /root/docker
 }
