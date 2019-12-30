@@ -4,12 +4,22 @@
 software="yum-utils device-mapper-persistent-data lvm2 docker-ce docker-ce-cli containerd.io"
 # Services to enable and start
 services="docker"
-rev="1.1"
+rev="1.2"
 
 _preinstall() {
+  # remove old docker versions
+  yum remove docker \
+    docker \
+    docker-client \
+    docker-client-latest \
+    docker-common \
+    docker-latest \
+    docker-latest-logrotate \
+    docker-logrotate \
+    docker-engine
   # add the docker community repo
   yum-config-manager \
     --add-repo \
     https://download.docker.com/linux/centos/docker-ce.repo
-  pug
+  P_UPGRADE
 }
