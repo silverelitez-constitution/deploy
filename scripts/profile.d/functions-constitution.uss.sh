@@ -202,7 +202,7 @@ deployer() { # deployer <service> <host(s)> - temporary function to test overall
 	echo Host ID is ${ID}
 	echo Deploying to ${host}...
     #ping -c1 ${host} >/dev/null && 
-	cd ~/deploy && scp packages/${service}.sh ${host}:~/ && ssh -oBatchMode=yes ${host} "~/${service}.sh ${password} && rm ${service}.sh"
+	cd ~/deploy && scp packages/${service} ${host}:~/ && ssh -oBatchMode=yes ${host} "~/${service} && rm ${service}"
   done
   IFS=${oldIFS}
 }
