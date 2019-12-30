@@ -221,17 +221,17 @@ mka() { # mka <alias string> - Beta function to add an alias to current session 
     source ~/.bash_aliases
 }
 
-function unmka() { # unmka <command> - Removes the alias permanently. the yang to the mka() ying, if you will
+unmka() { # unmka <command> - Removes the alias permanently. the yang to the mka() ying, if you will
   cmd=${1};  grep -v "alias ${cmd}=" ~/.bash_aliases > ~/.bash_aliases.new; mv ~/.bash_aliases.new ~/.bash_aliases; source unalias "${cmd}";
 }
 
 # just restarted a vps? use this and once it's ready for you, you'll be ready for it (within one second)
-function sshw() { # sshw <ssh flags and stuff> - Runs ssh once a second. Useful when waiting for a system to boot up
+sshw() { # sshw <ssh flags and stuff> - Runs ssh once a second. Useful when waiting for a system to boot up
   while ! ssh "${@}"; do sleep 1; done 
 }
 
 # alpha function to run a script straight from git from the prompt. testing and streamlining for better git-sh scripting
-function gitsource() { # gitsource <filename|default.sh> <branch|master> - Source a script from github
+gitsource() { # gitsource <filename|default.sh> <branch|master> - Source a script from github
   script=${1:-default.sh}
   branch=${2:-master}
   [ ! $domain ] && domain=$(sudo grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
@@ -241,7 +241,7 @@ function gitsource() { # gitsource <filename|default.sh> <branch|master> - Sourc
   [ ${?} == '0' ] || output="echo ERROR: curl returned ${?} for ${gitsurl}" && source <(echo "${output}")
 }
 
-function gitcat() { # gitcat <filename|default.sh> <branch|master> - echo out contents of github file like 'cat'
+gitcat() { # gitcat <filename|default.sh> <branch|master> - echo out contents of github file like 'cat'
   script=${1:-default.sh}
   branch=${2:-master}
   [ ! $domain ] && domain=$(sudo grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
@@ -303,6 +303,7 @@ gc() { # gc <message> - Set commit message and push
 paster() { # paster <content> - Pastebin to 'https://ptpb.pw'
   curl -F c=@- https://ptpb.pw; 
 }
+
 seenet() { # seenet <additional arguments for netstat> - Show a live list of network connections
   watch --interval=0.5 "netstat -aupt ${@} | grep -e 'ESTABLISH\|LISTEN\|TIME_WAIT'"
 }
@@ -315,8 +316,6 @@ refresh() { # refresh - Reload the Silver layer system
   output=$(curl -f -s "${refreshurl}")
   [ ${?} == '0' ] || output="echo ERROR: curl returned ${?} for ${url}" && source <(echo "${output}")
 }
-
-[ ${debug} ] && echo "Done!"
 
 myip() { # myip - Print external IP address
   curl ipinfo.io/ip
@@ -349,3 +348,5 @@ h() { # h - show basic help for main commands
   alias
   gitcat scripts/profile.d/functions-constitution.uss.sh | grep '() { #' --color=never | grep -v 'gitcat scripts'
 }
+
+[ ${debug} ] && echo "Done!"
