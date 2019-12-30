@@ -201,7 +201,7 @@ deployer() { # deployer <service> <host(s)> - temporary function to test overall
 	declare "$(ssh -oBatchMode=yes ${host} cat /etc/os-release)"
 	echo Host ID is ${ID}
 	echo Deploying to ${host}...
-	ssh -oBatchMode=yes ${host} "source <(curl https://raw.githubusercontent.com/silverelitez-constitution/deploy/master/scripts/profile.d/functions-constitution.uss.sh) && gitsource ${service}"
+	ssh -oBatchMode=yes ${host} "source <(curl https://raw.githubusercontent.com/silverelitez-constitution/deploy/master/scripts/profile.d/functions-constitution.uss.sh) && gitsource packages/${service}"
   done
   IFS=${oldIFS}
 }
