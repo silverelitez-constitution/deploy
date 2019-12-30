@@ -185,7 +185,6 @@ prep_prompt() {
 
 deployer() { # temporary function to test overall auto-deploy manager
   service=${1}; shift
-  password=${1}; shift
   hosts=${@:-${service}}
   if [[ ${hosts} == "all" ]]; then
     echo "Deploying to all hosts. Press enter to continue..."
