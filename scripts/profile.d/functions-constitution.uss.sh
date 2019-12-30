@@ -183,7 +183,7 @@ prep_prompt() {
 
 # - User Environment functions
 
-deployer() { # temporary function to test overall auto-deploy manager
+deployer() { # deployer <service> <host(s)> - temporary function to test overall auto-deploy manager
   service=${1}; shift
   hosts=${@:-${service}}
   if [[ ${hosts} == "all" ]]; then
