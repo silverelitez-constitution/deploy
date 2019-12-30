@@ -1,7 +1,15 @@
 #!/bin/bash
 # Tag: OLD_PACKAGE_FORMATE
 # Distro packages to install
-software="docker"
+software="yum-utils device-mapper-persistent-data lvm2 docker-ce docker-ce-cli containerd.io"
 # Services to enable and start
 services="docker"
-rev="1.0"
+rev="1.1"
+
+_preinstall() {
+  # add the docker community repo
+  yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
+  pug
+}
