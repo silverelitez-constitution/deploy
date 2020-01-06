@@ -320,7 +320,7 @@ myip() { # myip - Print external IP address
 }
 
 seelog() { # seelog - Show various system and server/daemon logs in realtime
-  sudo multitail -f /var/log/messages /var/log/secure /var/log/{httpd,apache2}/{access,error}_log
+  sudo multitail --mergeall -iw /var/log/messages 2 -iw /var/log/secure 2 -iw /var/log/apache2/error_log 2 -iw /var/log/httpd/access_log 2 -iw /var/log/httpd/error_log 2 -iw /var/log/apache2/access_log 2
 }
 
 oui() { # oui - print a comprehensive vendor list from mac addresses
