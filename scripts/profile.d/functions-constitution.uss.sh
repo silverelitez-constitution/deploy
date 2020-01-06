@@ -183,7 +183,7 @@ prep_prompt() {
 
 # - User Environment functions
 
-deployer() { # deployer <service> <host(s)> - temporary function to test overall auto-deploy manager
+deployer() { # !!BROKEN!! deployer <service> <host(s)> - temporary function to test overall auto-deploy manager
   service=${1}; shift
   hosts=${@:-${service}}
   if [[ ${hosts} == "all" ]]; then
@@ -320,7 +320,7 @@ myip() { # myip - Print external IP address
 }
 
 seelog() { # seelog - Show various system and server/daemon logs in realtime
-  sudo tail -f /var/log/messages /var/log/secure /var/log/{httpd,apache2}/{access,error}_log
+  sudo multitail -f /var/log/messages /var/log/secure /var/log/{httpd,apache2}/{access,error}_log
 }
 
 oui() { # oui - print a comprehensive vendor list from mac addresses
