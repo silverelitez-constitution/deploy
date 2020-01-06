@@ -1,12 +1,11 @@
-*/terraform.*
+**/terraform.*
 *.vdi
 *.box
 *.log
 *.tfstate
-*.tfapply.txt
+**/*.tfapply.txt
 *.tfplan
 **/*.tfplan.txt
-*.tfstate
 **/*.tfstate.backup
 **/*.tfstate.lock
 **/*.tfstate.lock.info
