@@ -9,7 +9,12 @@ _preinstall() {
   # Connect CentOS repository. It will work for Amazon-Linux.
   sudo wget http://download.opensuse.org/repositories/home:ocaml/CentOS_7/home:ocaml.repo -P /etc/yum.repos.d/
   # Install Ocaml and required dependencies.
-  sudo yum install opam ocaml gcc gcc-c++ m4 make ocamldoc ocaml-camlp4-devel ncurses-devel
+  sudo yum install dnf opam ocaml gcc gcc-c++ m4 make ocamldoc ocaml-camlp4-devel ncurses-devel -y
+  yum install sqlite-devel fuse fuse-devel libcurl-devel zlib-devel m4
+  yum install ocaml ocamldoc ocaml-camlp4-devel
+  wget https://raw.github.com/ocaml/opam/master/shell/opam_installer.sh -O - | sh -s /usr/local/bin/
+  yum install
+  dnf install opam
   opam init
   opam update
   opam install depext
