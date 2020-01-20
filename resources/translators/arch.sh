@@ -1,6 +1,6 @@
 alias i='echo null'
 P_INSTALL="echo null"
-P_NAME() {echo null;}
+P_NAME() { echo null;}
 P_REMOVE="echo null"
 P_BINARY() { echo null;}
 P_INSTALL_PIP() { echo null; }
