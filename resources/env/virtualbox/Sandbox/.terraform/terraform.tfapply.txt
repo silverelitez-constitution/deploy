@@ -1,12 +1,1 @@
 virtualbox_vm.node: Refreshing state... (ID: bc88e104-3cac-4ee0-bb0d-9dcefd439a14)
-virtualbox_vm.node: Modifying... (ID: bc88e104-3cac-4ee0-bb0d-9dcefd439a14)
-  cpus: "2" => "4"
-virtualbox_vm.node: Modifications complete after 4s (ID: bc88e104-3cac-4ee0-bb0d-9dcefd439a14)
-
-Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
-
-Outputs:
-
-IPAddr = [
-    10.37.224.57
-]
