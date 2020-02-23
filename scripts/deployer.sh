@@ -10,7 +10,8 @@ gitsource() {
   realm=$(echo ${domain} | cut -d. -f1)
   gitsurl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/${script}"
   echo ${gitsurl}
-  source <(curl -s ${gitsurl} | sed 's/^404:.*/echo 404 error - ${gitsurl}/g'  || echo echo Error)
+  output=$(curl -f -s "${gitsurl}")
+  [ ${?} == '0' ] || output="echo ERROR: curl returned ${?} for ${gitsurl}" && source <(echo "${output}")
 }
 
 #declare the pipeline stages
