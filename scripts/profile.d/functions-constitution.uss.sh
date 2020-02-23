@@ -158,7 +158,7 @@ refresh_global() {
   [ ! $domain ] && domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
   realm=$(echo ${domain} | cut -d. -f1)
   globalurl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/global.sh"
-  curl -s ${globalurl} | dos2unix > ~/.git.global.sh
+  curl -s ${globalurl} > ~/.git.global.sh
   sudo cp ~/.git.global.sh /etc/profile.d/global.sh
   sudo chown root.root /etc/profile.d/global.sh
   sudo chmod a+x /etc/profile.d/global.sh
