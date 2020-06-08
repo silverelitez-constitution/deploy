@@ -1,4 +1,12 @@
 #!/bin/bash
+
+if [ ! -e ~/.inputrc ]; then
+cat > ~/.inputrc <<EOF
+"\e[5~": history-search-backward   
+"\e[6~": history-search-forward 
+EOF
+fi
+
 export EDITOR='/usr/bin/nano'
 export PATH="${PATH}:/usr/local/go/bin:${HOME}/go/bin"
 

@@ -206,7 +206,7 @@ deployer() { # !!BROKEN!! deployer <service> <host(s)> - temporary function to t
   IFS=${oldIFS}
 }
 
-mka() { # mka <alias string> - Beta function to add an alias to current session and permanently store it as well
+mka() { # mka <command> <alias string> - Beta function to add an alias to current session and permanently store it as well
     shopt -s expand_aliases;
     if [ ! ${1} ]; then
         cat ~/.bash_aliases 2> /dev/null;
