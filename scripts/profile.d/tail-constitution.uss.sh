@@ -9,6 +9,7 @@ fi
 
 export EDITOR='/usr/bin/nano'
 export PATH="${PATH}:/usr/local/go/bin:${HOME}/go/bin"
+export NCURSES_NO_UTF8_ACS=1
 
 GIT_PROMPT_START="[\${AWS_ENV}] "
 
