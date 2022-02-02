@@ -287,6 +287,8 @@ r() { # r - Remove package/binary and flush the hash tables
   fi
 }
 
+function urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
+
 show-prompt() { # oddly, it's kinda hard to properly echo the bash prompt. this seems to do the magic
     ExpPS1="$(bash --rcfile <(echo "PS1='$PS1'") -i <<<'' 2>&1 |
      sed ':;$!{N;b};s/^\(.*\n\)*\(.*\)\n\2exit$/\2/p;d')";
