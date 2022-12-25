@@ -7,5 +7,5 @@ export PATH
 
 translation_layer
 refresh_global
-[[ ${ID} == "amzl" ]] && [[ -e /etc/yum.repos.d/epel* ]] || sudo amazon-linux-extras install epel -y
+if [[ ${ID} == "amzl" && ! -e /etc/yum.repos.d/epel* ]]; then sudo amazon-linux-extras install epel -y; fi
 prep_prompt
