@@ -131,7 +131,8 @@ tube() { # tube <video service urls> - Rip video service videos
 }
 
 tuber() { # tuber <youtube urls> - Download youtube links as mp3's. Also supports a lot of other popular video url services
-  youtube-dl -x --audio-format mp3 ${@};
+#  youtube-dl -x --audio-format mp3 ${@};
+  yt-dlp -x --audio-format mp3 ${@};
 }
 
 chances() {
