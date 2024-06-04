@@ -64,7 +64,7 @@ else
 fi
 
 giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/"
-localpath="/etc/silverelitez/deploy/${branch}/scripts/profile.d/"
+localpath="/etc/silverelitez/deploy/scripts/profile.d/"
 
 if [[ $localscripts == true ]]; then
   if [ ! -f /etc/silverelitez/deploy/.git/index ]; then
@@ -88,7 +88,7 @@ do
   scr="${localpath}${script}-${domain}.sh"
   if [ ${localscripts} == true ]; then 
     [ ${debug} ] && { echo Press enter to execute "${scr}"; read; }
-    source ${scr}
+    source <(cat ${scr} | dos2unix)
   else
     [ ${debug} ] && { echo Press enter to execute "${url}"; read; }
     output=$(curl -f -s "${url}")
