@@ -7,7 +7,7 @@ echo -n "Testing interconnectivity..."
 ping -q 4.2.2.2 -c1 >/dev/null || { echo "Failed"; return; } && echo "Done"
 
 # Get the weather
-F=$(curl -s wttr.in/detroit | grep 캟 | head -n1 | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | sed 's/[^0-9.]//g' | sed 's/^..//g' | sed 's/\.\./-/g')
+F=$(curl -s wttr.in/detroit | grep 째F | head -n1 | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | sed 's/[^0-9.]//g' | sed 's/^..//g' | sed 's/\.\./-/g')
 [ ! ${F} ] && F="93"
 
 # Welcome greeting
@@ -16,8 +16,8 @@ echo \
 This automated train is provided for the security and
 convenience of the Black Mesa Research Facility personnel.
 The time is $(date +'%I:%M %p'). Current topside temperature
-is ${F}캟, with an estimated high of 105캟. The Black Mesa
-compound is maintained at a pleasant 68캟 at all times."
+is ${F}째F, with an estimated high of 105째F. The Black Mesa
+compound is maintained at a pleasant 68째F at all times."
 
 unset F
 
@@ -64,6 +64,15 @@ else
 fi
 
 giturl="https://raw.githubusercontent.com/silverelitez-${realm}/deploy/${branch}/scripts/profile.d/"
+localpath="/etc/silverelitez/deploy/${branch}/scripts/profile.d/"
+
+if [[ $localscripts == true ]]; then
+  if [ ! -f /etc/silverelitez/deploy/.git/index ]; then
+    cd /etc/silverelitez/ && git clone https://github.com/silverelitez-constitution/deploy.git
+  else
+    cd /etc/silverelitez/deploy && git pull
+  fi
+fi
 
 nscripts=$(echo ${scripts} | tr ' ' '\n')
 scripts="${nscripts}"
@@ -74,7 +83,13 @@ unset nscripts
 for script in ${scripts}
 do
   url="${giturl}${script}-${domain}.sh"
-  [ ${debug} ] && { echo Press enter to execute "${url}"; read; }
-  output=$(curl -f -s "${url}")
-  [ ${?} == '0' ] || output="echo ERROR: curl returned ${?} for ${url}" && source <(echo "${output}")
+  scr="${localpath}${script}-${domain}.sh"
+  if [ ${localscripts} == true ]; then 
+    [ ${debug} ] && { echo Press enter to execute "${scr}"; read; }
+    source ${scr}
+  else
+    [ ${debug} ] && { echo Press enter to execute "${url}"; read; }
+    output=$(curl -f -s "${url}")
+    [ ${?} == '0' ] || output="echo ERROR: curl returned ${?} for ${url}" && source <(echo "${output}")
+  fi
 done 
