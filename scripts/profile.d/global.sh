@@ -68,9 +68,11 @@ localpath="/etc/silverelitez/deploy/${branch}/scripts/profile.d/"
 
 if [[ $localscripts == true ]]; then
   if [ ! -f /etc/silverelitez/deploy/.git/index ]; then
-    cd /etc/silverelitez/ && git clone https://github.com/silverelitez-constitution/deploy.git
+    cd /etc/silverelitez/ && sudo git clone https://github.com/silverelitez-constitution/deploy.git
+    sudo chmod a+r deploy -R
   else
-    cd /etc/silverelitez/deploy && git pull
+    cd /etc/silverelitez/deploy && sudo git pull
+    sudo chmod a+r ../deploy -R
   fi
 fi
 
@@ -93,3 +95,4 @@ do
     [ ${?} == '0' ] || output="echo ERROR: curl returned ${?} for ${url}" && source <(echo "${output}")
   fi
 done 
+cd ~/
