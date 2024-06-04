@@ -44,9 +44,9 @@ groups=$(id $(whoami) | sed 's/,/\n/g' | grep -oe "(.*)")
 # portage takes forever to generate an update list. disabled during diag/sanity retention
 if [[ ${ID} == 'centos' ]] || [[ ${ID} == 'amzn' ]]; then
   sudo yum-complete-transaction -y >/dev/null
-  if echo "${groups}" | grep --color=never -e 'admin\|user' >/dev/null; then num_updates=$(P_UPDATES | wc -l)
+  if echo "${groups}" | grep --color=never -e 'admin\|user' >/dev/null && [[ -f /etc/updates ]]; then num_updates=$(cat /etc/updates | wc -l)
     echo ${num_updates} updates available.
-    [[ ${num_updates} -gt "0" ]] && P_UPDATES
+   [[ ${num_updates} -gt "0" ]] && cat /etc/updates
   fi
 fi
 
