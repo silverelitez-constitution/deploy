@@ -1,6 +1,6 @@
 alias i='sudo yum -y install '
 P_INSTALL="sudo yum install -y "
-P_NAME() { repoquery --cache  -C --qf %{NAME} --whatprovides *bin/${1}; }
+P_NAME() { repoquery --cache -q -C --qf %{NAME} --whatprovides *bin/${1}; }
 P_REMOVE="sudo yum remove -y "
 P_BINARY() { repoquery -l ${1} | grep bin | rev | cut -d'/' -f1 | rev; }
 P_INSTALL_PIP() { sudo yum --quiet -y install gcc python34-pip python34-devel python34-setuptools; }
