@@ -1,6 +1,6 @@
 alias i='sudo yum -y install '
-P_INSTALL="apt install -y "
-P_REMOVE="apt remove -t "
+P_INSTALL="sudo apt install -y "
+P_REMOVE="sudo apt remove -t "
 P_INSTALL_PIP() { sudo apt --quiet -y install gcc python-pip; }
 P_UPDATE() { sudo apt update -y; }
 P_UPGRADE() { sudo apt upgrade -y; }
