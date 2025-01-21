@@ -4,7 +4,7 @@
 
 # Ensure the system can reach the internet so there's no lag during the priming process
 echo -n "Testing interconnectivity..."
-ping -q 4.2.2.2 -c1 >/dev/null || { echo "Failed"; return; } && echo "Done"
+ping -q 8.8.8.8 -c1 -t1 >/dev/null || ping -q 1.1.1.1 -c1 -t1 >/dev/null || { echo "Failed"; return; } && echo "Done"
 
 # Get the weather
 F=$(curl -s wttr.in/detroit | grep °F | head -n1 | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | sed 's/[^0-9.]//g' | sed 's/^..//g' | sed 's/\.\./-/g')
