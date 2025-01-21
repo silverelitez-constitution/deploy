@@ -1,6 +1,6 @@
 #!/bin/bash
 # If not running interactively, don't do anything
-[[ ${-} == *i* ]] || [[ ${1} ]] || return
+[[ "${-}" == *i* ]] || [[ "${1}" ]] || return
 
 # Ensure the system can reach the internet so there's no lag during the priming process
 echo -n "Testing interconnectivity..."
@@ -8,7 +8,7 @@ ping -q 8.8.8.8 -c1 >/dev/null || ping -q 1.1.1.1 -c1 >/dev/null || { echo "Fail
 
 # Get the weather
 F=$(curl -s wttr.in/detroit | grep °F | head -n1 | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | sed 's/[^0-9.]//g' | sed 's/^..//g' | sed 's/\.\./-/g')
-[ ! ${F} ] && F="93"
+[ ! "${F}" ] && F="93"
 
 # Welcome greeting
 echo \
@@ -21,6 +21,8 @@ compound is maintained at a pleasant 68°F at all times."
 
 unset F
 
+CURRENTPATH=`pwd`
+
 # debug
 if [ -e /etc/silverelitez/debug ]; then set -x; debug=1; source /etc/silverelitez/debug; fi
 
@@ -29,15 +31,15 @@ if [ -e /etc/silverelitez/config ]; then source /etc/silverelitez/config; fi
 
 scripts=${@:-head functions aliases global tail}
 
-[ ${debug} ] && echo "Scripts to run: ${scripts}"
+[ "${debug}" ] && echo "Scripts to run: ${scripts}"
 
-[ ! ${domain} ] && { echo -n Reading resolv.conf for domain...;domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2); echo $domain; }
-[ ! ${domain} ] && { echo -n Discovering domain...;domain=$(sudo realm discover | head -n1);echo $domain; }
-
-
+[ ! "${domain}" ] && { echo -n Reading resolv.conf for domain...;domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2); echo $domain; }
+[ ! "${domain}" ] && { echo -n Discovering domain...;domain=$(sudo realm discover | head -n1);echo $domain; }
 
 
-if [ ! ${domain} ]; then
+
+
+if [ ! "${domain}" ]; then
   echo \
   "Thank you for your interest in the Silver Elitez
   Constitution Class single-system beta test. You are receiving
@@ -56,7 +58,7 @@ fi
 realm=$(echo ${domain} | cut -d. -f1)
 echo "Realm: ${realm}"
 
-if [ ${TESTING_BRANCH} ]; then 
+if [ "${TESTING_BRANCH}" ]; then 
   branch="${TESTING_BRANCH}"
   echo "Testing mode on branch ${branch}"
 else
@@ -80,19 +82,19 @@ nscripts=$(echo ${scripts} | tr ' ' '\n')
 scripts="${nscripts}"
 unset nscripts
 
-[ ${debug} ] && echo "${scripts}"
+[ "${debug}" ] && echo "${scripts}"
 
 for script in ${scripts}
 do
   url="${giturl}${script}-${domain}.sh"
   scr="${localpath}${script}-${domain}.sh"
-  if [ ${localscripts} == true ]; then 
-    [ ${debug} ] && { echo Press enter to execute "${scr}"; read; }
+  if [ "${localscripts}" == true ]; then 
+    [ "${debug}" ] && { echo Press enter to execute "${scr}"; read; }
     source <(cat ${scr} | dos2unix)
   else
-    [ ${debug} ] && { echo Press enter to execute "${url}"; read; }
+    [ "${debug}" ] && { echo Press enter to execute "${url}"; read; }
     output=$(curl -f -s "${url}")
-    [ ${?} == '0' ] || output="echo ERROR: curl returned ${?} for ${url}" && source <(echo "${output}")
+    [ "${?}" == '0' ] || output="echo ERROR: curl returned ${?} for ${url}" && source <(echo "${output}")
   fi
 done 
-cd ~/
+cd "${CURRENTPATH}"
