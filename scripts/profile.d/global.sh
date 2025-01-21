@@ -22,7 +22,7 @@ compound is maintained at a pleasant 68°F at all times."
 unset F
 
 CURRENTPATH=`pwd`
-debug=0;
+debug='';
 
 # debug
 if [ -e /etc/silverelitez/debug ]; then set -x; debug=1; source /etc/silverelitez/debug; fi
@@ -89,13 +89,13 @@ for script in ${scripts}
 do
   url="${giturl}${script}-${domain}.sh"
   scr="${localpath}${script}-${domain}.sh"
-  if [ "${localscripts}" == true ]; then 
-    [ "${debug}" ] && { echo Press enter to execute "${scr}"; read; }
+  if [[ "${localscripts}" == true ]]; then 
+    [[ "${debug}" ]] && { echo Press enter to execute "${scr}"; read; }
     source <(cat ${scr} | dos2unix)
   else
-    [ "${debug}" ] && { echo Press enter to execute "${url}"; read; }
+    [[ "${debug}" ]] && { echo Press enter to execute "${url}"; read; }
     output=$(curl -f -s "${url}")
-    [ "${?}" == '0' ] || output="echo ERROR: curl returned ${?} for ${url}" && source <(echo "${output}")
+    [[ "${?}" == '0' ]] || output="echo ERROR: curl returned ${?} for ${url}" && source <(echo "${output}")
   fi
 done 
 cd "${CURRENTPATH}"
