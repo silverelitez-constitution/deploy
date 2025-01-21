@@ -8,7 +8,7 @@ ping -q 8.8.8.8 -c1 >/dev/null || ping -q 1.1.1.1 -c1 >/dev/null || { echo "Fail
 
 # Get the weather
 F=$(curl -s wttr.in/detroit | grep °F | head -n1 | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | sed 's/[^0-9.]//g' | sed 's/^..//g' | sed 's/\.\./-/g')
-[ ! "${F}" ] && F="93"
+[[ ! "${F}" ]] && F="93"
 
 # Welcome greeting
 echo \
@@ -22,6 +22,7 @@ compound is maintained at a pleasant 68°F at all times."
 unset F
 
 CURRENTPATH=`pwd`
+debug=0;
 
 # debug
 if [ -e /etc/silverelitez/debug ]; then set -x; debug=1; source /etc/silverelitez/debug; fi
@@ -33,13 +34,13 @@ scripts=${@:-head functions aliases global tail}
 
 [ "${debug}" ] && echo "Scripts to run: ${scripts}"
 
-[ ! "${domain}" ] && { echo -n Reading resolv.conf for domain...;domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2); echo $domain; }
-[ ! "${domain}" ] && { echo -n Discovering domain...;domain=$(sudo realm discover | head -n1);echo $domain; }
+[[ ! "${domain}" ]] && { echo -n Reading resolv.conf for domain...;domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2); echo $domain; }
+[[ ! "${domain}" ]] && { echo -n Discovering domain...;domain=$(sudo realm discover | head -n1);echo $domain; }
 
 
 
 
-if [ ! "${domain}" ]; then
+if [[ ! "${domain}" ]]; then
   echo \
   "Thank you for your interest in the Silver Elitez
   Constitution Class single-system beta test. You are receiving
@@ -58,7 +59,7 @@ fi
 realm=$(echo ${domain} | cut -d. -f1)
 echo "Realm: ${realm}"
 
-if [ "${TESTING_BRANCH}" ]; then 
+if [[ "${TESTING_BRANCH}" ]]; then 
   branch="${TESTING_BRANCH}"
   echo "Testing mode on branch ${branch}"
 else
@@ -82,7 +83,7 @@ nscripts=$(echo ${scripts} | tr ' ' '\n')
 scripts="${nscripts}"
 unset nscripts
 
-[ "${debug}" ] && echo "${scripts}"
+[[ "${debug}" ]] && echo "${scripts}"
 
 for script in ${scripts}
 do
