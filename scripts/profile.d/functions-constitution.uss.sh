@@ -174,7 +174,7 @@ prep_prompt() {
   if ! which thefuck > /dev/null 2>&1; then 
 	${P_INSTALL} expect sshpass
     P_INSTALL_PIP
-    pip3.4 install --user --quiet thefuck;
+    pip install --user --quiet thefuck;
   fi
   [ -e /etc/profile.d/bash_completion.sh ] || [ -e /etc/bash/bashrc.d/bash_completion.sh ] || sudo PG_BASH_COMPLETION
   if [[ ! -d ~/.bash-git-prompt ]]; then 
@@ -250,7 +250,7 @@ gitcat() { # gitcat <filename|default.sh> <branch|master> - echo out contents of
 }
 
 command_not_found_handle() { # Auto install packages as you go. No need to mess with package managers
-  if [[ ${FUNCNAME[1]} == 'command_not_found_handle' ]]; then
+  if [[ ${FUNCNAME[2]} == 'command_not_found_handle' ]]; then
 		echo "Preventing a forkbomb!"; return 1;
 	fi
 	
@@ -258,10 +258,14 @@ command_not_found_handle() { # Auto install packages as you go. No need to mess 
   echo "Command not found: ${1}"
   declare | grep 'P_NAME ()' >/dev/null || exit 1
   package=$(P_NAME ${1} |head -n1)
+	if [[ "$package" == "Preventing a forkbomb!" ]]; then
+		echo "Preventing a looped forkbomb!"; return 1;
+	fi
   if [[ ! $package ]]; then
     echo "No package provides ${1}! Command doesn't exist...?";
     return;
   fi;
+	
   echo -n "The package ${package} is required to run '${fullcommand}'! Installing...";
   if sudo ${P_INSTALL} "${package}" >/dev/null; then
 	echo "Done!";
