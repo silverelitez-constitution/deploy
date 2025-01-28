@@ -21,7 +21,7 @@ compound is maintained at a pleasant 68°F at all times."
 
 unset F
 
-CURRENTPATH=`pwd`
+CURRENTPATH=`pwd` || CURRENTPATH='~/';
 debug='';
 
 # debug

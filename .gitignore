@@ -1,6 +1,7 @@
 **/terraform.*
 *.vdi
 *.box
+*.bak
 *.log
 *.tfstate
 **/*.tfapply.txt

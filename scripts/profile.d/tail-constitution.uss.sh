@@ -18,12 +18,12 @@ GIT_PROMPT_START="[\${AWS_ENV}] "
 source ~/.bash-git-prompt/gitprompt.sh;
 
 [ ${ID} == 'centos' ] && [ -f /etc/yum.repos.d/lux.repo ] || {
-  sudo rpm -Uvh http://repo.iotti.biz/CentOS/5/noarch/lux-release-0-1.noarch.rpm;
   sudo rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-LUX;
+  sudo yum install http://repo.iotti.biz/CentOS/5/noarch/lux-release-0-1.noarch.rpm || sudo touch /etc/yum.repos.d/lux.repo;
 }
 
 echo "Loading prompt patcher..."
-eval $(thefuck --alias)
+which thefuck 1&>/dev/null && eval $(thefuck --alias)
 
 [ ! $domain ] && domain=$(grep '^search \|^domain ' /etc/resolv.conf | head -n1 | cut -d' ' -f2)
 realm=$(echo ${domain} | cut -d"." -f1)
