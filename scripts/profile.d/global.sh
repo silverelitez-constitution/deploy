@@ -21,7 +21,7 @@ compound is maintained at a pleasant 68°F at all times."
 
 unset F
 cd ~ || cd -
-CURRENTPATH=`pwd` || CURRENTPATH='~/';
+CURRENTPATH=`pwd` || CURRENTPATH='~';
 debug='';
 
 # debug
@@ -98,4 +98,4 @@ do
     [[ "${?}" == '0' ]] || output="echo ERROR: curl returned ${?} for ${url}" && source <(echo "${output}")
   fi
 done 
-cd "${CURRENTPATH}"
+cd ${CURRENTPATH} || cd ~
