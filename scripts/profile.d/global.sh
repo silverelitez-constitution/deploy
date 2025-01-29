@@ -20,7 +20,7 @@ is ${F}°F, with an estimated high of 105°F. The Black Mesa
 compound is maintained at a pleasant 68°F at all times."
 
 unset F
-
+cd ~ || cd -
 CURRENTPATH=`pwd` || CURRENTPATH='~/';
 debug='';
 
