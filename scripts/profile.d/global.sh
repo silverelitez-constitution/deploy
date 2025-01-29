@@ -74,7 +74,7 @@ if [[ $localscripts == true ]]; then
     cd /etc/silverelitez/ && sudo git clone https://github.com/silverelitez-constitution/deploy.git
     sudo chmod a+r deploy -R
   else
-    cd /etc/silverelitez/deploy && sudo git pull
+    cd /etc/silverelitez/deploy && sudo git pull || sudo git rebase
     sudo chmod a+r ../deploy -R
   fi
 fi
