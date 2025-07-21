@@ -95,7 +95,7 @@ do
   else
     [[ "${debug}" ]] && { echo Press enter to execute "${url}"; read; }
     output=$(curl -f -s "${url}")
-    [[ "${?}" == '0' ]] || output="echo ERROR: curl returned ${?} for ${url}" && source <(echo "${output}")
+    [[ "${?}" == '0' ]] ||   source <(cat ${scr} | dos2unix) || output="echo ERROR: curl returned ${?} for ${url}" && source <(echo "${output}")
   fi
 done 
 cd ${CURRENTPATH} || cd ~
